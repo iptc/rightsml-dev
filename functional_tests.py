@@ -1,13 +1,21 @@
 #!/usr/bin/python
 
 from licensed import mklicense
+import unittest
  
-licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
-	assigner="http://example.com/cv/party/epa",
-	assignee="http://example.com/cv/policy/group/epapartners")
+class SimpleLicenseTest(unittest.TestCase):
 
-geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+	def setUp(self):
+		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
+			assigner="http://example.com/cv/party/epa",
+			assignee="http://example.com/cv/policy/group/epapartners")
 
-geolicense_xml = geolicense.xml()
+	def tearDown(self):
+		pass
 
-assert "DEU" in geolicense_xml, "Geo License XML was" + geolicense_xml
+	def test_simple_geo(self):
+		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+
+		geolicense_xml = geolicense.xml()
+
+		assert "DEU" in geolicense_xml, "Geo License XML was" + geolicense_xml

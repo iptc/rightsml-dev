@@ -10,4 +10,4 @@ geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3
 
 geolicense_xml = geolicense.xml()
 
-assert "DEU" in geolicense_xml
+assert "DEU" in geolicense_xml, "Geo License XML was" + geolicense_xml

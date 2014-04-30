@@ -20,6 +20,7 @@ class SimpleLicenseTest(unittest.TestCase):
 		print(geolicense_xml)
 
 		self.assertIn("DEU", geolicense_xml)
+		self.assertIn("epa", geolicense_xml)
 		self.fail("Finish the test!")
 
 if __name__ == '__main__':

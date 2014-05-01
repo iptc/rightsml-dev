@@ -21,6 +21,8 @@ except ImportError:
         except ImportError:
           print("Failed to import ElementTree from any known place")
 
+import hashlib
+
 class mklicense:
 
 	def __init__(self,target, assigner, assignee):
@@ -34,21 +36,26 @@ class mklicense:
 class simpleGeographic:
 
 	def __init__(self,target, assigner, assignee, geography):
-		self.target = target
-		self.assigner = assigner
-		self.assignee = assignee
-		self.geography = geography
-		self.type = 'http://www.w3.org/ns/odrl/2/#set'
-		self.action = 'http://www.w3.org/ns/odrl/2/#distribute'
-		self.constraint = 'http://www.w3.org/ns/odrl/2/#spatial'
-		self.operator = 'http://www.w3.org/ns/odrl/2/#eq'
-		self.guid = 'http://example.com/RightsML/policy/idGeog1'
+		self.vals = {}
+		self.vals['target'] = target
+		self.vals['assigner'] = assigner
+		self.vals['assignee'] = assignee
+		self.vals['geography'] = geography
+		self.vals['type'] = 'http://www.w3.org/ns/odrl/2/#set'
+		self.vals['action'] = 'http://www.w3.org/ns/odrl/2/#distribute'
+		self.vals['constraint'] = 'http://www.w3.org/ns/odrl/2/#spatial'
+		self.vals['operator'] = 'http://www.w3.org/ns/odrl/2/#eq'
+		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.vals.items()))
+		self.vals['guid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
 	def xml(self):
+		return etree.tostring(self.xml_etree())
+
+	def xml_etree(self):
 		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.set('uid', self.guid)
-		policy.set('type', self.type)
+		policy.set('uid', self.vals['guid'])
+		policy.set('type', self.vals['type'])
 
 		permission = etree.Element("{http://www.w3.org/ns/odrl/2/}permission",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
@@ -56,32 +63,32 @@ class simpleGeographic:
 
 		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset.set('uid', self.target)
+		asset.set('uid', self.vals['target'])
 		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
 		policy.append(asset)
 
 		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		action.set('name', self.action)
+		action.set('name', self.vals['action'])
 		policy.append(action)
 
 		constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		constraint.set('name', self.constraint)
-		constraint.set('operator', self.operator)
-		constraint.set('rightOperand', self.geography)
+		constraint.set('name', self.vals['constraint'])
+		constraint.set('operator', self.vals['operator'])
+		constraint.set('rightOperand', self.vals['geography'])
 		policy.append(constraint)
 
 		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.assigner)
+		party.set('uid', self.vals['assigner'])
 		policy.append(party)
 
 		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.assignee)
+		party.set('uid', self.vals['assignee'])
 		policy.append(party)
 
-		return etree.tostring(policy)
+		return policy

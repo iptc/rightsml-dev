@@ -17,7 +17,6 @@ class SimpleLicenseTest(unittest.TestCase):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 
 		geolicense_xml = geolicense.xml()
-		print(geolicense_xml)
 
 		self.assertIn("DEU", geolicense_xml)
 		self.assertIn("epa", geolicense_xml)

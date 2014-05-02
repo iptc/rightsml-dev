@@ -39,6 +39,9 @@ class mklicense(object):
 	def simpleTimePeriod(self, timeperiod, operator="http://www.w3.org/ns/odrl/2/lt"):
 		return simpleTimePeriod(target=self.target, assigner=self.assigner, assignee=self.assignee, timeperiod=timeperiod, operator=operator)
 
+	def simpleChannel(self, channel, operator="http://www.w3.org/ns/odrl/2/eq"):
+		return simpleChannel(target=self.target, assigner=self.assigner, assignee=self.assignee, channel=channel, operator=operator)
+
 class simpleAction(object):
 
 	def __init__(self,target, assigner, assignee, action):
@@ -153,3 +156,8 @@ class simpleGeographic(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, geography, operator):
 		super(simpleGeographic, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/dateTime', operator=operator, rightoperand=geography)
+
+class simpleChannel(simpleConstraint):
+
+	def __init__(self,target, assigner, assignee, channel, operator):
+		super(simpleChannel, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/purpose', operator=operator, rightoperand=channel)

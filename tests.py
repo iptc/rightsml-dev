@@ -42,6 +42,14 @@ class SimpleLicenseTest(unittest.TestCase):
 		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_xml)
 		self.assertIn("epa", actionlicense_xml)
 
+	def test_simple_channel(self):
+		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
+
+		channellicense_xml = channellicense.xml()
+
+		self.assertIn("http://example.com/cv/audMedia/MOBILE", channellicense_xml)
+		self.assertIn("epa", channellicense_xml)
+
 	def test_simple_timeperiod(self):
 		timeperiodlicense = self.licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
 

@@ -42,6 +42,15 @@ class SimpleLicenseTest(unittest.TestCase):
 		self.assertIn("DEU", geolicense_xml)
 		self.assertIn("epa", geolicense_xml)
 
+	def test_simple_geo_not(self):
+		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU",
+				operator="http://www.w3.org/ns/odrl/2/neq")
+
+		geolicense_xml = geolicense.xml()
+
+		self.assertIn("DEU", geolicense_xml)
+		self.assertIn("epa", geolicense_xml)
+
 	def test_simple_geo_uid_is_unique(self):
 		geolicense_deu = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 		geolicense_deu_xml = geolicense_deu.xml_etree()

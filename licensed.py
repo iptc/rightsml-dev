@@ -30,21 +30,21 @@ class mklicense:
 		self.assigner = assigner
 		self.assignee = assignee
 
-	def simpleGeographic(self, geography):
-		return simpleGeographic(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography)
+	def simpleGeographic(self, geography, operator="http://www.w3.org/ns/odrl/2/eq"):
+		return simpleGeographic(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, operator=operator)
 
 class simpleGeographic:
 
-	def __init__(self,target, assigner, assignee, geography):
+	def __init__(self,target, assigner, assignee, geography, operator):
 		self.vals = {}
 		self.vals['target'] = target
 		self.vals['assigner'] = assigner
 		self.vals['assignee'] = assignee
 		self.vals['geography'] = geography
-		self.vals['type'] = 'http://www.w3.org/ns/odrl/2/#set'
-		self.vals['action'] = 'http://www.w3.org/ns/odrl/2/#distribute'
-		self.vals['constraint'] = 'http://www.w3.org/ns/odrl/2/#spatial'
-		self.vals['operator'] = 'http://www.w3.org/ns/odrl/2/#eq'
+		self.vals['type'] = 'http://www.w3.org/ns/odrl/2/set'
+		self.vals['action'] = 'http://www.w3.org/ns/odrl/2/distribute'
+		self.vals['constraint'] = 'http://www.w3.org/ns/odrl/2/spatial'
+		self.vals['operator'] = operator
 		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.vals.items()))
 		self.vals['guid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	

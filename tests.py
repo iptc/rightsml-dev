@@ -34,6 +34,22 @@ class SimpleLicenseTest(unittest.TestCase):
 	def tearDown(self):
 		pass
 
+	def test_simple_action(self):
+		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
+
+		actionlicense_xml = actionlicense.xml()
+
+		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_xml)
+		self.assertIn("epa", actionlicense_xml)
+
+	def test_simple_timeperiod(self):
+		timeperiodlicense = self.licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
+
+		timeperiodlicense_xml = timeperiodlicense.xml()
+
+		self.assertIn("2013-06-15", timeperiodlicense_xml)
+		self.assertIn("epa", timeperiodlicense_xml)
+
 	def test_simple_geo(self):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 

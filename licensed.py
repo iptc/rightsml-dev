@@ -57,38 +57,63 @@ class simpleAction(object):
 	def xml(self):
 		return etree.tostring(self.xml_etree())
 
-	def xml_etree(self):
+	def xml_etree_policy(self, uid, type):
 		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.set('uid', self.vals['guid'])
-		policy.set('type', self.vals['type'])
-
+		policy.set('uid', uid)
+		policy.set('type', type)
+		return policy
+	
+	def xml_etree_permissions(self):
 		permission = etree.Element("{http://www.w3.org/ns/odrl/2/}permission",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.append(permission)
-
 		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		asset.set('uid', self.vals['target'])
 		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
-		policy.append(asset)
+		permission.append(asset)
 
 		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		action.set('name', self.vals['action'])
-		policy.append(action)
+		permission.append(action)
 
-		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.vals['assigner'])
-		policy.append(party)
+		for constraint in self.xml_etree_permissions_constraints(): permission.append(constraint)
 
-		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+		for party in self.xml_etree_permissions_parties(): permission.append(party)
+
+		for duty in self.xml_etree_permissions_duties(): permission.append(duty)
+
+		return [permission]
+
+	def xml_etree_permissions_constraints(self):
+		return []
+
+	def xml_etree_permissions_duties(self):
+		return []
+
+	def xml_etree_permissions_parties(self):
+		assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.vals['assignee'])
-		policy.append(party)
+		assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
+		assigner.set('uid', self.vals['assigner'])
+
+		assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+		assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
+		assignee.set('uid', self.vals['assignee'])
+
+		return [assigner, assignee]
+
+	def xml_etree_prohibitions(self):
+		return []
+
+	def xml_etree(self):
+		policy = self.xml_etree_policy(uid=self.vals['guid'], type=self.vals['type'])
+
+		for permission in self.xml_etree_permissions(): policy.append(permission)
+
+		for prohibition in self.xml_etree_prohibitions(): policy.append(prohibition)
 
 		return policy
 

@@ -87,6 +87,19 @@ class SimpleLicenseTest(unittest.TestCase):
 
 		self.assertNotEqual(geolicense_deu_uid, geolicense_fra_uid)
 
+	def test_simple_geo_uid_is_not_duplicated_for_same_parameters_for_action_and_constraint(self):
+		geolicense_deu = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+		geolicense_deu_xml = geolicense_deu.xml_etree()
+
+		actionlicense = self.licenseFactory.simpleAction(action="'http://www.w3.org/ns/odrl/2/distribute")
+
+		actionlicense_xml = actionlicense.xml_etree()
+
+		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		actionlicense_uid = actionlicense_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+
+		self.assertNotEqual(geolicense_deu_uid, actionlicense_uid)
+
 	def test_simple_geo_uid_is_always_the_same_for_the_same_policy(self):
 		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 		geolicense_deu_xml_1 = geolicense_deu_1.xml_etree()
@@ -98,6 +111,9 @@ class SimpleLicenseTest(unittest.TestCase):
 		geolicense_deu_uid_2 = geolicense_deu_xml_2.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
+
+	def test_valid_odrl(self):
+		self.fail("Finish the tests!")
 
 if __name__ == '__main__':
 	unittest.main()

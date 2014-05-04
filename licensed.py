@@ -62,7 +62,7 @@ class simpleAction(rightsml):
 	def __init__(self,target, assigner, assignee, action):
 		super(simpleAction, self).__init__()
 		self.odrl['permissions'] = [{'target' : target, 'assigner' : assigner, 'assignee' : assignee, 'action' : action}]
-		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.odrl.items()))
+		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
 	def xml(self):
@@ -135,7 +135,7 @@ class simpleConstraint(simpleAction):
 		self.odrl['permissions'][0]['rightoperand'] = rightoperand
 		self.odrl['permissions'][0]['constraint'] = constraint
 		self.odrl['permissions'][0]['operator'] = operator
-		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.odrl.items()))
+		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
 	def xml(self):

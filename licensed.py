@@ -22,6 +22,7 @@ except ImportError:
           print("Failed to import ElementTree from any known place")
 
 import hashlib
+import json
 
 class mklicense(object):
 
@@ -42,17 +43,27 @@ class mklicense(object):
 	def simpleChannel(self, channel, operator="http://www.w3.org/ns/odrl/2/eq"):
 		return simpleChannel(target=self.target, assigner=self.assigner, assignee=self.assignee, channel=channel, operator=operator)
 
-class simpleAction(object):
+class odrl(object):
+
+	def __init__(self):
+		self.odrl = {}
+
+	def json(self):
+		return json.dumps(self.odrl)
+
+class rightsml(odrl):
+
+	def __init__(self):
+		super(rightsml, self).__init__()
+		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/set'
+
+class simpleAction(rightsml):
 
 	def __init__(self,target, assigner, assignee, action):
-		self.vals = {}
-		self.vals['target'] = target
-		self.vals['assigner'] = assigner
-		self.vals['assignee'] = assignee
-		self.vals['type'] = 'http://www.w3.org/ns/odrl/2/set'
-		self.vals['action'] = action
-		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.vals.items()))
-		self.vals['guid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+		super(simpleAction, self).__init__()
+		self.odrl['permissions'] = [{'target' : target, 'assigner' : assigner, 'assignee' : assignee, 'action' : action}]
+		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.odrl.items()))
+		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
 	def xml(self):
 		return etree.tostring(self.xml_etree())
@@ -61,7 +72,7 @@ class simpleAction(object):
 		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		policy.set('uid', uid)
-		policy.set('type', type)
+		policy.set('policytype', type)
 		return policy
 	
 	def xml_etree_permissions(self):
@@ -69,13 +80,13 @@ class simpleAction(object):
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset.set('uid', self.vals['target'])
+		asset.set('uid', self.odrl['permissions'][0]['target'])
 		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
 		permission.append(asset)
 
 		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		action.set('name', self.vals['action'])
+		action.set('name', self.odrl['permissions'][0]['action'])
 		permission.append(action)
 
 		for constraint in self.xml_etree_permissions_constraints(): permission.append(constraint)
@@ -96,12 +107,12 @@ class simpleAction(object):
 		assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
-		assigner.set('uid', self.vals['assigner'])
+		assigner.set('uid', self.odrl['permissions'][0]['assigner'])
 
 		assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
-		assignee.set('uid', self.vals['assignee'])
+		assignee.set('uid', self.odrl['permissions'][0]['assignee'])
 
 		return [assigner, assignee]
 
@@ -109,7 +120,7 @@ class simpleAction(object):
 		return []
 
 	def xml_etree(self):
-		policy = self.xml_etree_policy(uid=self.vals['guid'], type=self.vals['type'])
+		policy = self.xml_etree_policy(uid=self.odrl['policyid'], type=self.odrl['policytype'])
 
 		for permission in self.xml_etree_permissions(): policy.append(permission)
 
@@ -121,11 +132,11 @@ class simpleConstraint(simpleAction):
 
 	def __init__(self, target, assigner, assignee, constraint, rightoperand, operator):
 		super(simpleConstraint, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
-		self.vals['rightoperand'] = rightoperand
-		self.vals['constraint'] = constraint
-		self.vals['operator'] = operator
-		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.vals.items()))
-		self.vals['guid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+		self.odrl['permissions'][0]['rightoperand'] = rightoperand
+		self.odrl['permissions'][0]['constraint'] = constraint
+		self.odrl['permissions'][0]['operator'] = operator
+		hashedparams = hashlib.md5(''.join('%s%s' % (k,v) for k,v in self.odrl.items()))
+		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
 	def xml(self):
 		return etree.tostring(self.xml_etree())
@@ -133,8 +144,8 @@ class simpleConstraint(simpleAction):
 	def xml_etree(self):
 		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.set('uid', self.vals['guid'])
-		policy.set('type', self.vals['type'])
+		policy.set('uid', self.odrl['policyid'])
+		policy.set('policytype', self.odrl['policytype'])
 
 		permission = etree.Element("{http://www.w3.org/ns/odrl/2/}permission",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
@@ -142,32 +153,32 @@ class simpleConstraint(simpleAction):
 
 		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset.set('uid', self.vals['target'])
+		asset.set('uid', self.odrl['permissions'][0]['target'])
 		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
 		policy.append(asset)
 
 		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		action.set('name', self.vals['action'])
+		action.set('name', self.odrl['permissions'][0]['action'])
 		policy.append(action)
 
 		constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		constraint.set('name', self.vals['constraint'])
-		constraint.set('operator', self.vals['operator'])
-		constraint.set('rightOperand', self.vals['rightoperand'])
+		constraint.set('name', self.odrl['permissions'][0]['constraint'])
+		constraint.set('operator', self.odrl['permissions'][0]['operator'])
+		constraint.set('rightOperand', self.odrl['permissions'][0]['rightoperand'])
 		policy.append(constraint)
 
 		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.vals['assigner'])
+		party.set('uid', self.odrl['permissions'][0]['assigner'])
 		policy.append(party)
 
 		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.vals['assignee'])
+		party.set('uid', self.odrl['permissions'][0]['assignee'])
 		policy.append(party)
 
 		return policy

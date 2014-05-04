@@ -24,7 +24,25 @@ except ImportError:
 from licensed import mklicense
 import unittest
  
-class SimpleLicenseTest(unittest.TestCase):
+class SimpleLicenseJSONTest(unittest.TestCase):
+
+	def setUp(self):
+		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
+			assigner="http://example.com/cv/party/epa",
+			assignee="http://example.com/cv/policy/group/epapartners")
+
+	def tearDown(self):
+		pass
+
+	def test_simple_action(self):
+		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
+
+		actionlicense_json = actionlicense.json()
+
+		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_json)
+		self.assertIn("epa", actionlicense_json)
+
+class SimpleLicenseXMLTest(unittest.TestCase):
 
 	def setUp(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 

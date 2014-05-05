@@ -51,6 +51,122 @@ class odrl(object):
 	def json(self):
 		return json.dumps(self.odrl)
 
+	def xml(self):
+		return etree.tostring(self.xml_etree())
+
+	def xml_etree_permissions_prohibitions(self, type):
+		permissions_prohibitions = []
+		if type+"s" in self.odrl:
+			for p in self.odrl[type+"s"]:
+				permission_prohibition = etree.Element("{http://www.w3.org/ns/odrl/2/}" + type,
+					nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+				asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
+					nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+				asset.set('uid', p['target'])
+				asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
+				permission_prohibition.append(asset)
+
+				action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
+					nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+				action.set('name', p['action'])
+				permission_prohibition.append(action)
+
+				if "constraints" in p:
+					for c in p["constraints"]:
+						constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						constraint.set('name', c['constraint'])
+						constraint.set('operator', c['operator'])
+						constraint.set('rightOperand', c['rightoperand'])
+						if "rightoperanddatatype" in c:
+							constraint.set('dataType', c['rightoperanddatatype'])
+						if "rightoperandunit" in c:
+							constraint.set('unit', c['rightoperandunit'])
+						if "status" in c:
+							constraint.set('status', c['status'])
+						permission_prohibition.append(constraint)
+
+				if "assigner" in p:
+					assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+						nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+					assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
+					assigner.set('uid', p['assigner'])
+					permission_prohibition.append(assigner)
+
+				if "assignee" in p:
+					assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+						nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+					assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
+					assignee.set('uid', p['assignee'])
+					if "assignee_scope" in p:
+						assignee.set('scope', p['assignee_scope'])
+					permission_prohibition.append(assignee)
+
+				if "duties" in p:
+					for d in p["duties"]:
+						duty = etree.Element("{http://www.w3.org/ns/odrl/2/}duty",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						asset.set('uid', d['target'])
+						asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
+						duty.append(asset)
+
+						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						action.set('name', d['action'])
+						duty.append(action)
+
+						if "constraints" in d:
+							for c in d["constraints"]:
+								constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
+									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+								constraint.set('name', d['constraint'])
+								constraint.set('operator', d['operator'])
+								constraint.set('rightOperand', d['rightoperand'])
+								if "rightoperanddatatype" in d:
+									constraint.set('dataType', d['rightoperanddatatype'])
+								if "rightoperandunit" in d:
+									constraint.set('unit', d['rightoperandunit'])
+								if "status" in d:
+									constraint.set('status', d['status'])
+								duty.append(constraint)
+
+						if "assigner" in d:
+							assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
+							assigner.set('uid', d['assigner'])
+							permission_prohibition.append(assigner)
+
+						if "assignee" in d:
+							assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
+							assignee.set('uid', d['assignee'])
+							if "assignee_scope" in d:
+								assignee.set('scope', d['assignee_scope'])
+							
+						permission_prohibition.append(duty)
+
+					permissions_prohibitions.append(permission_prohibition)
+
+		return permissions_prohibitions
+
+	def xml_etree(self):
+		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
+			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+		policy.set('uid', self.odrl['policyid'])
+		policy.set('policytype', self.odrl['policytype'])
+
+		for permission in self.xml_etree_permissions_prohibitions(type="permission"):
+			policy.append(permission)
+
+		for prohibition in self.xml_etree_permissions_prohibitions(type="prohibition"):
+			policy.append(prohibition)
+
+		return policy
+
 class rightsml(odrl):
 
 	def __init__(self):
@@ -64,69 +180,6 @@ class simpleAction(rightsml):
 		self.odrl['permissions'] = [{'target' : target, 'assigner' : assigner, 'assignee' : assignee, 'action' : action}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
-	
-	def xml(self):
-		return etree.tostring(self.xml_etree())
-
-	def xml_etree_policy(self, uid, type):
-		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.set('uid', uid)
-		policy.set('policytype', type)
-		return policy
-	
-	def xml_etree_permissions(self):
-		permission = etree.Element("{http://www.w3.org/ns/odrl/2/}permission",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset.set('uid', self.odrl['permissions'][0]['target'])
-		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
-		permission.append(asset)
-
-		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		action.set('name', self.odrl['permissions'][0]['action'])
-		permission.append(action)
-
-		for constraint in self.xml_etree_permissions_constraints(): permission.append(constraint)
-
-		for party in self.xml_etree_permissions_parties(): permission.append(party)
-
-		for duty in self.xml_etree_permissions_duties(): permission.append(duty)
-
-		return [permission]
-
-	def xml_etree_permissions_constraints(self):
-		return []
-
-	def xml_etree_permissions_duties(self):
-		return []
-
-	def xml_etree_permissions_parties(self):
-		assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
-		assigner.set('uid', self.odrl['permissions'][0]['assigner'])
-
-		assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
-		assignee.set('uid', self.odrl['permissions'][0]['assignee'])
-
-		return [assigner, assignee]
-
-	def xml_etree_prohibitions(self):
-		return []
-
-	def xml_etree(self):
-		policy = self.xml_etree_policy(uid=self.odrl['policyid'], type=self.odrl['policytype'])
-
-		for permission in self.xml_etree_permissions(): policy.append(permission)
-
-		for prohibition in self.xml_etree_prohibitions(): policy.append(prohibition)
-
-		return policy
 
 class simpleConstraint(simpleAction):
 

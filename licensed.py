@@ -149,7 +149,7 @@ class odrl(object):
 							
 						permission_prohibition.append(duty)
 
-					permissions_prohibitions.append(permission_prohibition)
+				permissions_prohibitions.append(permission_prohibition)
 
 		return permissions_prohibitions
 
@@ -185,57 +185,10 @@ class simpleConstraint(simpleAction):
 
 	def __init__(self, target, assigner, assignee, constraint, rightoperand, operator):
 		super(simpleConstraint, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
-		self.odrl['permissions'][0]['rightoperand'] = rightoperand
-		self.odrl['permissions'][0]['constraint'] = constraint
-		self.odrl['permissions'][0]['operator'] = operator
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
-	def xml(self):
-		return etree.tostring(self.xml_etree())
-
-	def xml_etree(self):
-		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.set('uid', self.odrl['policyid'])
-		policy.set('policytype', self.odrl['policytype'])
-
-		permission = etree.Element("{http://www.w3.org/ns/odrl/2/}permission",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		policy.append(permission)
-
-		asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		asset.set('uid', self.odrl['permissions'][0]['target'])
-		asset.set('relation', 'http://www.w3.org/ns/odrl/2/#target')
-		policy.append(asset)
-
-		action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		action.set('name', self.odrl['permissions'][0]['action'])
-		policy.append(action)
-
-		constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		constraint.set('name', self.odrl['permissions'][0]['constraint'])
-		constraint.set('operator', self.odrl['permissions'][0]['operator'])
-		constraint.set('rightOperand', self.odrl['permissions'][0]['rightoperand'])
-		policy.append(constraint)
-
-		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.odrl['permissions'][0]['assigner'])
-		policy.append(party)
-
-		party = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
-			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-		party.set('function', 'http://www.w3.org/ns/odrl/2/')
-		party.set('uid', self.odrl['permissions'][0]['assignee'])
-		policy.append(party)
-
-		return policy
-
 class simpleTimePeriod(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, timeperiod, operator):

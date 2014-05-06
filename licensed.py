@@ -46,6 +46,9 @@ class mklicense(object):
 	def simpleDutyToPay(self, action, rightoperand, rightoperandunit, payee, operator="http://www.w3.org/ns/odrl/2/eq"):
 		return simpleDutyToPay(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, rightoperand=rightoperand, rightoperandunit=rightoperandunit, payee=payee, operator=operator)
 
+	def simpleDutyNextPolicy(self, action, policy):
+		return simpleDutyNextPolicy(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, policy=policy)
+
 class odrl(object):
 
 	def __init__(self):
@@ -228,16 +231,23 @@ class simpleChannel(simpleConstraint):
 	def __init__(self,target, assigner, assignee, channel, operator):
 		super(simpleChannel, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/purpose', operator=operator, rightoperand=channel)
 
-class simpleDuty(simpleAction):
+class simpleDuty():
 
 	def __init__(self, target, assigner, assignee, duty, constraint, action, rightoperand, operator, rightoperandunit, party, partytype):
 		super(simpleDuty, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
-		self.odrl['permissions'][0]['duties']= [{'action' : action, partytype : party, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+
+class simpleDutyToPay(simpleAction):
+
+	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
+		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/pay', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 
-class simpleDutyToPay(simpleDuty):
+class simpleDutyNextPolicy(simpleAction):
 
-	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
-		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, duty='http://www.w3.org/ns/odrl/2/pay', constraint='http://www.w3.org/ns/odrl/2/payAmount', action=action, operator=operator, rightoperand=rightoperand, rightoperandunit=rightoperandunit, party=payee, partytype="payeeparty")
-
+	def __init__(self, target, assigner, assignee, action, policy):
+		super(simpleDutyNextPolicy, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
+		hashedparams = hashlib.md5(self.json())
+		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()

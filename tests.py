@@ -88,6 +88,15 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertIn("payee", dutylicense_xml)
 		self.assertIn("100.00", dutylicense_xml)
 
+	def test_simple_duty_next_policy(self):
+		dutylicense = self.licenseFactory.simpleDutyNextPolicy(action="http://www.w3.org/ns/odrl/2/sublicense",
+				policy="http://example.com/policy/99")
+
+		dutylicense_xml = dutylicense.xml()
+
+		self.assertIn("sublicense", dutylicense_xml)
+		self.assertIn("policy/99", dutylicense_xml)
+
 	def test_simple_geo(self):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 

@@ -43,6 +43,9 @@ class mklicense(object):
 	def simpleChannel(self, channel, operator="http://www.w3.org/ns/odrl/2/eq"):
 		return simpleChannel(target=self.target, assigner=self.assigner, assignee=self.assignee, channel=channel, operator=operator)
 
+	def simpleDutyToPay(self, action, rightoperand, rightoperandunit, payee, operator="http://www.w3.org/ns/odrl/2/eq"):
+		return simpleDutyToPay(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, rightoperand=rightoperand, rightoperandunit=rightoperandunit, payee=payee, operator=operator)
+
 class odrl(object):
 
 	def __init__(self):
@@ -106,11 +109,12 @@ class odrl(object):
 					for d in p["duties"]:
 						duty = etree.Element("{http://www.w3.org/ns/odrl/2/}duty",
 							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-						asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
-							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-						asset.set('uid', d['target'])
-						asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
-						duty.append(asset)
+						if "target" in d:
+							asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							asset.set('uid', d['target'])
+							asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
+							duty.append(asset)
 
 						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
 							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
@@ -121,15 +125,15 @@ class odrl(object):
 							for c in d["constraints"]:
 								constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
 									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-								constraint.set('name', d['constraint'])
-								constraint.set('operator', d['operator'])
-								constraint.set('rightOperand', d['rightoperand'])
-								if "rightoperanddatatype" in d:
-									constraint.set('dataType', d['rightoperanddatatype'])
-								if "rightoperandunit" in d:
-									constraint.set('unit', d['rightoperandunit'])
-								if "status" in d:
-									constraint.set('status', d['status'])
+								constraint.set('name', c['constraint'])
+								constraint.set('operator', c['operator'])
+								constraint.set('rightOperand', c['rightoperand'])
+								if "rightoperanddatatype" in c:
+									constraint.set('dataType', c['rightoperanddatatype'])
+								if "rightoperandunit" in c:
+									constraint.set('unit', c['rightoperandunit'])
+								if "status" in c:
+									constraint.set('status', c['status'])
 								duty.append(constraint)
 
 						if "assigner" in d:
@@ -203,3 +207,17 @@ class simpleChannel(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, channel, operator):
 		super(simpleChannel, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/purpose', operator=operator, rightoperand=channel)
+
+class simpleDuty(simpleAction):
+
+	def __init__(self, target, assigner, assignee, duty, constraint, action, rightoperand, operator, rightoperandunit, dutyparty, dutypartyfunction):
+		super(simpleDuty, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
+		self.odrl['permissions'][0]['duties']= [{'action' : action, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+		hashedparams = hashlib.md5(self.json())
+		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+class simpleDutyToPay(simpleDuty):
+
+	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
+		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, duty='http://www.w3.org/ns/odrl/2/pay', constraint='http://www.w3.org/ns/odrl/2/payAmount', action=action, operator=operator, rightoperand=rightoperand, rightoperandunit=rightoperandunit, dutyparty=payee, dutypartyfunction='http://www.w3.org/ns/odrl/2/payeeParty')
+

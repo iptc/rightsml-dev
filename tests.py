@@ -76,6 +76,17 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertIn("2013-06-15", timeperiodlicense_xml)
 		self.assertIn("epa", timeperiodlicense_xml)
 
+	def test_simple_duty(self):
+		dutylicense = self.licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
+				rightoperand="100.00",
+				rightoperandunit="http://cvx.iptc.org/iso4217a/EUR",
+				payee="http://example.com/cv/party/epa")
+
+		dutylicense_xml = dutylicense.xml()
+
+		self.assertIn("payamount", dutylicense_xml)
+		self.assertIn("100.00", dutylicense_xml)
+
 	def test_simple_geo(self):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 

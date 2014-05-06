@@ -84,7 +84,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 		dutylicense_xml = dutylicense.xml()
 
-		self.assertIn("payamount", dutylicense_xml)
+		self.assertIn("payAmount", dutylicense_xml)
+		self.assertIn("payee", dutylicense_xml)
 		self.assertIn("100.00", dutylicense_xml)
 
 	def test_simple_geo(self):

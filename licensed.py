@@ -136,21 +136,41 @@ class odrl(object):
 									constraint.set('status', c['status'])
 								duty.append(constraint)
 
-						if "assigner" in d:
-							assigner = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+						if "attributedparty" in d:
+							attributedparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-							assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
-							assigner.set('uid', d['assigner'])
-							permission_prohibition.append(assigner)
+							attributedparty.set('function', 'http://www.w3.org/ns/odrl/2/attributedParty')
+							attributedparty.set('uid', d['attributedparty'])
+							permission_prohibition.append(attributedparty)
 
-						if "assignee" in d:
-							assignee = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+						if "consentingparty" in d:
+							consentingparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-							assignee.set('function', 'http://www.w3.org/ns/odrl/2/assignee')
-							assignee.set('uid', d['assignee'])
-							if "assignee_scope" in d:
-								assignee.set('scope', d['assignee_scope'])
-							
+							consentingparty.set('function', 'http://www.w3.org/ns/odrl/2/consentingParty')
+							consentingparty.set('uid', d['consentingparty'])
+							permission_prohibition.append(consentingparty)
+
+						if "informedparty" in d:
+							informedparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							informedparty.set('function', 'http://www.w3.org/ns/odrl/2/informedParty')
+							informedparty.set('uid', d['informedparty'])
+							permission_prohibition.append(informedparty)
+
+						if "payeeparty" in d:
+							payeeparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							payeeparty.set('function', 'http://www.w3.org/ns/odrl/2/payeeParty')
+							payeeparty.set('uid', d['payeeparty'])
+							permission_prohibition.append(payeeparty)
+
+						if "trackingparty" in d:
+							trackingparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
+								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+							trackingparty.set('function', 'http://www.w3.org/ns/odrl/2/trackingParty')
+							trackingparty.set('uid', d['trackingparty'])
+							permission_prohibition.append(trackingparty)
+
 						permission_prohibition.append(duty)
 
 				permissions_prohibitions.append(permission_prohibition)
@@ -210,14 +230,14 @@ class simpleChannel(simpleConstraint):
 
 class simpleDuty(simpleAction):
 
-	def __init__(self, target, assigner, assignee, duty, constraint, action, rightoperand, operator, rightoperandunit, dutyparty, dutypartyfunction):
+	def __init__(self, target, assigner, assignee, duty, constraint, action, rightoperand, operator, rightoperandunit, party, partytype):
 		super(simpleDuty, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
-		self.odrl['permissions'][0]['duties']= [{'action' : action, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+		self.odrl['permissions'][0]['duties']= [{'action' : action, partytype : party, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 
 class simpleDutyToPay(simpleDuty):
 
 	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
-		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, duty='http://www.w3.org/ns/odrl/2/pay', constraint='http://www.w3.org/ns/odrl/2/payAmount', action=action, operator=operator, rightoperand=rightoperand, rightoperandunit=rightoperandunit, dutyparty=payee, dutypartyfunction='http://www.w3.org/ns/odrl/2/payeeParty')
+		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, duty='http://www.w3.org/ns/odrl/2/pay', constraint='http://www.w3.org/ns/odrl/2/payAmount', action=action, operator=operator, rightoperand=rightoperand, rightoperandunit=rightoperandunit, party=payee, partytype="payeeparty")
 

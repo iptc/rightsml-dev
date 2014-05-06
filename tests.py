@@ -97,6 +97,14 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertIn("sublicense", dutylicense_xml)
 		self.assertIn("policy/99", dutylicense_xml)
 
+	def test_simple_duty_refer_to_terms(self):
+		dutylicense = self.licenseFactory.simpleDutyReferToTerms(termslist=["#idOfRightsInfo1", "#idOfRightsInfo2"])
+
+		dutylicense_xml = dutylicense.xml()
+
+		self.assertIn("reviewPolicy", dutylicense_xml)
+		self.assertIn("idOfRightsInfo1", dutylicense_xml)
+
 	def test_simple_geo(self):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 

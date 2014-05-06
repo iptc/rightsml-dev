@@ -49,6 +49,9 @@ class mklicense(object):
 	def simpleDutyNextPolicy(self, action, policy):
 		return simpleDutyNextPolicy(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, policy=policy)
 
+	def simpleDutyReferToTerms(self, termslist, action="http://www.w3.org/ns/odrl/2/distribute"):
+		return simpleDutyReferToTerms(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, termslist=termslist)
+
 class odrl(object):
 
 	def __init__(self):
@@ -58,7 +61,7 @@ class odrl(object):
 		return json.dumps(self.odrl)
 
 	def xml(self):
-		return etree.tostring(self.xml_etree())
+		return etree.tostring(self.xml_etree(), pretty_print=True)
 
 	def xml_etree_permissions_prohibitions(self, type):
 		permissions_prohibitions = []
@@ -124,6 +127,13 @@ class odrl(object):
 						action.set('name', d['action'])
 						duty.append(action)
 
+						if "assets" in d:
+							for a in d["assets"]:
+								asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
+									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+								asset.set('id', a)
+								duty.append(asset)
+
 						if "constraints" in d:
 							for c in d["constraints"]:
 								constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
@@ -144,35 +154,35 @@ class odrl(object):
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							attributedparty.set('function', 'http://www.w3.org/ns/odrl/2/attributedParty')
 							attributedparty.set('uid', d['attributedparty'])
-							permission_prohibition.append(attributedparty)
+							duty.append(attributedparty)
 
 						if "consentingparty" in d:
 							consentingparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							consentingparty.set('function', 'http://www.w3.org/ns/odrl/2/consentingParty')
 							consentingparty.set('uid', d['consentingparty'])
-							permission_prohibition.append(consentingparty)
+							duty.append(consentingparty)
 
 						if "informedparty" in d:
 							informedparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							informedparty.set('function', 'http://www.w3.org/ns/odrl/2/informedParty')
 							informedparty.set('uid', d['informedparty'])
-							permission_prohibition.append(informedparty)
+							duty.append(informedparty)
 
 						if "payeeparty" in d:
 							payeeparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							payeeparty.set('function', 'http://www.w3.org/ns/odrl/2/payeeParty')
 							payeeparty.set('uid', d['payeeparty'])
-							permission_prohibition.append(payeeparty)
+							duty.append(payeeparty)
 
 						if "trackingparty" in d:
 							trackingparty = etree.Element("{http://www.w3.org/ns/odrl/2/}party",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							trackingparty.set('function', 'http://www.w3.org/ns/odrl/2/trackingParty')
 							trackingparty.set('uid', d['trackingparty'])
-							permission_prohibition.append(trackingparty)
+							duty.append(trackingparty)
 
 						permission_prohibition.append(duty)
 
@@ -251,3 +261,11 @@ class simpleDutyNextPolicy(simpleAction):
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+class simpleDutyReferToTerms(simpleAction):
+
+	def __init__(self, target, assigner, assignee, action, termslist):
+		super(simpleDutyReferToTerms, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/reviewPolicy', 'assets' : termslist}]
+		hashedparams = hashlib.md5(self.json())
+

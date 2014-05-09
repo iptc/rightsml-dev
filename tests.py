@@ -42,6 +42,9 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_json)
 		self.assertIn("epa", actionlicense_json)
 
+	def test_validate_entire_json_with_schema(self):
+		self.fail("Finish the tests!")
+
 class SimpleLicenseXMLTest(unittest.TestCase):
 
 	def setUp(self):
@@ -163,6 +166,9 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
 	def test_valid_odrl(self):
+		self.fail("Finish the tests!")
+
+	def test_compare_entire_odrl_xml(self):
 		self.fail("Finish the tests!")
 
 class CombinedLicenseXMLTest(unittest.TestCase):

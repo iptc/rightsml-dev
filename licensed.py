@@ -269,7 +269,10 @@ class simpleDutyReferToTerms(simpleAction):
 
 	def __init__(self, target, assigner, assignee, action, termslist):
 		super(simpleDutyReferToTerms, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
-		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/reviewPolicy', 'assets' : termslist}]
+		duties = []
+		for terms in termslist:
+			duties.append({'action' : 'http://www.w3.org/ns/odrl/2/reviewPolicy', 'target' : terms})
+		self.odrl['permissions'][0]['duties'] = duties
 		hashedparams = hashlib.md5(self.json())
 
 class combinedGeoNextPolicy(simpleAction):

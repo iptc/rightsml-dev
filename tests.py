@@ -112,6 +112,7 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 		self.assertIn("DEU", geolicense_xml)
 		self.assertIn("epa", geolicense_xml)
+		self.assertIn("spatial", geolicense_xml)
 
 	def test_simple_geo_not(self):
 		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU",
@@ -121,6 +122,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 		self.assertIn("DEU", geolicense_xml)
 		self.assertIn("epa", geolicense_xml)
+		self.assertIn("spatial", geolicense_xml)
+		self.assertIn("neq", geolicense_xml)
 
 	def test_simple_geo_uid_is_unique(self):
 		geolicense_deu = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
@@ -161,6 +164,30 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 	def test_valid_odrl(self):
 		self.fail("Finish the tests!")
+
+class CombinedLicenseXMLTest(unittest.TestCase):
+
+	def setUp(self):
+		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
+			assigner="http://example.com/cv/party/epa",
+			assignee="http://example.com/cv/policy/group/epapartners")
+
+	def tearDown(self):
+		pass
+
+	def test_combined_geographic_and_next_policy(self):
+		combined_geo_duty = self.licenseFactory.combinedGeoNextPolicy(geography="http://cvx.iptc.org/iso3166-1a3/DEU", action="http://www.w3.org/ns/odrl/2/sublicense", policy="http://epa.eu/cv/policy/3")
+		combined_geo_duty_xml = combined_geo_duty.xml()
+
+		self.assertIn("DEU", combined_geo_duty_xml)
+		self.assertIn("epa", combined_geo_duty_xml)
+		self.assertIn("sublicense", combined_geo_duty_xml)
+		self.assertIn("policy/3", combined_geo_duty_xml)
+		self.assertIn("spatial", combined_geo_duty_xml)
+		self.assertIn("eq", combined_geo_duty_xml)
+		self.assertIn("duty", combined_geo_duty_xml)
+
+
 
 if __name__ == '__main__':
 	unittest.main()

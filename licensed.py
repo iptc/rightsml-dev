@@ -52,6 +52,9 @@ class mklicense(object):
 	def simpleDutyReferToTerms(self, termslist, action="http://www.w3.org/ns/odrl/2/distribute"):
 		return simpleDutyReferToTerms(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action, termslist=termslist)
 
+	def combinedGeoNextPolicy(self, geography, action, policy):
+		return combinedGeoNextPolicy(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, action=action, policy=policy)
+
 class odrl(object):
 
 	def __init__(self):
@@ -234,7 +237,7 @@ class simpleTimePeriod(simpleConstraint):
 class simpleGeographic(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, geography, operator):
-		super(simpleGeographic, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/dateTime', operator=operator, rightoperand=geography)
+		super(simpleGeographic, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/spatial', operator=operator, rightoperand=geography)
 
 class simpleChannel(simpleConstraint):
 
@@ -269,3 +272,11 @@ class simpleDutyReferToTerms(simpleAction):
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/reviewPolicy', 'assets' : termslist}]
 		hashedparams = hashlib.md5(self.json())
 
+class combinedGeoNextPolicy(simpleAction):
+
+	def __init__(self, target, assigner, assignee, geography, action, policy, operator='http://www.w3.org/ns/odrl/2/eq'):
+		super(combinedGeoNextPolicy, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'constraint' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
+		hashedparams = hashlib.md5(self.json())
+		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()

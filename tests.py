@@ -166,7 +166,14 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
 	def test_valid_odrl(self):
-		self.fail("Finish the tests!")
+		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema = etree.XMLSchema(odrl_schema_doc)
+
+		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+		if not odrl_schema(geolicense_deu_1.xml_etree()):
+			log = odrl_schema.error_log
+			error = log.last_error
+			self.fail("Invalid ODRL %s" % error)
 
 	def test_compare_entire_odrl_xml(self):
 		self.fail("Finish the tests!")

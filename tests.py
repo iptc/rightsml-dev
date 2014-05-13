@@ -23,6 +23,8 @@ except ImportError:
 
 from licensed import mklicense
 import unittest
+import json
+import jsonschema
  
 class SimpleLicenseJSONTest(unittest.TestCase):
 
@@ -30,6 +32,10 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
+
+		jsonfile =  open("ODRL.json")
+		self.jsonschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(self.jsonschema)
 
 	def tearDown(self):
 		pass
@@ -43,6 +49,10 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 		self.assertIn("epa", actionlicense_json)
 
 	def test_validate_entire_json_with_schema(self):
+		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
+
+		channellicense_xml = channellicense.xml()
+
 		self.fail("Finish the tests!")
 
 class SimpleLicenseXMLTest(unittest.TestCase):
@@ -174,9 +184,6 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 			log = odrl_schema.error_log
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
-
-	def test_compare_entire_odrl_xml(self):
-		self.fail("Finish the tests!")
 
 class CombinedLicenseXMLTest(unittest.TestCase):
 

@@ -12,6 +12,8 @@ tests.py - a suite of tests for exercising the licensed.py library
 
 ODRL.xsd - the ODRL XML Schema - "fixed" to use the right URL scheme
 
+ODRL.json - the ODRL JSON Schema
+
 licensed Dependencies
 =====================
 

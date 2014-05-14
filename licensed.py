@@ -87,7 +87,7 @@ class odrl(object):
 					for c in p["constraints"]:
 						constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
 							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-						constraint.set('name', c['constraint'])
+						constraint.set('name', c['name'])
 						constraint.set('operator', c['operator'])
 						constraint.set('rightOperand', c['rightoperand'])
 						if "rightoperanddatatype" in c:
@@ -141,7 +141,7 @@ class odrl(object):
 							for c in d["constraints"]:
 								constraint = etree.Element("{http://www.w3.org/ns/odrl/2/}constraint",
 									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-								constraint.set('name', c['constraint'])
+								constraint.set('name', c['name'])
 								constraint.set('operator', c['operator'])
 								constraint.set('rightOperand', c['rightoperand'])
 								if "rightoperanddatatype" in c:
@@ -225,7 +225,7 @@ class simpleConstraint(simpleAction):
 
 	def __init__(self, target, assigner, assignee, constraint, rightoperand, operator):
 		super(simpleConstraint, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
-		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : rightoperand, 'constraint' : constraint, 'operator' : operator}]
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : rightoperand, 'name' : constraint, 'operator' : operator}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
@@ -253,7 +253,7 @@ class simpleDutyToPay(simpleAction):
 
 	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
 		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
-		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/pay', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'constraint' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/pay', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'name' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 
@@ -279,7 +279,7 @@ class combinedGeoNextPolicy(simpleAction):
 
 	def __init__(self, target, assigner, assignee, geography, action, policy, operator='http://www.w3.org/ns/odrl/2/eq'):
 		super(combinedGeoNextPolicy, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
-		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'constraint' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()

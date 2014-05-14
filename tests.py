@@ -34,8 +34,8 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 			assignee="http://example.com/cv/policy/group/epapartners")
 
 		jsonfile =  open("ODRL.json")
-		self.jsonschema = json.load(jsonfile)
-		self.odrlvalidator = jsonschema.Draft4Validator(self.jsonschema)
+		odrlschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
 	def tearDown(self):
 		pass
@@ -51,7 +51,9 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 	def test_validate_entire_json_with_schema(self):
 		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
 
-		channellicense_xml = channellicense.xml()
+		channellicense_odrl = channellicense.odrl
+
+		self.odrlvalidator.validate(channellicense_odrl)
 
 		self.fail("Finish the tests!")
 

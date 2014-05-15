@@ -53,9 +53,10 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 
 		channellicense_odrl = channellicense.odrl
 
-		self.odrlvalidator.validate(channellicense_odrl)
-
-		self.fail("Finish the tests!")
+		try:
+			self.odrlvalidator.validate(channellicense_odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
 
 class SimpleLicenseXMLTest(unittest.TestCase):
 

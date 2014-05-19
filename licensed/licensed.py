@@ -64,7 +64,7 @@ class odrl(object):
 		return json.dumps(self.odrl)
 
 	def xml(self):
-		return etree.tostring(self.xml_etree(), pretty_print=True)
+		return etree.tostring(self.xml_etree())
 
 	def xml_etree_permissions_prohibitions(self, type):
 		permissions_prohibitions = []

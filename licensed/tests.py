@@ -148,8 +148,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		geolicense_fra = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/FRA")
 		geolicense_fra_xml = geolicense_fra.xml_etree()
 
-		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		geolicense_fra_uid = geolicense_fra_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_fra_uid = geolicense_fra_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertNotEqual(geolicense_deu_uid, geolicense_fra_uid)
 
@@ -161,8 +161,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 		actionlicense_xml = actionlicense.xml_etree()
 
-		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		actionlicense_uid = actionlicense_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		actionlicense_uid = actionlicense_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertNotEqual(geolicense_deu_uid, actionlicense_uid)
 
@@ -173,13 +173,13 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		geolicense_deu_2 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 		geolicense_deu_xml_2 = geolicense_deu_2.xml_etree()
 
-		geolicense_deu_uid_1 = geolicense_deu_xml_1.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		geolicense_deu_uid_2 = geolicense_deu_xml_2.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid_1 = geolicense_deu_xml_1.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid_2 = geolicense_deu_xml_2.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
 	def test_valid_odrl(self):
-		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema_doc = etree.parse("ODRL20.xsd")
 		odrl_schema = etree.XMLSchema(odrl_schema_doc)
 
 		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")

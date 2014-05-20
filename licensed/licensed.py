@@ -194,7 +194,7 @@ class odrl(object):
 		return permissions_prohibitions
 
 	def xml_etree(self):
-		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
+		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}Policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		policy.set('uid', self.odrl['policyid'])
 		policy.set('type', self.odrl['policytype'])

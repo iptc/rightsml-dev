@@ -5,13 +5,10 @@ import json
  
 class SimpleLicenseJSON:
 
-	def setUp(self):
+	def __init__(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
-
-	def tearDown(self):
-		pass
 
 	def simple_action(self):
 		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
@@ -29,13 +26,13 @@ class SimpleLicenseXMLTest:
 	def tearDown(self):
 		pass
 
-	def test_simple_action(self):
+	def simple_action(self):
 		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
 
 		actionlicense_xml = actionlicense.xml()
 
-		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_xml)
-		self.assertIn("epa", actionlicense_xml)
+		return actionlicense_xml
+
 
 	def test_simple_channel(self):
 		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
@@ -176,8 +173,4 @@ class CombinedLicenseXMLTest:
 if __name__ == '__main__':
 	slj = SimpleLicenseJSON()
 
-	slj.setUp()
-
 	print(slj.simple_action())
-
-	slj.tearDown()

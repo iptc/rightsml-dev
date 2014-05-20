@@ -1,8 +1,3 @@
-rightsml-dev
-============
-
-Documents regarding developments regarding the IPTC RightsML standard
-
 licensed
 ========
 
@@ -16,8 +11,6 @@ ODRL.json - the ODRL JSON Schema
 
 licensed Dependencies
 =====================
-
-licensed.py - requires lxml
 
 tests.py - requires lxml and jsonschema
 

@@ -211,7 +211,7 @@ class rightsml(odrl):
 
 	def __init__(self):
 		super(rightsml, self).__init__()
-		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/set'
+		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/Set'
 
 class simpleAction(rightsml):
 

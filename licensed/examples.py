@@ -10,10 +10,6 @@ class SimpleLicenseJSON:
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		jsonfile =  open("ODRL.json")
-		odrlschema = json.load(jsonfile)
-		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
-
 	def tearDown(self):
 		pass
 
@@ -180,4 +176,8 @@ class CombinedLicenseXMLTest:
 if __name__ == '__main__':
 	slj = SimpleLicenseJSON()
 
+	slj.setUp()
+
 	print(slj.simple_action())
+
+	slj.tearDown()

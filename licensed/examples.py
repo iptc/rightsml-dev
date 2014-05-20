@@ -16,15 +16,12 @@ class SimpleLicenseJSON:
 		return actionlicense.json()
 
 
-class SimpleLicenseXMLTest:
+class SimpleLicenseXML:
 
-	def setUp(self):
+	def __init__(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
-
-	def tearDown(self):
-		pass
 
 	def simple_action(self):
 		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
@@ -172,5 +169,12 @@ class CombinedLicenseXMLTest:
 
 if __name__ == '__main__':
 	slj = SimpleLicenseJSON()
-
 	print(slj.simple_action())
+
+	print("##################")
+
+	slx = SimpleLicenseXML()
+	print(slx.simple_action())
+
+	print("##################")
+

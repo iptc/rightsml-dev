@@ -61,7 +61,7 @@ class odrl(object):
 		self.odrl = {}
 
 	def json(self):
-		return json.dumps(self.odrl)
+		return json.dumps(self.odrl, sort_keys=True, indent=4)
 
 	def xml(self):
 		return etree.tostring(self.xml_etree())

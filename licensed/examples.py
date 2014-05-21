@@ -156,8 +156,13 @@ class CombinedLicenseXMLTest:
 
 
 if __name__ == '__main__':
-	slj = SimpleLicenseJSON()
-	print(slj.simple_action())
+	licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
+		assigner="http://example.com/cv/party/epa",
+		assignee="http://example.com/cv/policy/group/epapartners")
+
+	actionlicense = licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
+
+	print(actionlicense.json())
 
 	print("##################")
 

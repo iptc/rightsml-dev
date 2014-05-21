@@ -58,6 +58,19 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 		except jsonschema.exceptions.ValidationError as e:
 			self.fail("ODRL JSON didn't validate: %s" % e.message)
 
+	def test_validate_simple_duty(self):
+		dutylicense = self.licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
+				rightoperand="100.00",
+				rightoperandunit="http://cvx.iptc.org/iso4217a/EUR",
+				payee="http://example.com/cv/party/epa")
+
+		dutylicense_odrl = dutylicense.odrl
+
+		try:
+			self.odrlvalidator.validate(dutylicense_odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
+
 class SimpleLicenseXMLTest(unittest.TestCase):
 
 	def setUp(self):

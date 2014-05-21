@@ -31,21 +31,19 @@ class SimpleLicenseXML:
 		return actionlicense_xml
 
 
-	def test_simple_channel(self):
+	def simple_channel(self):
 		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
 
 		channellicense_xml = channellicense.xml()
 
-		self.assertIn("http://example.com/cv/audMedia/MOBILE", channellicense_xml)
-		self.assertIn("epa", channellicense_xml)
+		return channellicense_xml
 
-	def test_simple_timeperiod(self):
+	def simple_timeperiod(self):
 		timeperiodlicense = self.licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
 
 		timeperiodlicense_xml = timeperiodlicense.xml()
 
-		self.assertIn("2013-06-15", timeperiodlicense_xml)
-		self.assertIn("epa", timeperiodlicense_xml)
+		return timeperiodlicense_xml
 
 	def test_simple_duty(self):
 		dutylicense = self.licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
@@ -133,16 +131,6 @@ class SimpleLicenseXML:
 
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
-	def test_valid_odrl(self):
-		odrl_schema_doc = etree.parse("ODRL.xsd")
-		odrl_schema = etree.XMLSchema(odrl_schema_doc)
-
-		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
-		if not odrl_schema(geolicense_deu_1.xml_etree()):
-			log = odrl_schema.error_log
-			error = log.last_error
-			self.fail("Invalid ODRL %s" % error)
-
 class CombinedLicenseXMLTest:
 
 	def setUp(self):
@@ -177,4 +165,8 @@ if __name__ == '__main__':
 	print(slx.simple_action())
 
 	print("##################")
+	print(slx.simple_channel())
+
+	print("##################")
+	print(slx.simple_timeperiod())
 

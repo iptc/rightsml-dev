@@ -2,7 +2,9 @@
 
 try:
   from lxml import etree
+  lxmlavailable=True
 except ImportError:
+  lxmlavailable=False
   try:
     # Python 2.5
     import xml.etree.cElementTree as etree
@@ -63,8 +65,11 @@ class odrl(object):
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)
 
-	def xml(self):
-		return etree.tostring(self.xml_etree())
+	def xml(self, pretty_print=True):
+		if lxmlavailable:
+			return etree.tostring(self.xml_etree(), pretty_print = pretty_print)
+		else:
+			return etree.tostring(self.xml_etree())
 
 	def xml_etree_permissions_prohibitions(self, type):
 		permissions_prohibitions = []

@@ -23,14 +23,6 @@ class SimpleLicenseXML:
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-	def simple_action(self):
-		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
-
-		actionlicense_xml = actionlicense.xml()
-
-		return actionlicense_xml
-
-
 	def simple_channel(self):
 		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
 
@@ -164,14 +156,15 @@ if __name__ == '__main__':
 
 	print(actionlicense.json())
 
-	print("##################")
-
-	slx = SimpleLicenseXML()
-	print(slx.simple_action())
+	print(actionlicense.xml())
 
 	print("##################")
-	print(slx.simple_channel())
+
+	channellicense = licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
+
+	print(channellicense.json())
+
+	print(channellicense.xml())
 
 	print("##################")
-	print(slx.simple_timeperiod())
 

@@ -152,11 +152,28 @@ if __name__ == '__main__':
 		assigner="http://example.com/cv/party/epa",
 		assignee="http://example.com/cv/policy/group/epapartners")
 
+	print("http://dev.iptc.org/RightsML-Simple-Example-An-Action")
 	actionlicense = licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
 
 	print(actionlicense.json())
 
 	print(actionlicense.xml())
+
+	print("##################")
+	print("http://dev.iptc.org/RightsML-Simple-Example-Geographic")
+	geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+	print(geolicense.json())
+
+	print(geolicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Time-Period")
+	timeperiodlicense = licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
+
+	print(timeperiodlicense.json())
+
+	print(timeperiodlicense.xml())
 
 	print("##################")
 

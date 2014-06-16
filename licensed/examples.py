@@ -177,6 +177,7 @@ if __name__ == '__main__':
 
 	print("##################")
 
+	print("http://dev.iptc.org/RightsML-Simple-Example-Channel")
 	channellicense = licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
 
 	print(channellicense.json())
@@ -185,3 +186,14 @@ if __name__ == '__main__':
 
 	print("##################")
 
+	print("http://dev.iptc.org/RightsML-Simple-Example-Duty-to-Pay")
+	dutylicense = licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
+			rightoperand="100.00",
+			rightoperandunit="http://cvx.iptc.org/iso4217a/EUR",
+			payee="http://example.com/cv/party/epa")
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")

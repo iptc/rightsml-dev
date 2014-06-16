@@ -197,3 +197,24 @@ if __name__ == '__main__':
 	print(dutylicense.xml())
 
 	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Duty-of-a-Third-Party")
+	dutylicense = licenseFactory.simpleDutyNextPolicy(action="http://www.w3.org/ns/odrl/2/sublicense",
+				policy="http://example.com/policy/99")
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Refer-to-Terms")
+
+	dutylicense = licenseFactory.simpleDutyReferToTerms(termslist=["#idOfRightsInfo1", "#idOfRightsInfo2"])
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")
+

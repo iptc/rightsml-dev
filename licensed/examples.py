@@ -1,109 +1,41 @@
 #!/usr/bin/python
 
-try:
-  from lxml import etree
-except ImportError:
-  try:
-    # Python 2.5
-    import xml.etree.cElementTree as etree
-  except ImportError:
-    try:
-      # Python 2.5
-      import xml.etree.ElementTree as etree
-    except ImportError:
-      try:
-        # normal cElementTree install
-        import cElementTree as etree
-      except ImportError:
-        try:
-          # normal ElementTree install
-          import elementtree.ElementTree as etree
-        except ImportError:
-          print("Failed to import ElementTree from any known place")
-
 from licensed import mklicense
-import unittest
 import json
-import jsonschema
  
-class SimpleLicenseJSONTest(unittest.TestCase):
+class SimpleLicenseJSON:
 
-	def setUp(self):
+	def __init__(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		jsonfile =  open("ODRL.json")
-		odrlschema = json.load(jsonfile)
-		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
-
-	def tearDown(self):
-		pass
-
-	def test_simple_action(self):
+	def simple_action(self):
 		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
 
-		actionlicense_json = actionlicense.json()
+		return actionlicense.json()
 
-		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_json)
-		self.assertIn("epa", actionlicense_json)
 
-	def test_validate_entire_json_with_schema(self):
-		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
+class SimpleLicenseXML:
 
-		channellicense_odrl = channellicense.odrl
-
-		try:
-			self.odrlvalidator.validate(channellicense_odrl)
-		except jsonschema.exceptions.ValidationError as e:
-			self.fail("ODRL JSON didn't validate: %s" % e.message)
-
-	def test_validate_simple_duty(self):
-		dutylicense = self.licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
-				rightoperand="100.00",
-				rightoperandunit="http://cvx.iptc.org/iso4217a/EUR",
-				payee="http://example.com/cv/party/epa")
-
-		dutylicense_odrl = dutylicense.odrl
-
-		try:
-			self.odrlvalidator.validate(dutylicense_odrl)
-		except jsonschema.exceptions.ValidationError as e:
-			self.fail("ODRL JSON didn't validate: %s" % e.message)
-
-class SimpleLicenseXMLTest(unittest.TestCase):
-
-	def setUp(self):
+	def __init__(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-	def tearDown(self):
-		pass
-
-	def test_simple_action(self):
-		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
-
-		actionlicense_xml = actionlicense.xml()
-
-		self.assertIn("http://www.w3.org/ns/odrl/2/print", actionlicense_xml)
-		self.assertIn("epa", actionlicense_xml)
-
-	def test_simple_channel(self):
+	def simple_channel(self):
 		channellicense = self.licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
 
 		channellicense_xml = channellicense.xml()
 
-		self.assertIn("http://example.com/cv/audMedia/MOBILE", channellicense_xml)
-		self.assertIn("epa", channellicense_xml)
+		return channellicense_xml
 
-	def test_simple_timeperiod(self):
+	def simple_timeperiod(self):
 		timeperiodlicense = self.licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
 
 		timeperiodlicense_xml = timeperiodlicense.xml()
 
-		self.assertIn("2013-06-15", timeperiodlicense_xml)
-		self.assertIn("epa", timeperiodlicense_xml)
+		return timeperiodlicense_xml
 
 	def test_simple_duty(self):
 		dutylicense = self.licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
@@ -161,8 +93,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		geolicense_fra = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/FRA")
 		geolicense_fra_xml = geolicense_fra.xml_etree()
 
-		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		geolicense_fra_uid = geolicense_fra_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_fra_uid = geolicense_fra_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertNotEqual(geolicense_deu_uid, geolicense_fra_uid)
 
@@ -174,8 +106,8 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 
 		actionlicense_xml = actionlicense.xml_etree()
 
-		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		actionlicense_uid = actionlicense_xml.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid = geolicense_deu_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		actionlicense_uid = actionlicense_xml.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertNotEqual(geolicense_deu_uid, actionlicense_uid)
 
@@ -186,22 +118,12 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		geolicense_deu_2 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
 		geolicense_deu_xml_2 = geolicense_deu_2.xml_etree()
 
-		geolicense_deu_uid_1 = geolicense_deu_xml_1.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
-		geolicense_deu_uid_2 = geolicense_deu_xml_2.xpath("/o:Policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid_1 = geolicense_deu_xml_1.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
+		geolicense_deu_uid_2 = geolicense_deu_xml_2.xpath("/o:policy/@uid", namespaces={'o' : 'http://www.w3.org/ns/odrl/2/'})
 
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
-	def test_valid_odrl(self):
-		odrl_schema_doc = etree.parse("ODRL.xsd")
-		odrl_schema = etree.XMLSchema(odrl_schema_doc)
-
-		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
-		if not odrl_schema(geolicense_deu_1.xml_etree()):
-			log = odrl_schema.error_log
-			error = log.last_error
-			self.fail("Invalid ODRL %s" % error)
-
-class CombinedLicenseXMLTest(unittest.TestCase):
+class CombinedLicenseXMLTest:
 
 	def setUp(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
@@ -226,4 +148,73 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-	unittest.main()
+	licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
+		assigner="http://example.com/cv/party/epa",
+		assignee="http://example.com/cv/policy/group/epapartners")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-An-Action")
+	actionlicense = licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
+
+	print(actionlicense.json())
+
+	print(actionlicense.xml())
+
+	print("##################")
+	print("http://dev.iptc.org/RightsML-Simple-Example-Geographic")
+	geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+	print(geolicense.json())
+
+	print(geolicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Time-Period")
+	timeperiodlicense = licenseFactory.simpleTimePeriod(timeperiod="2013-06-15")
+
+	print(timeperiodlicense.json())
+
+	print(timeperiodlicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Channel")
+	channellicense = licenseFactory.simpleChannel(channel="http://example.com/cv/audMedia/MOBILE")
+
+	print(channellicense.json())
+
+	print(channellicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Duty-to-Pay")
+	dutylicense = licenseFactory.simpleDutyToPay(action="http://www.w3.org/ns/odrl/2/print",
+			rightoperand="100.00",
+			rightoperandunit="http://cvx.iptc.org/iso4217a/EUR",
+			payee="http://example.com/cv/party/epa")
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Duty-of-a-Third-Party")
+	dutylicense = licenseFactory.simpleDutyNextPolicy(action="http://www.w3.org/ns/odrl/2/sublicense",
+				policy="http://example.com/policy/99")
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Simple-Example-Refer-to-Terms")
+
+	dutylicense = licenseFactory.simpleDutyReferToTerms(termslist=["#idOfRightsInfo1", "#idOfRightsInfo2"])
+
+	print(dutylicense.json())
+
+	print(dutylicense.xml())
+
+	print("##################")
+

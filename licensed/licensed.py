@@ -2,7 +2,9 @@
 
 try:
   from lxml import etree
+  lxmlavailable=True
 except ImportError:
+  lxmlavailable=False
   try:
     # Python 2.5
     import xml.etree.cElementTree as etree
@@ -61,10 +63,13 @@ class odrl(object):
 		self.odrl = {}
 
 	def json(self):
-		return json.dumps(self.odrl)
+		return json.dumps(self.odrl, sort_keys=True, indent=4)
 
-	def xml(self):
-		return etree.tostring(self.xml_etree())
+	def xml(self, pretty_print=True):
+		if lxmlavailable:
+			return etree.tostring(self.xml_etree(), pretty_print = pretty_print)
+		else:
+			return etree.tostring(self.xml_etree())
 
 	def xml_etree_permissions_prohibitions(self, type):
 		permissions_prohibitions = []
@@ -194,7 +199,7 @@ class odrl(object):
 		return permissions_prohibitions
 
 	def xml_etree(self):
-		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}policy",
+		policy = etree.Element("{http://www.w3.org/ns/odrl/2/}Policy",
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		policy.set('uid', self.odrl['policyid'])
 		policy.set('type', self.odrl['policytype'])
@@ -211,7 +216,7 @@ class rightsml(odrl):
 
 	def __init__(self):
 		super(rightsml, self).__init__()
-		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/set'
+		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/Set'
 
 class simpleAction(rightsml):
 

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>RightsML Simple Example Geographic</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="RMLsimpleExampleGeographicProc.js" type="text/javascript"></script>
+    <script src="../ODRLclasses.js" type="text/javascript"></script>
+    <script src="../ODRLvocabs.js" type="text/javascript"></script>
+    <script src="../RightsMLvocabs.js" type="text/javascript"></script>
+</head>
+<body>
+    <h1>Form for applying variable values to the RightsML Simple Example Geographic:</h1>
+    <p>(See the <a href="http://dev.iptc.org/RightsML-Simple-Example-Geographic">page of the example</a>)</p>
+    <form id="relinput1" name="relinput1">
+        <fieldset>
+            <label for="policyGUID">Policy GUID: </label>
+            <input type="text" size="80" id="policyGUID" name="policyGUID" value="http://example.com/RightsML/policy/idGeog1" /><br />
+            <label for="targetassetGUID">Target Asset URI: </label>
+            <input type="text" size="80" id="targetassetGUID" name="targetassetGUID" value="urn:newsml:example.com:20090101:120111-999-000013" /><br />
+            <label for="grAction">One Action out of:</label>
+            <input type="radio" name="grAction" value="http://www.w3.org/ns/odrl/2/distribute" checked="true"> Distribute |
+            <input type="radio" name="grAction" value="http://www.w3.org/ns/odrl/2/present"> Present |
+            <input type="radio" name="grAction" value="http://www.w3.org/ns/odrl/2/archive"> Archive |
+            <input type="radio" name="grAction" value="http://www.w3.org/ns/odrl/2/index"> Index <br />
+            <label for="constraintoperatorGUID">constraint-operator GUID: </label>
+            <input type="text" size="80" id="constraintoperatorGUID" name="constraintoperatorGUID" value="http://w3.org/ns/odrl/vocab#eq" /><br />
+            <label for="constrainttargetGUID">constraint-target GUID:</label>
+            <input type="text" size="80" id="constrainttargetGUID" name="constrainttargetGUID" value="http://cvx.iptc.org/iso3166-1a3/DEU" /><br />
+            <label for="assigner">Assigner's URI: </label>
+            <input type="text" size="80" id="assignerParty" name="assignerParty" value="http://example.com/cv/party/epa" /><br />
+            <label for="assignee">Assignee's URI: </label>
+            <input type="text" size="80" id="assigneeParty" name="assigneeParty" value="http://example.com/cv/policy/group/epapartner" /><br />
+            <input type="button" id="submitBtn" value="Submit" onclick="processFormSimpExGeo();" />
+        </fieldset>
+    </form>
+    <h2>The result:</h2>
+    <div id="content1"></div>
+    <div id="content2"></div>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 ﻿/// <reference path="ODRLclasses.ts"/>
 var Odrl;
 (function (Odrl) {
+    // development timestamp: 2014-06-23
+    // development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
     Odrl.nsVocabUri = "http://www.w3.org/ns/odrl/2/";
     var Actions = (function () {
         function Actions() {

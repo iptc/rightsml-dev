@@ -1,5 +1,7 @@
 ﻿var RightsML;
 (function (RightsML) {
+    // development timestamp: 2014-06-23
+    // development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
     // Constant values:
     RightsML.nsUri = "http://iptc.org/std/RightsML/2011-10-07/";
 

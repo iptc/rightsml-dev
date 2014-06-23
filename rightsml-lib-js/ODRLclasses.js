@@ -1,6 +1,7 @@
 ﻿var Odrl;
 (function (Odrl) {
-    // devel timestamp: 2014-06-23
+    // development timestamp: 2014-06-23
+    // development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
     // Constant values:
     Odrl.nsUri = "http://www.w3.org/ns/odrl/2/";
     Odrl.nsPrefix = "o";

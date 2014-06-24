@@ -4,7 +4,7 @@
 function processForm() {
     var policy1 = new Odrl.Policy("http://iptc.org/std/RightsML/demos/policy007", "set");
     var perm1 = new Odrl.Permission();
-    var action = getRBvalue("relinput1", "grAction");
+    var action = getRBvalueTestAll("relinput1", "grAction");
     var targetAsset = document.forms["relinput1"]["targetasset"].value;
     var assigner = document.forms["relinput1"]["assignerParty"].value;
     var assignee = document.forms["relinput1"]["assigneeParty"].value;
@@ -27,7 +27,7 @@ function processForm() {
     jel.innerHTML = "<h2>Example in JSON</h2><pre>" + outStr + "</pre>";
 }
 
-function getRBvalue(form, rbgroup) {
+function getRBvalueTestAll(form, rbgroup) {
     var rbvalue = "";
     var len = document.forms[form][rbgroup].length;
     var i;
@@ -39,4 +39,4 @@ function getRBvalue(form, rbgroup) {
     }
     return rbvalue;
 }
-//# sourceMappingURL=formTest1proc.js.map
+//# sourceMappingURL=FormTestAllproc.js.map

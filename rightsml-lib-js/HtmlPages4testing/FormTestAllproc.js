@@ -1,6 +1,8 @@
 ﻿/// <reference path="../ODRLclasses.ts"/>
 /// <reference path="../ODRLvocabs.ts"/>
 /// <reference path="../RightsMLvocabs.ts"/>
+// development timestamp: 2014-06-24
+// development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 function processForm() {
     var policy1 = new Odrl.Policy("http://iptc.org/std/RightsML/demos/policy007", "set");
     var perm1 = new Odrl.Permission();

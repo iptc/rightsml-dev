@@ -1,6 +1,8 @@
 ﻿/// <reference path="../ODRLclasses.ts"/>
 /// <reference path="../ODRLvocabs.ts"/>
 /// <reference path="../RightsMLvocabs.ts"/>
+// development timestamp: 2014-06-24
+// development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 // the function for the RMLsimpleExampleGeo form:
 function processFormSimpleExGeo() {
     var policyGUID = document.forms["relinput1"]["policyGUID"].value;

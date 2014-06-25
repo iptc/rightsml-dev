@@ -9,6 +9,8 @@ ODRLvocabs.js ... ODRL Controlled Vocabulares implemented as JavaScript classes 
 
 Note on ODRL: be aware that it builds on the current draft for version 2.1, including the changed namespace URL.
 
+RightsMLclasses.js ... RightsML classes building on ODRL classes, having a profile attribute set to the RightsML URI
+
 RightsMLvocabs.js ... RightsML Controlled Vocabulares implemented as JavaScript classes for a convenient use
 
 Folder HtmlPages4testing ... HTML pages making use of the JavaScript modules at the top level.

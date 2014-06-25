@@ -1,7 +1,12 @@
-﻿var Odrl;
+﻿/**
+* development timestamp: 2014-06-23
+* development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+*
+* This module provides all classes of the ODRL data model
+*
+*/
+var Odrl;
 (function (Odrl) {
-    // development timestamp: 2014-06-23
-    // development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
     // Constant values:
     Odrl.nsUri = "http://www.w3.org/ns/odrl/2/";
     Odrl.nsPrefix = "o";

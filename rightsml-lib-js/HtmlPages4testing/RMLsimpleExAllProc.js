@@ -1,8 +1,13 @@
 ﻿/// <reference path="../ODRLclasses.ts"/>
 /// <reference path="../ODRLvocabs.ts"/>
 /// <reference path="../RightsMLvocabs.ts"/>
-// development timestamp: 2014-06-24
-// development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+/**
+* development timestamp: 2014-06-24
+* development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+*
+* This module provides functions for processing the RightsML Simple Examples HTML pages
+*
+*/
 // the function for the RMLsimpleExampleGeo form:
 function processFormSimpleExGeo() {
     var policyGUID = document.forms["relinput1"]["policyGUID"].value;
@@ -14,7 +19,7 @@ function processFormSimpleExGeo() {
     var constrainttarget = document.forms["relinput1"]["constrainttarget"].value;
     var assigner = document.forms["relinput1"]["assignerParty"].value;
     var assignee = document.forms["relinput1"]["assigneeParty"].value;
-    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelations.target).addConstraint(Odrl.Constraints.spatial, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRoles.assigner, Odrl.PartyRoleScopes.individual).addParty(assignee, Odrl.PartyRoles.assignee, Odrl.PartyRoleScopes.individual);
+    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelationsCV.target).addConstraint(Odrl.ConstraintsCV.spatial, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRolesCV.assigner, Odrl.PartyRoleScopesCV.individual).addParty(assignee, Odrl.PartyRolesCV.assignee, Odrl.PartyRoleScopesCV.individual);
 
     policy1.addPermission(perm1);
 
@@ -44,7 +49,7 @@ function processFormSimpleExTimePeriod() {
     var constrainttarget = document.forms["relinput1"]["constrainttarget"].value;
     var assigner = document.forms["relinput1"]["assignerParty"].value;
     var assignee = document.forms["relinput1"]["assigneeParty"].value;
-    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelations.target).addConstraint(Odrl.Constraints.dateTime, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRoles.assigner, Odrl.PartyRoleScopes.individual).addParty(assignee, Odrl.PartyRoles.assignee, Odrl.PartyRoleScopes.individual);
+    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelationsCV.target).addConstraint(Odrl.ConstraintsCV.dateTime, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRolesCV.assigner, Odrl.PartyRoleScopesCV.individual).addParty(assignee, Odrl.PartyRolesCV.assignee, Odrl.PartyRoleScopesCV.individual);
 
     policy1.addPermission(perm1);
 

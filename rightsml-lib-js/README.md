@@ -15,6 +15,6 @@ Folder HtmlPages4testing ... HTML pages making use of the JavaScript modules at 
 
 Development Notes
 =====================
-The classes have been developed by using TypeScript (http://www.typescriptlang.org)
+The classes have been developed by using TypeScript (http://www.typescriptlang.org) but the JavaScript files can be used as provided.
 
 

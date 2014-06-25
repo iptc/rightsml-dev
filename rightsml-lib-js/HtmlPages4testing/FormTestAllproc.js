@@ -1,8 +1,13 @@
 ﻿/// <reference path="../ODRLclasses.ts"/>
 /// <reference path="../ODRLvocabs.ts"/>
 /// <reference path="../RightsMLvocabs.ts"/>
-// development timestamp: 2014-06-24
-// development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+/**
+* development timestamp: 2014-06-24
+* development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+*
+* This module provides functions for processing the FormTest HTML pages
+*
+*/
 function processForm() {
     var policy1 = new Odrl.Policy("http://iptc.org/std/RightsML/demos/policy007", "set");
     var perm1 = new Odrl.Permission();
@@ -10,7 +15,7 @@ function processForm() {
     var targetAsset = document.forms["relinput1"]["targetasset"].value;
     var assigner = document.forms["relinput1"]["assignerParty"].value;
     var assignee = document.forms["relinput1"]["assigneeParty"].value;
-    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelations.target).addParty(assigner, Odrl.PartyRoles.assigner, Odrl.PartyRoleScopes.individual).addParty(assignee, Odrl.PartyRoles.assignee, Odrl.PartyRoleScopes.individual);
+    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelationsCV.target).addParty(assigner, Odrl.PartyRolesCV.assigner, Odrl.PartyRoleScopesCV.individual).addParty(assignee, Odrl.PartyRolesCV.assignee, Odrl.PartyRoleScopesCV.individual);
 
     policy1.addPermission(perm1);
 

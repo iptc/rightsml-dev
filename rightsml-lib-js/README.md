@@ -13,6 +13,8 @@ RightsMLclasses.js ... RightsML classes building on ODRL classes, having a profi
 
 RightsMLvocabs.js ... RightsML Controlled Vocabulares implemented as JavaScript classes for a convenient use
 
+Folder doc ... documentation of the JavaScript classes
+
 Folder HtmlPages4testing ... HTML pages making use of the JavaScript modules at the top level.
 
 Development Notes

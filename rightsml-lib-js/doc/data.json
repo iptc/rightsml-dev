@@ -1,0 +1,791 @@
+{
+    "project": {},
+    "files": {
+        "HtmlPages4testing\\FormTestAllproc.js": {
+            "name": "HtmlPages4testing\\FormTestAllproc.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "HtmlPages4testing\\RMLsimpleExAllProc.js": {
+            "name": "HtmlPages4testing\\RMLsimpleExAllProc.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "ODRLclasses.js": {
+            "name": "ODRLclasses.js",
+            "modules": {
+                ": ODRL": 1
+            },
+            "classes": {
+                "Asset": 1,
+                "Action": 1,
+                "Constraint": 1,
+                "Party": 1,
+                "Duty": 1,
+                "Permission": 1,
+                "Prohibition": 1,
+                "Policy": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "ODRLvocabs.js": {
+            "name": "ODRLvocabs.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "RightsMLclasses.js": {
+            "name": "RightsMLclasses.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "RightsMLvocabs.js": {
+            "name": "RightsMLvocabs.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        ": ODRL": {
+            "name": ": ODRL",
+            "submodules": {},
+            "classes": {
+                "Asset": 1,
+                "Action": 1,
+                "Constraint": 1,
+                "Party": 1,
+                "Duty": 1,
+                "Permission": 1,
+                "Prohibition": 1,
+                "Policy": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "ODRLclasses.js",
+            "line": 582,
+            "description": "This file of the module provides all classes of the ODRL data model",
+            "author": "Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\ndevelopment timestamp: 2014-06-23"
+        }
+    },
+    "classes": {
+        "Asset": {
+            "name": "Asset",
+            "shortname": "Asset",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 18,
+            "description": "Class for the Asset of the ODRL Core Model",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Asset",
+                    "type": "String"
+                },
+                {
+                    "name": "relation",
+                    "description": "The relation of the asset to the policy",
+                    "type": "String"
+                }
+            ]
+        },
+        "Action": {
+            "name": "Action",
+            "shortname": "Action",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 38,
+            "description": "Class for the Action of the ODRL Core Model",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The identifing name of the Action",
+                    "type": "String"
+                }
+            ]
+        },
+        "Constraint": {
+            "name": "Constraint",
+            "shortname": "Constraint",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 56,
+            "description": "Class for the Constraint of the ODRL Core Model",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The identifing name of the Constraint",
+                    "type": "String"
+                },
+                {
+                    "name": "operator",
+                    "description": "The identifyer of the operator",
+                    "type": "String"
+                },
+                {
+                    "name": "rightOperand",
+                    "description": "The identifyer of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "dataType",
+                    "description": "The identifyer of the data type of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "unit",
+                    "description": "The identifyer of the unit of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "status",
+                    "description": "The identifyer of the status",
+                    "type": "String"
+                }
+            ]
+        },
+        "Party": {
+            "name": "Party",
+            "shortname": "Party",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 101,
+            "description": "Class for the Party of the ODRL Core Model",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Party",
+                    "type": "String"
+                },
+                {
+                    "name": "pfunction",
+                    "description": "The identifier of the functional role this party takes",
+                    "type": "String"
+                },
+                {
+                    "name": "scope",
+                    "description": "The scope of the party",
+                    "type": "String"
+                }
+            ]
+        },
+        "Duty": {
+            "name": "Duty",
+            "shortname": "Duty",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 131,
+            "description": "Class for the Duty of the ODRL Core Model",
+            "is_constructor": 1
+        },
+        "Permission": {
+            "name": "Permission",
+            "shortname": "Permission",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 278,
+            "description": "Class for the Permission of the ODRL Core Model",
+            "is_constructor": 1
+        },
+        "Prohibition": {
+            "name": "Prohibition",
+            "shortname": "Prohibition",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 440,
+            "description": "Class for the Prohibition of the ODRL Core Model",
+            "is_constructor": 1
+        },
+        "Policy": {
+            "name": "Policy",
+            "shortname": "Policy",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": ": ODRL",
+            "namespace": "",
+            "file": "ODRLclasses.js",
+            "line": 582,
+            "description": "Class for the Policy of the ODRL Core Model",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Asset",
+                    "type": "String"
+                },
+                {
+                    "name": "pType",
+                    "description": "The identifier of the policy type",
+                    "type": "String"
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "HtmlPages4testing\\FormTestAllproc.js",
+            "line": 4,
+            "description": "development timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the FormTest HTML pages",
+            "class": "Asset"
+        },
+        {
+            "file": "HtmlPages4testing\\RMLsimpleExAllProc.js",
+            "line": 4,
+            "description": "development timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
+            "class": "Asset"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 143,
+            "description": "The Method for setting the unique identifier of the Duty",
+            "itemtype": "method",
+            "name": "setUid",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the Duty",
+                    "type": "String"
+                }
+            ],
+            "class": "Duty",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 153,
+            "description": "The Method for setting the action of the Duty",
+            "itemtype": "method",
+            "name": "setAction",
+            "params": [
+                {
+                    "name": "actionname",
+                    "description": "The identifier of the action",
+                    "type": "String"
+                }
+            ],
+            "class": "Duty",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 163,
+            "description": "The Method for adding an asset to the Duty",
+            "itemtype": "method",
+            "name": "addAsset",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the asset",
+                    "type": "String"
+                },
+                {
+                    "name": "relation",
+                    "description": "The relation of the asset to the Duty.",
+                    "type": "String"
+                }
+            ],
+            "class": "Duty",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 175,
+            "description": "The Method for adding a constraint to the Duty",
+            "itemtype": "method",
+            "name": "addConstraint",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The identifing name of the Constraint",
+                    "type": "String"
+                },
+                {
+                    "name": "operator",
+                    "description": "The identifyer of the operator",
+                    "type": "String"
+                },
+                {
+                    "name": "rightOperand",
+                    "description": "The identifyer of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "dataType",
+                    "description": "The identifyer of the data type of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "unit",
+                    "description": "The identifyer of the unit of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "status",
+                    "description": "The identifyer of the status",
+                    "type": "String"
+                }
+            ],
+            "class": "Duty",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 191,
+            "description": "The Method for adding a party to the Duty",
+            "itemtype": "method",
+            "name": "addParty",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Party",
+                    "type": "String"
+                },
+                {
+                    "name": "pfunction",
+                    "description": "The identifier of the functional role this party takes",
+                    "type": "String"
+                },
+                {
+                    "name": "scope",
+                    "description": "The scope of the party",
+                    "type": "String"
+                }
+            ],
+            "class": "Duty",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 291,
+            "description": "The Method for setting the action of the Permission",
+            "itemtype": "method",
+            "name": "setAction",
+            "params": [
+                {
+                    "name": "actionname",
+                    "description": "The identifier of the action",
+                    "type": "String"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 301,
+            "description": "The Method for adding an asset to the Permission",
+            "itemtype": "method",
+            "name": "addAsset",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the asset",
+                    "type": "String"
+                },
+                {
+                    "name": "relation",
+                    "description": "The relation of the asset to the Duty.",
+                    "type": "String"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 313,
+            "description": "The Method for adding the required target asset to the Permission",
+            "itemtype": "method",
+            "name": "addTargetAsset",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the asset",
+                    "type": "String"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 324,
+            "description": "The Method for adding a constraint to the Permission",
+            "itemtype": "method",
+            "name": "addConstraint",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The identifing name of the Constraint",
+                    "type": "String"
+                },
+                {
+                    "name": "operator",
+                    "description": "The identifyer of the operator",
+                    "type": "String"
+                },
+                {
+                    "name": "rightOperand",
+                    "description": "The identifyer of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "dataType",
+                    "description": "The identifyer of the data type of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "unit",
+                    "description": "The identifyer of the unit of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "status",
+                    "description": "The identifyer of the status",
+                    "type": "String"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 340,
+            "description": "The Method for adding a party to the Permission",
+            "itemtype": "method",
+            "name": "addParty",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Party",
+                    "type": "String"
+                },
+                {
+                    "name": "pfunction",
+                    "description": "The identifier of the functional role this party takes",
+                    "type": "String"
+                },
+                {
+                    "name": "scope",
+                    "description": "The scope of the party",
+                    "type": "String"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 353,
+            "description": "The Method for adding a duty to the Permission",
+            "itemtype": "method",
+            "name": "addParty",
+            "params": [
+                {
+                    "name": "newDuty",
+                    "description": "A duty instance",
+                    "type": "Duty"
+                }
+            ],
+            "class": "Permission",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 452,
+            "description": "The Method for setting the action of the Prohibition",
+            "itemtype": "method",
+            "name": "setAction",
+            "params": [
+                {
+                    "name": "actionname",
+                    "description": "The identifier of the action",
+                    "type": "String"
+                }
+            ],
+            "class": "Prohibition",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 462,
+            "description": "The Method for adding an asset to the Prohibition",
+            "itemtype": "method",
+            "name": "addAsset",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the asset",
+                    "type": "String"
+                },
+                {
+                    "name": "relation",
+                    "description": "The relation of the asset to the Duty.",
+                    "type": "String"
+                }
+            ],
+            "class": "Prohibition",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 474,
+            "description": "The Method for adding the required target asset to the Prohibition",
+            "itemtype": "method",
+            "name": "addTargetAsset",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The unique identifier of the asset",
+                    "type": "String"
+                }
+            ],
+            "class": "Prohibition",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 485,
+            "description": "The Method for adding a constraint to the Prohibition",
+            "itemtype": "method",
+            "name": "addConstraint",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The identifing name of the Constraint",
+                    "type": "String"
+                },
+                {
+                    "name": "operator",
+                    "description": "The identifyer of the operator",
+                    "type": "String"
+                },
+                {
+                    "name": "rightOperand",
+                    "description": "The identifyer of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "dataType",
+                    "description": "The identifyer of the data type of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "unit",
+                    "description": "The identifyer of the unit of the right operand",
+                    "type": "String"
+                },
+                {
+                    "name": "status",
+                    "description": "The identifyer of the status",
+                    "type": "String"
+                }
+            ],
+            "class": "Prohibition",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 501,
+            "description": "The Method for adding a party to the Prohibition",
+            "itemtype": "method",
+            "name": "addParty",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The Unique Identifier of the Party",
+                    "type": "String"
+                },
+                {
+                    "name": "pfunction",
+                    "description": "The identifier of the functional role this party takes",
+                    "type": "String"
+                },
+                {
+                    "name": "scope",
+                    "description": "The scope of the party",
+                    "type": "String"
+                }
+            ],
+            "class": "Prohibition",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 596,
+            "description": "The Method for setting the conflict property of the Policy",
+            "itemtype": "method",
+            "name": "setConflict",
+            "params": [
+                {
+                    "name": "conflict",
+                    "description": "The identifier of the conflict",
+                    "type": "String"
+                }
+            ],
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 606,
+            "description": "The Method for adding a permission to the Policy",
+            "itemtype": "method",
+            "name": "addPermission",
+            "params": [
+                {
+                    "name": "newPerm",
+                    "description": "A permission instance",
+                    "type": "Permission"
+                }
+            ],
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 616,
+            "description": "The Method for adding a Prohibition to the Policy",
+            "itemtype": "method",
+            "name": "addProhibition",
+            "params": [
+                {
+                    "name": "newProhib",
+                    "description": "A prohibition instance",
+                    "type": "Prohibition"
+                }
+            ],
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 626,
+            "description": "The Method for serializing the Policy to XML syntax",
+            "itemtype": "method",
+            "name": "serializeXml",
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 683,
+            "description": "The Method for serializing the Policy to the official ODRL JSON syntax",
+            "itemtype": "method",
+            "name": "serializeJson",
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLclasses.js",
+            "line": 692,
+            "description": "The Method for serializing the Policy to JSON reflecting the Core Model",
+            "itemtype": "method",
+            "name": "serializeCoreModelJson",
+            "class": "Policy",
+            "module": ": ODRL"
+        },
+        {
+            "file": "ODRLvocabs.js",
+            "line": 2,
+            "description": "development timestamp: 2014-06-25\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides each currently defined ODRL Controlled Vocabulary\nas a class.",
+            "class": "",
+            "module": ": ODRL"
+        },
+        {
+            "file": "RightsMLclasses.js",
+            "line": 9,
+            "description": "development timestamp: 2014-06-23\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides all ODRL classes complying to the RightsML profile",
+            "class": "",
+            "module": ": ODRL"
+        },
+        {
+            "file": "RightsMLvocabs.js",
+            "line": 1,
+            "description": "development timestamp: 2014-06-25\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides each currently defined RightsML Controlled Vocabulary\nas a class.",
+            "class": "",
+            "module": ": ODRL"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type\ndevelopment timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the FormTest HTML pages",
+            "line": " HtmlPages4testing\\FormTestAllproc.js:4"
+        },
+        {
+            "message": "Missing item type\ndevelopment timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
+            "line": " HtmlPages4testing\\RMLsimpleExAllProc.js:4"
+        },
+        {
+            "message": "Missing item type\ndevelopment timestamp: 2014-06-25\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides each currently defined ODRL Controlled Vocabulary\nas a class.",
+            "line": " ODRLvocabs.js:2"
+        },
+        {
+            "message": "Missing item type\ndevelopment timestamp: 2014-06-23\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides all ODRL classes complying to the RightsML profile",
+            "line": " RightsMLclasses.js:9"
+        },
+        {
+            "message": "Missing item type\ndevelopment timestamp: 2014-06-25\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides each currently defined RightsML Controlled Vocabulary\nas a class.",
+            "line": " RightsMLvocabs.js:1"
+        }
+    ]
+}

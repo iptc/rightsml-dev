@@ -1,6 +1,7 @@
 ﻿/// <reference path="../ODRLclasses.ts"/>
 /// <reference path="../ODRLvocabs.ts"/>
 /// <reference path="../RightsMLvocabs.ts"/>
+/// <reference path="./scripts/vkbeautify.d.ts"/>
 /**
 * development timestamp: 2014-06-24
 * development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
@@ -25,6 +26,7 @@ function processFormSimpleExGeo() {
 
     // make the object ready for display: in XML first
     var xmlStr = policy1.serializeXml();
+    xmlStr = vkbeautify.xml(xmlStr);
     xmlStr = xmlStr.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     // xmlStr = xmlStr.replace(/>/g, "&gt;");
@@ -55,6 +57,7 @@ function processFormSimpleExTimePeriod() {
 
     // make the object ready for display: in XML first
     var xmlStr = policy1.serializeXml();
+    xmlStr = vkbeautify.xml(xmlStr);
     xmlStr = xmlStr.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     // xmlStr = xmlStr.replace(/>/g, "&gt;");

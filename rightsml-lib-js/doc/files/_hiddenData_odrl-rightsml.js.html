@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ODRLclasses.js</title>
+    <title>_hiddenData\odrl-rightsml.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -98,14 +98,13 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: ODRLclasses.js</h1>
+                        <h1 class="file-heading">File: _hiddenData\odrl-rightsml.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-﻿/**
-* This file of the module provides all classes of the ODRL data model
+/**
+* ODRL-RightsML JavaScript Library
 *
-* @module: ODRL
 * @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 * Published under MIT license (see http://www.opensource.org/licenses/MIT)
 * development timestamp: 2014-06-23
@@ -839,8 +838,215 @@ var Odrl;
         return Policy;
     })();
     Odrl.Policy = Policy;
+
+    Odrl.nsVocabUri = &quot;http://www.w3.org/ns/odrl/2/&quot;;
+    var ActionsCV = (function () {
+        function ActionsCV() {
+        }
+        ActionsCV.acceptTracking = Odrl.nsVocabUri + &quot;acceptTracking&quot;;
+        ActionsCV.aggregate = Odrl.nsVocabUri + &quot;aggregate&quot;;
+        ActionsCV.annotate = Odrl.nsVocabUri + &quot;annotate&quot;;
+        ActionsCV.anonymize = Odrl.nsVocabUri + &quot;anonymize&quot;;
+        ActionsCV.appendTo = Odrl.nsVocabUri + &quot;appendTo&quot;;
+        ActionsCV.archive = Odrl.nsVocabUri + &quot;archive&quot;;
+        ActionsCV.attribute = Odrl.nsVocabUri + &quot;attribute&quot;;
+        ActionsCV.concurrentUse = Odrl.nsVocabUri + &quot;concurrentUse&quot;;
+        ActionsCV.deletee = Odrl.nsVocabUri + &quot;delete&quot;;
+        ActionsCV.derive = Odrl.nsVocabUri + &quot;derive&quot;;
+        ActionsCV.digitize = Odrl.nsVocabUri + &quot;digitize&quot;;
+        ActionsCV.display = Odrl.nsVocabUri + &quot;display&quot;;
+        ActionsCV.distribute = Odrl.nsVocabUri + &quot;distribute&quot;;
+        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + &quot;ensureExclusivity&quot;;
+        ActionsCV.execute = Odrl.nsVocabUri + &quot;execute&quot;;
+        ActionsCV.extract = Odrl.nsVocabUri + &quot;extract&quot;;
+        ActionsCV.give = Odrl.nsVocabUri + &quot;give&quot;;
+        ActionsCV.include = Odrl.nsVocabUri + &quot;include&quot;;
+        ActionsCV.index = Odrl.nsVocabUri + &quot;index&quot;;
+        ActionsCV.inform = Odrl.nsVocabUri + &quot;inform&quot;;
+        ActionsCV.install = Odrl.nsVocabUri + &quot;install&quot;;
+        ActionsCV.lease = Odrl.nsVocabUri + &quot;lease&quot;;
+        ActionsCV.lend = Odrl.nsVocabUri + &quot;lend&quot;;
+        ActionsCV.move = Odrl.nsVocabUri + &quot;move&quot;;
+        ActionsCV.nextPolicy = Odrl.nsVocabUri + &quot;nextPolicy&quot;;
+        ActionsCV.obtainConsent = Odrl.nsVocabUri + &quot;obtainConsent&quot;;
+        ActionsCV.pay = Odrl.nsVocabUri + &quot;pay&quot;;
+        ActionsCV.play = Odrl.nsVocabUri + &quot;play&quot;;
+        ActionsCV.present = Odrl.nsVocabUri + &quot;present&quot;;
+        ActionsCV.preview = Odrl.nsVocabUri + &quot;preview&quot;;
+        ActionsCV.print = Odrl.nsVocabUri + &quot;print&quot;;
+        ActionsCV.read = Odrl.nsVocabUri + &quot;read&quot;;
+        ActionsCV.reproduce = Odrl.nsVocabUri + &quot;reproduce&quot;;
+        ActionsCV.reviewPolicy = Odrl.nsVocabUri + &quot;reviewPolicy&quot;;
+        ActionsCV.secondaryUse = Odrl.nsVocabUri + &quot;secondaryUse&quot;;
+        ActionsCV.sell = Odrl.nsVocabUri + &quot;sell&quot;;
+        ActionsCV.sublicense = Odrl.nsVocabUri + &quot;sublicense&quot;;
+        ActionsCV.textToSpeech = Odrl.nsVocabUri + &quot;textToSpeech&quot;;
+        ActionsCV.transfer = Odrl.nsVocabUri + &quot;transfer&quot;;
+        ActionsCV.transform = Odrl.nsVocabUri + &quot;transform&quot;;
+        ActionsCV.translate = Odrl.nsVocabUri + &quot;translate&quot;;
+        ActionsCV.uninstall = Odrl.nsVocabUri + &quot;uninstall&quot;;
+        ActionsCV.use = Odrl.nsVocabUri + &quot;use&quot;;
+        ActionsCV.watermark = Odrl.nsVocabUri + &quot;watermark&quot;;
+        ActionsCV.writeTo = Odrl.nsVocabUri + &quot;writeTo&quot;;
+        return ActionsCV;
+    })();
+    Odrl.ActionsCV = ActionsCV;
+    var PolicyTypesCV = (function () {
+        function PolicyTypesCV() {
+        }
+        PolicyTypesCV.agreement = Odrl.nsVocabUri + &quot;agreement&quot;;
+        PolicyTypesCV.offer = Odrl.nsVocabUri + &quot;offer&quot;;
+        PolicyTypesCV.privacy = Odrl.nsVocabUri + &quot;privacy&quot;;
+        PolicyTypesCV.request = Odrl.nsVocabUri + &quot;request&quot;;
+        PolicyTypesCV.set = Odrl.nsVocabUri + &quot;set&quot;;
+        PolicyTypesCV.ticket = Odrl.nsVocabUri + &quot;ticket&quot;;
+        return PolicyTypesCV;
+    })();
+    Odrl.PolicyTypesCV = PolicyTypesCV;
+    var ConstraintsCV = (function () {
+        function ConstraintsCV() {
+        }
+        ConstraintsCV.absolutePosition = Odrl.nsVocabUri + &quot;absolutePosition&quot;;
+        ConstraintsCV.absoluteSize = Odrl.nsVocabUri + &quot;absoluteSize&quot;;
+        ConstraintsCV.count = Odrl.nsVocabUri + &quot;count&quot;;
+        ConstraintsCV.dateTime = Odrl.nsVocabUri + &quot;dateTime&quot;;
+        ConstraintsCV.fileFormat = Odrl.nsVocabUri + &quot;fileFormat&quot;;
+        ConstraintsCV.industry = Odrl.nsVocabUri + &quot;industry&quot;;
+        ConstraintsCV.language = Odrl.nsVocabUri + &quot;language&quot;;
+        ConstraintsCV.deliveryChannel = Odrl.nsVocabUri + &quot;deliveryChannel&quot;;
+        ConstraintsCV.elapsedTime = Odrl.nsVocabUri + &quot;elapsedTime&quot;;
+        ConstraintsCV.event = Odrl.nsVocabUri + &quot;media&quot;;
+        ConstraintsCV.meteredTime = Odrl.nsVocabUri + &quot;meteredTime&quot;;
+        ConstraintsCV.payAmount = Odrl.nsVocabUri + &quot;payAmount&quot;;
+        ConstraintsCV.percentage = Odrl.nsVocabUri + &quot;percentage&quot;;
+        ConstraintsCV.product = Odrl.nsVocabUri + &quot;product&quot;;
+        ConstraintsCV.purpose = Odrl.nsVocabUri + &quot;purpose&quot;;
+        ConstraintsCV.recipient = Odrl.nsVocabUri + &quot;recipient&quot;;
+        ConstraintsCV.relativePosition = Odrl.nsVocabUri + &quot;relativePosition&quot;;
+        ConstraintsCV.relativeSize = Odrl.nsVocabUri + &quot;relativeSize&quot;;
+        ConstraintsCV.resolution = Odrl.nsVocabUri + &quot;resolution&quot;;
+        ConstraintsCV.spatial = Odrl.nsVocabUri + &quot;spatial&quot;;
+        ConstraintsCV.timeInterval = Odrl.nsVocabUri + &quot;event&quot;;
+        ConstraintsCV.systemDevice = Odrl.nsVocabUri + &quot;systemDevice&quot;;
+        ConstraintsCV.version = Odrl.nsVocabUri + &quot;version&quot;;
+        ConstraintsCV.virtualLocation = Odrl.nsVocabUri + &quot;virtualLocation&quot;;
+        return ConstraintsCV;
+    })();
+    Odrl.ConstraintsCV = ConstraintsCV;
+    var ConstrOperatorsCV = (function () {
+        function ConstrOperatorsCV() {
+        }
+        ConstrOperatorsCV.eq = Odrl.nsVocabUri + &quot;eq&quot;;
+        ConstrOperatorsCV.gt = Odrl.nsVocabUri + &quot;gt&quot;;
+        ConstrOperatorsCV.gteq = Odrl.nsVocabUri + &quot;gteq&quot;;
+        ConstrOperatorsCV.hasPart = Odrl.nsVocabUri + &quot;hasPart&quot;;
+        ConstrOperatorsCV.isA = Odrl.nsVocabUri + &quot;isA&quot;;
+        ConstrOperatorsCV.isAllOf = Odrl.nsVocabUri + &quot;isAllOf&quot;;
+        ConstrOperatorsCV.isAnyOf = Odrl.nsVocabUri + &quot;isAnyOf&quot;;
+        ConstrOperatorsCV.isNoneOf = Odrl.nsVocabUri + &quot;isNoneOf&quot;;
+        ConstrOperatorsCV.isPartOf = Odrl.nsVocabUri + &quot;isPartOf&quot;;
+        ConstrOperatorsCV.lt = Odrl.nsVocabUri + &quot;lt&quot;;
+        ConstrOperatorsCV.lteq = Odrl.nsVocabUri + &quot;lteq&quot;;
+        ConstrOperatorsCV.neq = Odrl.nsVocabUri + &quot;neq&quot;;
+        return ConstrOperatorsCV;
+    })();
+    Odrl.ConstrOperatorsCV = ConstrOperatorsCV;
+    var PartyRolesCV = (function () {
+        function PartyRolesCV() {
+        }
+        PartyRolesCV.assigner = Odrl.nsVocabUri + &quot;assigner&quot;;
+        PartyRolesCV.assignee = Odrl.nsVocabUri + &quot;assignee&quot;;
+        PartyRolesCV.attributedParty = Odrl.nsVocabUri + &quot;attributedParty&quot;;
+        PartyRolesCV.consentingParty = Odrl.nsVocabUri + &quot;consentingParty&quot;;
+        PartyRolesCV.informedParty = Odrl.nsVocabUri + &quot;informedParty&quot;;
+        PartyRolesCV.payeeParty = Odrl.nsVocabUri + &quot;payeeParty&quot;;
+        PartyRolesCV.trackingParty = Odrl.nsVocabUri + &quot;trackingParty&quot;;
+        return PartyRolesCV;
+    })();
+    Odrl.PartyRolesCV = PartyRolesCV;
+    var PartyRoleScopesCV = (function () {
+        function PartyRoleScopesCV() {
+        }
+        PartyRoleScopesCV.individual = Odrl.nsVocabUri + &quot;individual&quot;;
+        PartyRoleScopesCV.group = Odrl.nsVocabUri + &quot;group&quot;;
+        PartyRoleScopesCV.all = Odrl.nsVocabUri + &quot;all&quot;;
+        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + &quot;allConnections&quot;;
+        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + &quot;all2ndConnections&quot;;
+        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + &quot;allGroups&quot;;
+        return PartyRoleScopesCV;
+    })();
+    Odrl.PartyRoleScopesCV = PartyRoleScopesCV;
+    var AssetRelationsCV = (function () {
+        function AssetRelationsCV() {
+        }
+        AssetRelationsCV.target = Odrl.nsVocabUri + &quot;target&quot;;
+        AssetRelationsCV.output = Odrl.nsVocabUri + &quot;output&quot;;
+        return AssetRelationsCV;
+    })();
+    Odrl.AssetRelationsCV = AssetRelationsCV;
+
 })(Odrl || (Odrl = {}));
-//# sourceMappingURL=ODRLclasses.js.map
+
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+/**
+* This module provides all ODRL classes complying to the RightsML profile
+*
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
+* development timestamp: 2014-06-23
+*/
+var RightsML;
+(function (RightsML) {
+    var Policy = (function (_super) {
+        __extends(Policy, _super);
+        function Policy(pUid, pType) {
+            _super.call(this, pUid, pType);
+            this.profile = RightsML.nsUri;
+        }
+        return Policy;
+    })(Odrl.Policy);
+    RightsML.Policy = Policy;
+    
+        // Constant values:
+    RightsML.nsUri = &quot;http://iptc.org/std/RightsML/2011-10-07/&quot;;
+
+    var ActionsCV = (function () {
+        function ActionsCV() {
+        }
+        ActionsCV.archive = RightsML.nsUri + &quot;archive&quot;;
+        ActionsCV.copy = RightsML.nsUri + &quot;copy&quot;;
+        ActionsCV.distribute = RightsML.nsUri + &quot;distribute&quot;;
+        ActionsCV.removeFromService = RightsML.nsUri + &quot;removeFromService&quot;;
+        return ActionsCV;
+    })();
+    RightsML.ActionsCV = ActionsCV;
+
+    var ConstraintsCV = (function () {
+        function ConstraintsCV() {
+        }
+        ConstraintsCV.actionRequestReceived = RightsML.nsUri + &quot;actionRequestReceived&quot;;
+        ConstraintsCV.requestedActionsPerformed = RightsML.nsUri + &quot;requestedActionsPerformed&quot;;
+        return ConstraintsCV;
+    })();
+    RightsML.ConstraintsCV = ConstraintsCV;
+
+    var RightOperandsCV = (function () {
+        function RightOperandsCV() {
+        }
+        RightOperandsCV.requestReceivedDateTime = RightsML.nsUri + &quot;requestReceivedDateTime&quot;;
+        RightOperandsCV.serviceDevelopment = RightsML.nsUri + &quot;serviceDevelopment&quot;;
+        RightOperandsCV.serviceDemonstration = RightsML.nsUri + &quot;serviceDemonstration&quot;;
+        RightOperandsCV.serviceTesting = RightsML.nsUri + &quot;serviceTesting&quot;;
+        return RightOperandsCV;
+    })();
+    RightsML.RightOperandsCV = RightOperandsCV;
+
+})(RightsML || (RightsML = {}));
 
     </pre>
 </div>

@@ -7,11 +7,11 @@
 /// <reference path="ODRLclasses.ts"/>
 /// <reference path="RightsMLvocabs.ts"/>
 /**
-* development timestamp: 2014-06-23
-* development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
-*
 * This module provides all ODRL classes complying to the RightsML profile
 *
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
+* development timestamp: 2014-06-23
 */
 var RightsML;
 (function (RightsML) {

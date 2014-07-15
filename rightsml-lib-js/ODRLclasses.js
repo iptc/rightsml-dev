@@ -2,7 +2,8 @@
 * This file of the module provides all classes of the ODRL data model
 *
 * @module: ODRL
-* @author Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
 * development timestamp: 2014-06-23
 */
 var Odrl;
@@ -27,6 +28,14 @@ var Odrl;
             this.uid = uid;
             this.relation = relation;
         }
+        Asset.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.uid.length < 1) {
+                valResult = "!! Asset: the uid is missing\n";
+            }
+            return valResult;
+        };
+
         Asset.prototype.serializeXml = function (serStrIn) {
             return serStrIn + "<asset uid=\"" + this.uid + "\" relation=\"" + this.relation + "\"/>";
         };
@@ -141,7 +150,7 @@ var Odrl;
             this.parties = [];
         }
         /**
-        * The Method for setting the unique identifier of the Duty
+        * The method for setting the unique identifier of the Duty
         * @method setUid
         * @param {String} uid The unique identifier of the Duty
         */
@@ -151,7 +160,7 @@ var Odrl;
         };
 
         /**
-        * The Method for setting the action of the Duty
+        * The method for setting the action of the Duty
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -161,7 +170,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding an asset to the Duty
+        * The method for adding an asset to the Duty
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -173,7 +182,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a constraint to the Duty
+        * The method for adding a constraint to the Duty
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -189,7 +198,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a party to the Duty
+        * The method for adding a party to the Duty
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -289,7 +298,7 @@ var Odrl;
             this.duties = [];
         }
         /**
-        * The Method for setting the action of the Permission
+        * The method for setting the action of the Permission
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -299,7 +308,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding an asset to the Permission
+        * The method for adding an asset to the Permission
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -311,7 +320,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding the required target asset to the Permission
+        * The method for adding the required target asset to the Permission
         * @method addTargetAsset
         * @param {String} uid The unique identifier of the asset
         */
@@ -322,7 +331,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a constraint to the Permission
+        * The method for adding a constraint to the Permission
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -338,7 +347,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a party to the Permission
+        * The method for adding a party to the Permission
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -351,7 +360,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a duty to the Permission
+        * The method for adding a duty to the Permission
         * @method addParty
         * @param {Duty} newDuty A duty instance
         */
@@ -432,6 +441,17 @@ var Odrl;
             }
             OdrlInJson.permissions.push(thisP);
         };
+
+        Permission.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.assets.length == 0) {
+                valResult += "!! Permission: no asset assigned to it";
+            }
+            for (var i = 0; i < this.assets.length; i++) {
+                valResult += this.assets[i].validationResult();
+            }
+            return valResult;
+        };
         return Permission;
     })();
     Odrl.Permission = Permission;
@@ -450,7 +470,7 @@ var Odrl;
             this.parties = [];
         }
         /**
-        * The Method for setting the action of the Prohibition
+        * The method for setting the action of the Prohibition
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -460,7 +480,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding an asset to the Prohibition
+        * The method for adding an asset to the Prohibition
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -472,7 +492,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding the required target asset to the Prohibition
+        * The method for adding the required target asset to the Prohibition
         * @method addTargetAsset
         * @param {String} uid The unique identifier of the asset
         */
@@ -483,7 +503,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a constraint to the Prohibition
+        * The method for adding a constraint to the Prohibition
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -499,7 +519,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a party to the Prohibition
+        * The method for adding a party to the Prohibition
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -594,7 +614,7 @@ var Odrl;
             this.prohibitions = [];
         }
         /**
-        * The Method for setting the conflict property of the Policy
+        * The method for setting the conflict property of the Policy
         * @method setConflict
         * @param {String} conflict The identifier of the conflict
         */
@@ -604,7 +624,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a permission to the Policy
+        * The method for adding a permission to the Policy
         * @method addPermission
         * @param {Permission} newPerm A permission instance
         */
@@ -614,7 +634,7 @@ var Odrl;
         };
 
         /**
-        * The Method for adding a Prohibition to the Policy
+        * The method for adding a Prohibition to the Policy
         * @method addProhibition
         * @param {Prohibition} newProhib A prohibition instance
         */
@@ -624,7 +644,7 @@ var Odrl;
         };
 
         /**
-        * The Method for serializing the Policy to XML syntax
+        * The method for serializing the Policy to XML syntax
         * @method serializeXml
         */
         Policy.prototype.serializeXml = function () {
@@ -681,7 +701,23 @@ var Odrl;
         };
 
         /**
-        * The Method for serializing the Policy to the official ODRL JSON syntax
+        * The method for validating the data, returns a string
+        * @method validationResult
+        */
+        Policy.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.permissions.length == 0 && this.prohibitions.length == 0) {
+                valResult += "!! Policy does not contain a permission or a prohibition \n";
+            }
+            for (var i = 0; i < this.permissions.length; i++) {
+                valResult += this.permissions[i].validationResult();
+            }
+
+            return valResult;
+        };
+
+        /**
+        * The method for serializing the Policy to the official ODRL JSON syntax
         * @method serializeJson
         */
         Policy.prototype.serializeJson = function () {
@@ -690,7 +726,7 @@ var Odrl;
         };
 
         /**
-        * The Method for serializing the Policy to JSON reflecting the Core Model
+        * The method for serializing the Policy to JSON reflecting the Core Model
         * @method serializeCoreModelJson
         */
         Policy.prototype.serializeCoreModelJson = function () {

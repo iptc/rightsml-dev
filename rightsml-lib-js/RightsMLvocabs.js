@@ -1,10 +1,10 @@
 ﻿/**
-* development timestamp: 2014-06-25
-* development by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
-*
 * This module provides each currently defined RightsML Controlled Vocabulary
 * as a class.
 *
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
+* development timestamp: 2014-06-25
 */
 var RightsML;
 (function (RightsML) {

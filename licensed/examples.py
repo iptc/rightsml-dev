@@ -3,19 +3,6 @@
 from licensed import mklicense
 import json
  
-class SimpleLicenseJSON:
-
-	def __init__(self):
-		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
-			assigner="http://example.com/cv/party/epa",
-			assignee="http://example.com/cv/policy/group/epapartners")
-
-	def simple_action(self):
-		actionlicense = self.licenseFactory.simpleAction(action="http://www.w3.org/ns/odrl/2/print")
-
-		return actionlicense.json()
-
-
 class SimpleLicenseXML:
 
 	def __init__(self):
@@ -67,7 +54,7 @@ class SimpleLicenseXML:
 		self.assertIn("idOfRightsInfo1", dutylicense_xml)
 
 	def test_simple_geo(self):
-		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+		geolicense = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/CHN")
 
 		geolicense_xml = geolicense.xml()
 
@@ -161,7 +148,7 @@ if __name__ == '__main__':
 
 	print("##################")
 	print("http://dev.iptc.org/RightsML-Simple-Example-Geographic")
-	geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
+	geolicense = licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/CHN")
 	print(geolicense.json())
 
 	print(geolicense.xml())

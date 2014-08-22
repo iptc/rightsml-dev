@@ -205,3 +205,12 @@ if __name__ == '__main__':
 
 	print("##################")
 
+	print("http://dev.iptc.org/RightsML-Combined-Example-geographic-and-duty-to-pay")
+
+	combined_geo_duty = licenseFactory.combinedGeoNextPolicy(geography="http://cvx.iptc.org/iso3166-1a3/DEU", action="http://www.w3.org/ns/odrl/2/sublicense", policy="http://epa.eu/cv/policy/3")
+
+	print(combined_geo_duty.json())
+
+	print(combined_geo_duty.xml())
+
+	print("##################")

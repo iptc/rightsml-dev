@@ -123,17 +123,18 @@ class odrl(object):
 					for d in p["duties"]:
 						duty = etree.Element("{http://www.w3.org/ns/odrl/2/}duty",
 							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+
+						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						action.set('name', d['action'])
+						duty.append(action)
+
 						if "target" in d:
 							asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 							asset.set('uid', d['target'])
 							asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
 							duty.append(asset)
-
-						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
-							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-						action.set('name', d['action'])
-						duty.append(action)
 
 						if "assets" in d:
 							for a in d["assets"]:

@@ -57,6 +57,9 @@ class mklicense(object):
 	def combinedGeoNextPolicy(self, geography, action, policy):
 		return combinedGeoNextPolicy(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, action=action, policy=policy)
 
+	def combinedGeoTimePeriod(self, geography, action, timeperiod, geooperator):
+		return combinedGeoTimePeriod(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, action=action, timeperiod=timeperiod, geooperator=geooperator)
+
 class odrl(object):
 
 	def __init__(self):
@@ -287,5 +290,13 @@ class combinedGeoNextPolicy(simpleAction):
 		super(combinedGeoNextPolicy, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
 		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
+		hashedparams = hashlib.md5(self.json())
+
+class combinedGeoTimePeriod(simpleAction):
+
+	def __init__(self, target, assigner, assignee, geography, action, timeperiod, geooperator='http://www.w3.org/ns/odrl/2/eq', timeperiodoperator='http://www.w3.org/ns/odrl/2/lt'):
+		super(combinedGeoTimePeriod, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : geooperator},
+								{'rightoperand' : timeperiod, 'name' : 'http://www.w3.org/ns/odrl/2/dateTime', 'operator' : timeperiodoperator, 'rightoperanddatatype' : 'xs:dateTime'}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()

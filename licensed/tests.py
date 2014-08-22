@@ -231,6 +231,23 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
 
+	def test_combined_geographic_and_time_period(self):
+		combined_geo_duty = self.licenseFactory.combinedGeoTimePeriod(geography="http://cvx.iptc.org/iso3166-1a3/GBR", action="http://www.w3.org/ns/odrl/2/use", timeperiod="2013-06-15", geooperator="http://www.w3.org/ns/odrl/2/neq")
+		combined_geo_duty_xml = combined_geo_duty.xml()
+
+		self.assertIn("GBR", combined_geo_duty_xml)
+		self.assertIn("epa", combined_geo_duty_xml)
+		self.assertIn("use", combined_geo_duty_xml)
+		self.assertIn("spatial", combined_geo_duty_xml)
+		self.assertIn("neq", combined_geo_duty_xml)
+		self.assertIn("lt", combined_geo_duty_xml)
+		self.assertIn("2013-06-15", combined_geo_duty_xml)
+
+		if not self.odrl_schema(combined_geo_duty.xml_etree()):
+			log = odrl_schema.error_log
+			error = log.last_error
+			self.fail("Invalid ODRL %s" % error)
+
 
 if __name__ == '__main__':
 	unittest.main()

@@ -214,3 +214,11 @@ if __name__ == '__main__':
 	print(combined_geo_duty.xml())
 
 	print("##################")
+
+	print("http://dev.iptc.org/RightsML-Combined-Example-geographic-and-time-period")
+
+	combined_geo_duty = licenseFactory.combinedGeoTimePeriod(geography="http://cvx.iptc.org/iso3166-1a3/GBR", action="http://www.w3.org/ns/odrl/2/use", timeperiod="2013-06-15", geooperator="http://www.w3.org/ns/odrl/2/neq")
+
+	print(combined_geo_duty.json())
+
+	print(combined_geo_duty.xml())

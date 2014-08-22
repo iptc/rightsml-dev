@@ -208,6 +208,9 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
+		odrl_schema_doc = etree.parse("ODRL.xsd")
+		self.odrl_schema = etree.XMLSchema(odrl_schema_doc)
+
 	def tearDown(self):
 		pass
 
@@ -223,6 +226,10 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 		self.assertIn("eq", combined_geo_duty_xml)
 		self.assertIn("duty", combined_geo_duty_xml)
 
+		if not self.odrl_schema(combined_geo_duty.xml_etree()):
+			log = odrl_schema.error_log
+			error = log.last_error
+			self.fail("Invalid ODRL %s" % error)
 
 
 if __name__ == '__main__':

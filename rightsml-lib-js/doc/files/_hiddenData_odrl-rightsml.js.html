@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>_hiddenData\odrl-rightsml.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
+            
+                <li><a href="../classes/Asset.html">Asset</a></li>
+            
+                <li><a href="../classes/Constraint.html">Constraint</a></li>
+            
+                <li><a href="../classes/Duty.html">Duty</a></li>
+            
+                <li><a href="../classes/Party.html">Party</a></li>
+            
+                <li><a href="../classes/Permission.html">Permission</a></li>
+            
+                <li><a href="../classes/Policy.html">Policy</a></li>
+            
+                <li><a href="../classes/Prohibition.html">Prohibition</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/: ODRL.html">: ODRL</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: _hiddenData\odrl-rightsml.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* ODRL-RightsML JavaScript Library
+*
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
+* development timestamp: 2014-06-23
+*/
+var Odrl;
+(function (Odrl) {
+    // Constant values:
+    Odrl.nsUri = &quot;http://www.w3.org/ns/odrl/2/&quot;;
+    Odrl.nsPrefix = &quot;o&quot;;
+
+    var OdrlInJson;
+
+    // The classes:
+    // ****************************************************
+    /**
+    * Class for the Asset of the ODRL Core Model
+    * @class Asset
+    * @constructor
+    * @param {String} uid The Unique Identifier of the Asset
+    * @param {String} relation The relation of the asset to the policy
+    */
+    var Asset = (function () {
+        function Asset(uid, relation) {
+            this.uid = uid;
+            this.relation = relation;
+        }
+        Asset.prototype.validationResult = function () {
+            var valResult = &quot;&quot;;
+            if (this.uid.length &lt; 1) {
+                valResult = &quot;!! Asset: the uid is missing\n&quot;;
+            }
+            return valResult;
+        };
+
+        Asset.prototype.serializeXml = function (serStrIn) {
+            return serStrIn + &quot;&lt;asset uid=\&quot;&quot; + this.uid + &quot;\&quot; relation=\&quot;&quot; + this.relation + &quot;\&quot;/&gt;&quot;;
+        };
+        return Asset;
+    })();
+    Odrl.Asset = Asset;
+
+    // ****************************************************
+    /**
+    * Class for the Action of the ODRL Core Model
+    * @class Action
+    * @constructor
+    * @param {String} name The identifing name of the Action
+    */
+    var Action = (function () {
+        function Action(name) {
+            this.name = name;
+        }
+        Action.prototype.serializeXml = function (serStrIn) {
+            return serStrIn + &quot;&lt;action name=\&quot;&quot; + this.name + &quot;\&quot;/&gt;&quot;;
+        };
+        return Action;
+    })();
+    Odrl.Action = Action;
+
+    // ****************************************************
+    /**
+    * Class for the Constraint of the ODRL Core Model
+    * @class Constraint
+    * @constructor
+    * @param {String} name The identifing name of the Constraint
+    * @param {String} operator The identifyer of the operator
+    * @param {String} rightOperand The identifyer of the right operand
+    * @param {String} dataType The identifyer of the data type of the right operand
+    * @param {String} unit The identifyer of the unit of the right operand
+    * @param {String} status The identifyer of the status
+    */
+    var Constraint = (function () {
+        function Constraint(name, operator, rightOperand, dataType, unit, status) {
+            this.name = name;
+            this.operator = operator;
+            this.rightOperand = rightOperand;
+            this.dataType = dataType;
+            this.unit = unit;
+            this.status = status;
+        }
+        Constraint.prototype.serializeXml = function (serStrIn) {
+            var serStrOut = serStrIn + &quot;&lt;constraint name=\&quot;&quot; + this.name + &quot;\&quot;&quot;;
+            if (this.operator !== undefined &amp;&amp; this.operator != &quot;&quot;) {
+                serStrOut += &quot; operator=\&quot;&quot; + this.operator + &quot;\&quot;&quot;;
+            }
+            if (this.rightOperand !== undefined &amp;&amp; this.rightOperand != &quot;&quot;) {
+                serStrOut += &quot; rightOperand=\&quot;&quot; + this.rightOperand + &quot;\&quot;&quot;;
+            }
+            if (this.dataType !== undefined &amp;&amp; this.dataType != &quot;&quot;) {
+                serStrOut += &quot; dataType=\&quot;&quot; + this.dataType + &quot;\&quot;&quot;;
+            }
+            if (this.unit !== undefined &amp;&amp; this.unit != &quot;&quot;) {
+                serStrOut += &quot; unit=\&quot;&quot; + this.unit + &quot;\&quot;&quot;;
+            }
+            if (this.status !== undefined &amp;&amp; this.status != &quot;&quot;) {
+                serStrOut += &quot; status=\&quot;&quot; + this.status + &quot;\&quot;&quot;;
+            }
+            serStrOut += &quot;/&gt;&quot;;
+            return serStrOut;
+        };
+        return Constraint;
+    })();
+    Odrl.Constraint = Constraint;
+
+    // ****************************************************
+    /**
+    * Class for the Party of the ODRL Core Model
+    * @class Party
+    * @constructor
+    * @param {String} uid The Unique Identifier of the Party
+    * @param {String} pfunction The identifier of the functional role this party takes
+    * @param {String} scope The scope of the party
+    */
+    var Party = (function () {
+        function Party(uid, pfunction, scope) {
+            this.uid = uid;
+            this.pfunction = pfunction;
+            this.scope = scope;
+        }
+        Party.prototype.serializeXml = function (serStrIn) {
+            var serStrOut = serStrIn + &quot;&lt;party uid=\&quot;&quot; + this.uid + &quot;\&quot;&quot;;
+            if (this.pfunction !== undefined &amp;&amp; this.pfunction != &quot;&quot;) {
+                serStrOut += &quot; function=\&quot;&quot; + this.pfunction + &quot;\&quot;&quot;;
+            }
+            if (this.scope !== undefined &amp;&amp; this.scope != &quot;&quot;) {
+                serStrOut += &quot; scope=\&quot;&quot; + this.scope + &quot;\&quot;&quot;;
+            }
+            serStrOut += &quot;/&gt;&quot;;
+            return serStrOut;
+        };
+        return Party;
+    })();
+    Odrl.Party = Party;
+
+    // ****************************************************
+    /**
+    * Class for the Duty of the ODRL Core Model
+    * @class Duty
+    * @constructor
+    */
+    var Duty = (function () {
+        function Duty() {
+            this.uid = null;
+            this.assets = [];
+            this.constraints = [];
+            this.parties = [];
+        }
+        /**
+        * The method for setting the unique identifier of the Duty
+        * @method setUid
+        * @param {String} uid The unique identifier of the Duty
+        */
+        Duty.prototype.setUid = function (uid) {
+            this.uid = uid;
+            return this;
+        };
+
+        /**
+        * The method for setting the action of the Duty
+        * @method setAction
+        * @param {String} actionname The identifier of the action
+        */
+        Duty.prototype.setAction = function (actionname) {
+            this.action = new Action(actionname);
+            return this;
+        };
+
+        /**
+        * The method for adding an asset to the Duty
+        * @method addAsset
+        * @param {String} uid The unique identifier of the asset
+        * @param {String} relation The relation of the asset to the Duty.
+        */
+        Duty.prototype.addAsset = function (uid, relation) {
+            var newAsset = new Asset(uid, relation);
+            this.assets.push(newAsset);
+            return this;
+        };
+
+        /**
+        * The method for adding a constraint to the Duty
+        * @method addConstraint
+        * @param {String} name The identifing name of the Constraint
+        * @param {String} operator The identifyer of the operator
+        * @param {String} rightOperand The identifyer of the right operand
+        * @param {String} dataType The identifyer of the data type of the right operand
+        * @param {String} unit The identifyer of the unit of the right operand
+        * @param {String} status The identifyer of the status
+        */
+        Duty.prototype.addConstraint = function (name, operator, rightOperand, dataType, unit, status) {
+            var newConstraint = new Constraint(name, operator, rightOperand, dataType, unit, status);
+            this.constraints.push(newConstraint);
+            return this;
+        };
+
+        /**
+        * The method for adding a party to the Duty
+        * @method addParty
+        * @param {String} uid The Unique Identifier of the Party
+        * @param {String} pfunction The identifier of the functional role this party takes
+        * @param {String} scope The scope of the party
+        */
+        Duty.prototype.addParty = function (uid, pfunction, scope) {
+            var newParty = new Party(uid, pfunction, scope);
+            this.parties.push(newParty);
+            return this;
+        };
+
+        Duty.prototype.serializeXml = function (serStrIn) {
+            var serStrOut = serStrIn;
+            if (this.uid != undefined &amp;&amp; this.uid != &quot;&quot;) {
+                serStrOut += &quot;&lt;duty uid=\&quot;&quot; + this.uid + &quot;\&quot; &gt;&quot;;
+            } else {
+                serStrOut += &quot;&lt;duty&gt;&quot;;
+            }
+            var i;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                serStrOut = this.assets[i].serializeXml(serStrOut);
+            }
+            if (this.action != undefined) {
+                serStrOut = this.action.serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.constraints.length; i++) {
+                serStrOut = this.constraints[i].serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.parties.length; i++) {
+                serStrOut = this.parties[i].serializeXml(serStrOut);
+            }
+            serStrOut += &quot;&lt;/duty&gt;&quot;;
+            return serStrOut;
+        };
+
+        Duty.prototype.buildDutyOdrlInJson = function () {
+            var thisD = {};
+            var i;
+            thisD.action = this.action.name;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                if (this.assets[i].relation == Odrl.nsUri + &quot;target&quot;) {
+                    thisD.target = this.assets[i].uid;
+                }
+                if (this.assets[i].relation == Odrl.nsUri + &quot;output&quot;) {
+                    thisD.output = this.assets[i].uid;
+                }
+            }
+            if (this.constraints.length &gt; 0) {
+                thisD.constraints = [];
+                var thisC;
+                for (i = 0; i &lt; this.constraints.length; i++) {
+                    thisC = {};
+                    thisC.name = this.constraints[i].name;
+                    thisC.operator = this.constraints[i].operator;
+                    thisC.rightoperand = this.constraints[i].rightOperand;
+                    if (this.constraints[i].dataType != undefined &amp;&amp; this.constraints[i].dataType !== &quot;&quot;) {
+                        thisC.rightoperanddatatype = this.constraints[i].dataType;
+                    }
+                    if (this.constraints[i].unit != undefined &amp;&amp; this.constraints[i].unit !== &quot;&quot;) {
+                        thisC.rightoperandunit = this.constraints[i].unit;
+                    }
+                    if (this.constraints[i].status != undefined &amp;&amp; this.constraints[i].status !== &quot;&quot;) {
+                        thisC.status = this.constraints[i].status;
+                    }
+                    thisD.constraints.push(thisC);
+                }
+            }
+            for (i = 0; i &lt; this.parties.length; i++) {
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assigner&quot;) {
+                    thisD.assigner = this.parties[i].uid;
+                }
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assignee&quot;) {
+                    thisD.assignee = this.parties[i].uid;
+                    if (this.parties[i].scope != &quot;&quot;) {
+                        thisD.assignee_scope = this.parties[i].scope;
+                    }
+                }
+            }
+            return thisD;
+        };
+        return Duty;
+    })();
+    Odrl.Duty = Duty;
+
+    // ****************************************************
+    /**
+    * Class for the Permission of the ODRL Core Model
+    * @class Permission
+    * @constructor
+    */
+    var Permission = (function () {
+        function Permission() {
+            this.action = null;
+            this.assets = [];
+            this.constraints = [];
+            this.parties = [];
+            this.duties = [];
+        }
+        /**
+        * The method for setting the action of the Permission
+        * @method setAction
+        * @param {String} actionname The identifier of the action
+        */
+        Permission.prototype.setAction = function (actionname) {
+            this.action = new Action(actionname);
+            return this;
+        };
+
+        /**
+        * The method for adding an asset to the Permission
+        * @method addAsset
+        * @param {String} uid The unique identifier of the asset
+        * @param {String} relation The relation of the asset to the Duty.
+        */
+        Permission.prototype.addAsset = function (uid, relation) {
+            var newAsset = new Asset(uid, relation);
+            this.assets.push(newAsset);
+            return this;
+        };
+
+        /**
+        * The method for adding the required target asset to the Permission
+        * @method addTargetAsset
+        * @param {String} uid The unique identifier of the asset
+        */
+        Permission.prototype.addTargetAsset = function (uid) {
+            var newAsset = new Asset(uid, Odrl.AssetRelationsCV.target);
+            this.assets.push(newAsset);
+            return this;
+        };
+
+        /**
+        * The method for adding a constraint to the Permission
+        * @method addConstraint
+        * @param {String} name The identifing name of the Constraint
+        * @param {String} operator The identifyer of the operator
+        * @param {String} rightOperand The identifyer of the right operand
+        * @param {String} dataType The identifyer of the data type of the right operand
+        * @param {String} unit The identifyer of the unit of the right operand
+        * @param {String} status The identifyer of the status
+        */
+        Permission.prototype.addConstraint = function (name, operator, rightOperand, dataType, unit, status) {
+            var newConstraint = new Constraint(name, operator, rightOperand, dataType, unit, status);
+            this.constraints.push(newConstraint);
+            return this;
+        };
+
+        /**
+        * The method for adding a party to the Permission
+        * @method addParty
+        * @param {String} uid The Unique Identifier of the Party
+        * @param {String} pfunction The identifier of the functional role this party takes
+        * @param {String} scope The scope of the party
+        */
+        Permission.prototype.addParty = function (uid, pfunction, scope) {
+            var newParty = new Party(uid, pfunction, scope);
+            this.parties.push(newParty);
+            return this;
+        };
+
+        /**
+        * The method for adding a duty to the Permission
+        * @method addParty
+        * @param {Duty} newDuty A duty instance
+        */
+        Permission.prototype.addDuty = function (newDuty) {
+            this.duties.push(newDuty);
+            return this;
+        };
+
+        Permission.prototype.serializeXml = function (serStrIn) {
+            var serStrOut = serStrIn + &quot;&lt;permission&gt;&quot;;
+            var i;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                serStrOut = this.assets[i].serializeXml(serStrOut);
+            }
+            if (this.action != undefined) {
+                serStrOut = this.action.serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.constraints.length; i++) {
+                serStrOut = this.constraints[i].serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.parties.length; i++) {
+                serStrOut = this.parties[i].serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.duties.length; i++) {
+                serStrOut = this.duties[i].serializeXml(serStrOut);
+            }
+            serStrOut += &quot;&lt;/permission&gt;&quot;;
+            return serStrOut;
+        };
+
+        Permission.prototype.buildOdrlInJson = function () {
+            var thisP = {};
+            var i;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                if (this.assets[i].relation == Odrl.nsUri + &quot;target&quot;) {
+                    thisP.target = this.assets[i].uid;
+                }
+                if (this.assets[i].relation == Odrl.nsUri + &quot;output&quot;) {
+                    thisP.output = this.assets[i].uid;
+                }
+            }
+            thisP.action = this.action.name;
+
+            if (this.constraints.length &gt; 0) {
+                thisP.constraints = [];
+                var thisC;
+                for (i = 0; i &lt; this.constraints.length; i++) {
+                    thisC = {};
+                    thisC.name = this.constraints[i].name;
+                    thisC.operator = this.constraints[i].operator;
+                    thisC.rightoperand = this.constraints[i].rightOperand;
+                    if (this.constraints[i].dataType != undefined &amp;&amp; this.constraints[i].dataType !== &quot;&quot;) {
+                        thisC.rightoperanddatatype = this.constraints[i].dataType;
+                    }
+                    if (this.constraints[i].unit != undefined &amp;&amp; this.constraints[i].unit !== &quot;&quot;) {
+                        thisC.rightoperandunit = this.constraints[i].unit;
+                    }
+                    if (this.constraints[i].status != undefined &amp;&amp; this.constraints[i].status !== &quot;&quot;) {
+                        thisC.status = this.constraints[i].status;
+                    }
+                    thisP.constraints.push(thisC);
+                }
+            }
+
+            for (i = 0; i &lt; this.parties.length; i++) {
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assigner&quot;) {
+                    thisP.assigner = this.parties[i].uid;
+                }
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assignee&quot;) {
+                    thisP.assignee = this.parties[i].uid;
+                }
+            }
+            if (this.duties.length &gt; 0) {
+                thisP.duties = [];
+                for (i = 0; i &lt; this.duties.length; i++) {
+                    thisP.duties.push(this.duties[i].buildDutyOdrlInJson());
+                }
+            }
+            OdrlInJson.permissions.push(thisP);
+        };
+
+        Permission.prototype.validationResult = function () {
+            var valResult = &quot;&quot;;
+            if (this.assets.length == 0) {
+                valResult += &quot;!! Permission: no asset assigned to it&quot;;
+            }
+            for (var i = 0; i &lt; this.assets.length; i++) {
+                valResult += this.assets[i].validationResult();
+            }
+            return valResult;
+        };
+        return Permission;
+    })();
+    Odrl.Permission = Permission;
+
+    // ****************************************************
+    /**
+    * Class for the Prohibition of the ODRL Core Model
+    * @class Prohibition
+    * @constructor
+    */
+    var Prohibition = (function () {
+        function Prohibition() {
+            this.action = null;
+            this.assets = [];
+            this.constraints = [];
+            this.parties = [];
+        }
+        /**
+        * The method for setting the action of the Prohibition
+        * @method setAction
+        * @param {String} actionname The identifier of the action
+        */
+        Prohibition.prototype.setAction = function (actionname) {
+            this.action = new Action(actionname);
+            return this;
+        };
+
+        /**
+        * The method for adding an asset to the Prohibition
+        * @method addAsset
+        * @param {String} uid The unique identifier of the asset
+        * @param {String} relation The relation of the asset to the Duty.
+        */
+        Prohibition.prototype.addAsset = function (uid, relation) {
+            var newAsset = new Asset(uid, relation);
+            this.assets.push(newAsset);
+            return this;
+        };
+
+        /**
+        * The method for adding the required target asset to the Prohibition
+        * @method addTargetAsset
+        * @param {String} uid The unique identifier of the asset
+        */
+        Prohibition.prototype.addTargetAsset = function (uid) {
+            var newAsset = new Asset(uid, Odrl.AssetRelationsCV.target);
+            this.assets.push(newAsset);
+            return this;
+        };
+
+        /**
+        * The method for adding a constraint to the Prohibition
+        * @method addConstraint
+        * @param {String} name The identifing name of the Constraint
+        * @param {String} operator The identifyer of the operator
+        * @param {String} rightOperand The identifyer of the right operand
+        * @param {String} dataType The identifyer of the data type of the right operand
+        * @param {String} unit The identifyer of the unit of the right operand
+        * @param {String} status The identifyer of the status
+        */
+        Prohibition.prototype.addConstraint = function (name, operator, rightOperand, dataType, unit, status) {
+            var newConstraint = new Constraint(name, operator, rightOperand, dataType, unit, status);
+            this.constraints.push(newConstraint);
+            return this;
+        };
+
+        /**
+        * The method for adding a party to the Prohibition
+        * @method addParty
+        * @param {String} uid The Unique Identifier of the Party
+        * @param {String} pfunction The identifier of the functional role this party takes
+        * @param {String} scope The scope of the party
+        */
+        Prohibition.prototype.addParty = function (uid, pfunction, scope) {
+            var newParty = new Party(uid, pfunction, scope);
+            this.parties.push(newParty);
+            return this;
+        };
+
+        Prohibition.prototype.serializeXml = function (serStrIn) {
+            var serStrOut = serStrIn + &quot;&lt;prohibition&gt;&quot;;
+            var i;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                serStrOut = this.assets[i].serializeXml(serStrOut);
+            }
+            if (this.action != undefined) {
+                serStrOut = this.action.serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.constraints.length; i++) {
+                serStrOut = this.constraints[i].serializeXml(serStrOut);
+            }
+            for (i = 0; i &lt; this.parties.length; i++) {
+                serStrOut = this.parties[i].serializeXml(serStrOut);
+            }
+            serStrOut += &quot;&lt;/prohibition&gt;&quot;;
+            return serStrOut;
+        };
+
+        Prohibition.prototype.buildOdrlInJson = function () {
+            var thisP = {};
+            var i;
+            thisP.action = this.action.name;
+            for (i = 0; i &lt; this.assets.length; i++) {
+                if (this.assets[i].relation == Odrl.nsUri + &quot;target&quot;) {
+                    thisP.target = this.assets[i].uid;
+                }
+                if (this.assets[i].relation == Odrl.nsUri + &quot;output&quot;) {
+                    thisP.output = this.assets[i].uid;
+                }
+            }
+            if (this.constraints.length &gt; 0) {
+                thisP.constraints = [];
+                var thisC;
+                for (i = 0; i &lt; this.constraints.length; i++) {
+                    thisC = {};
+                    thisC.name = this.constraints[i].name;
+                    thisC.operator = this.constraints[i].operator;
+                    thisC.rightoperand = this.constraints[i].rightOperand;
+                    if (this.constraints[i].dataType != undefined &amp;&amp; this.constraints[i].dataType !== &quot;&quot;) {
+                        thisC.rightoperanddatatype = this.constraints[i].dataType;
+                    }
+                    if (this.constraints[i].unit != undefined &amp;&amp; this.constraints[i].unit !== &quot;&quot;) {
+                        thisC.rightoperandunit = this.constraints[i].unit;
+                    }
+                    if (this.constraints[i].status != undefined &amp;&amp; this.constraints[i].status !== &quot;&quot;) {
+                        thisC.status = this.constraints[i].status;
+                    }
+                    thisP.constraints.push(thisC);
+                }
+            }
+            for (i = 0; i &lt; this.parties.length; i++) {
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assigner&quot;) {
+                    thisP.assigner = this.parties[i].uid;
+                }
+                if (this.parties[i].pfunction == Odrl.nsUri + &quot;assignee&quot;) {
+                    thisP.assignee = this.parties[i].uid;
+                    if (this.parties[i].scope != &quot;&quot;) {
+                        thisP.assignee_scope = this.parties[i].scope;
+                    }
+                }
+            }
+        };
+        return Prohibition;
+    })();
+    Odrl.Prohibition = Prohibition;
+
+    // ****************************************************
+    /**
+    * Class for the Policy of the ODRL Core Model
+    * @class Policy
+    * @constructor
+    * @param {String} uid The Unique Identifier of the Asset
+    * @param {String} pType The identifier of the policy type
+    */
+    var Policy = (function () {
+        function Policy(pUid, pType) {
+            this.uid = pUid;
+            this.type = Odrl.nsUri + pType;
+            this.permissions = [];
+            this.prohibitions = [];
+        }
+        /**
+        * The method for setting the conflict property of the Policy
+        * @method setConflict
+        * @param {String} conflict The identifier of the conflict
+        */
+        Policy.prototype.setConflict = function (conflict) {
+            this.conflict = conflict;
+            return this;
+        };
+
+        /**
+        * The method for adding a permission to the Policy
+        * @method addPermission
+        * @param {Permission} newPerm A permission instance
+        */
+        Policy.prototype.addPermission = function (newPerm) {
+            this.permissions.push(newPerm);
+            return this;
+        };
+
+        /**
+        * The method for adding a Prohibition to the Policy
+        * @method addProhibition
+        * @param {Prohibition} newProhib A prohibition instance
+        */
+        Policy.prototype.addProhibition = function (newProhib) {
+            this.prohibitions.push(newProhib);
+            return this;
+        };
+
+        /**
+        * The method for serializing the Policy to XML syntax
+        * @method serializeXml
+        */
+        Policy.prototype.serializeXml = function () {
+            var serStr = &quot;&lt;Policy uid=\&quot;&quot; + this.uid + &quot;\&quot; type=\&quot;&quot; + this.type + &quot;\&quot;&quot;;
+            if (this.conflict != undefined &amp;&amp; this.conflict != &quot;&quot;) {
+                serStr += &quot; conflict=\&quot;&quot; + this.conflict + &quot;\&quot;&quot;;
+            }
+            serStr += &quot; xmlns=\&quot;&quot; + Odrl.nsUri + &quot;\&quot; &gt;&quot;;
+            var i;
+            for (i = 0; i &lt; this.permissions.length; i++) {
+                serStr = this.permissions[i].serializeXml(serStr);
+            }
+            for (i = 0; i &lt; this.prohibitions.length; i++) {
+                serStr = this.prohibitions[i].serializeXml(serStr);
+            }
+            serStr += &quot;&lt;/Policy&gt;&quot;;
+            return serStr;
+        };
+
+        Policy.prototype.buildOdrlInJson = function () {
+            OdrlInJson = {};
+            OdrlInJson.policytype = this.type;
+            OdrlInJson.policyid = this.uid;
+            if (this.conflict != undefined &amp;&amp; this.conflict != &quot;&quot;) {
+                OdrlInJson.conflict = this.conflict;
+            }
+            if (this.undefined != undefined &amp;&amp; this.undefined != &quot;&quot;) {
+                OdrlInJson.undefined = this.undefined;
+            }
+            if (this.inheritAllowed != undefined &amp;&amp; this.inheritAllowed != &quot;&quot;) {
+                OdrlInJson.inheritallowed = this.inheritAllowed;
+            }
+            if (this.inheritFrom != undefined &amp;&amp; this.inheritFrom != &quot;&quot;) {
+                OdrlInJson.inheritfrom = this.inheritFrom;
+            }
+            if (this.inheritRelation != undefined &amp;&amp; this.inheritRelation != &quot;&quot;) {
+                OdrlInJson.inheritrelation = this.inheritRelation;
+            }
+            if (this.profile != undefined &amp;&amp; this.profile != &quot;&quot;) {
+                OdrlInJson.profile = this.profile;
+            }
+            if (this.permissions.length &gt; 0) {
+                OdrlInJson.permissions = [];
+                for (var i = 0; i &lt; this.permissions.length; i++) {
+                    this.permissions[i].buildOdrlInJson();
+                }
+            }
+            if (this.prohibitions.length &gt; 0) {
+                OdrlInJson.permissions = [];
+                for (var i = 0; i &lt; this.prohibitions.length; i++) {
+                    this.prohibitions[i].buildOdrlInJson();
+                }
+            }
+        };
+
+        /**
+        * The method for validating the data, returns a string
+        * @method validationResult
+        */
+        Policy.prototype.validationResult = function () {
+            var valResult = &quot;&quot;;
+            if (this.permissions.length == 0 &amp;&amp; this.prohibitions.length == 0) {
+                valResult += &quot;!! Policy does not contain a permission or a prohibition \n&quot;;
+            }
+            for (var i = 0; i &lt; this.permissions.length; i++) {
+                valResult += this.permissions[i].validationResult();
+            }
+
+            return valResult;
+        };
+
+        /**
+        * The method for serializing the Policy to the official ODRL JSON syntax
+        * @method serializeJson
+        */
+        Policy.prototype.serializeJson = function () {
+            this.buildOdrlInJson();
+            return JSON.stringify(OdrlInJson, null, 2);
+        };
+
+        /**
+        * The method for serializing the Policy to JSON reflecting the Core Model
+        * @method serializeCoreModelJson
+        */
+        Policy.prototype.serializeCoreModelJson = function () {
+            return JSON.stringify(this, null, 2);
+        };
+        return Policy;
+    })();
+    Odrl.Policy = Policy;
+
+    Odrl.nsVocabUri = &quot;http://www.w3.org/ns/odrl/2/&quot;;
+    var ActionsCV = (function () {
+        function ActionsCV() {
+        }
+        ActionsCV.acceptTracking = Odrl.nsVocabUri + &quot;acceptTracking&quot;;
+        ActionsCV.aggregate = Odrl.nsVocabUri + &quot;aggregate&quot;;
+        ActionsCV.annotate = Odrl.nsVocabUri + &quot;annotate&quot;;
+        ActionsCV.anonymize = Odrl.nsVocabUri + &quot;anonymize&quot;;
+        ActionsCV.appendTo = Odrl.nsVocabUri + &quot;appendTo&quot;;
+        ActionsCV.archive = Odrl.nsVocabUri + &quot;archive&quot;;
+        ActionsCV.attribute = Odrl.nsVocabUri + &quot;attribute&quot;;
+        ActionsCV.concurrentUse = Odrl.nsVocabUri + &quot;concurrentUse&quot;;
+        ActionsCV.deletee = Odrl.nsVocabUri + &quot;delete&quot;;
+        ActionsCV.derive = Odrl.nsVocabUri + &quot;derive&quot;;
+        ActionsCV.digitize = Odrl.nsVocabUri + &quot;digitize&quot;;
+        ActionsCV.display = Odrl.nsVocabUri + &quot;display&quot;;
+        ActionsCV.distribute = Odrl.nsVocabUri + &quot;distribute&quot;;
+        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + &quot;ensureExclusivity&quot;;
+        ActionsCV.execute = Odrl.nsVocabUri + &quot;execute&quot;;
+        ActionsCV.extract = Odrl.nsVocabUri + &quot;extract&quot;;
+        ActionsCV.give = Odrl.nsVocabUri + &quot;give&quot;;
+        ActionsCV.include = Odrl.nsVocabUri + &quot;include&quot;;
+        ActionsCV.index = Odrl.nsVocabUri + &quot;index&quot;;
+        ActionsCV.inform = Odrl.nsVocabUri + &quot;inform&quot;;
+        ActionsCV.install = Odrl.nsVocabUri + &quot;install&quot;;
+        ActionsCV.lease = Odrl.nsVocabUri + &quot;lease&quot;;
+        ActionsCV.lend = Odrl.nsVocabUri + &quot;lend&quot;;
+        ActionsCV.move = Odrl.nsVocabUri + &quot;move&quot;;
+        ActionsCV.nextPolicy = Odrl.nsVocabUri + &quot;nextPolicy&quot;;
+        ActionsCV.obtainConsent = Odrl.nsVocabUri + &quot;obtainConsent&quot;;
+        ActionsCV.pay = Odrl.nsVocabUri + &quot;pay&quot;;
+        ActionsCV.play = Odrl.nsVocabUri + &quot;play&quot;;
+        ActionsCV.present = Odrl.nsVocabUri + &quot;present&quot;;
+        ActionsCV.preview = Odrl.nsVocabUri + &quot;preview&quot;;
+        ActionsCV.print = Odrl.nsVocabUri + &quot;print&quot;;
+        ActionsCV.read = Odrl.nsVocabUri + &quot;read&quot;;
+        ActionsCV.reproduce = Odrl.nsVocabUri + &quot;reproduce&quot;;
+        ActionsCV.reviewPolicy = Odrl.nsVocabUri + &quot;reviewPolicy&quot;;
+        ActionsCV.secondaryUse = Odrl.nsVocabUri + &quot;secondaryUse&quot;;
+        ActionsCV.sell = Odrl.nsVocabUri + &quot;sell&quot;;
+        ActionsCV.sublicense = Odrl.nsVocabUri + &quot;sublicense&quot;;
+        ActionsCV.textToSpeech = Odrl.nsVocabUri + &quot;textToSpeech&quot;;
+        ActionsCV.transfer = Odrl.nsVocabUri + &quot;transfer&quot;;
+        ActionsCV.transform = Odrl.nsVocabUri + &quot;transform&quot;;
+        ActionsCV.translate = Odrl.nsVocabUri + &quot;translate&quot;;
+        ActionsCV.uninstall = Odrl.nsVocabUri + &quot;uninstall&quot;;
+        ActionsCV.use = Odrl.nsVocabUri + &quot;use&quot;;
+        ActionsCV.watermark = Odrl.nsVocabUri + &quot;watermark&quot;;
+        ActionsCV.writeTo = Odrl.nsVocabUri + &quot;writeTo&quot;;
+        return ActionsCV;
+    })();
+    Odrl.ActionsCV = ActionsCV;
+    var PolicyTypesCV = (function () {
+        function PolicyTypesCV() {
+        }
+        PolicyTypesCV.agreement = Odrl.nsVocabUri + &quot;agreement&quot;;
+        PolicyTypesCV.offer = Odrl.nsVocabUri + &quot;offer&quot;;
+        PolicyTypesCV.privacy = Odrl.nsVocabUri + &quot;privacy&quot;;
+        PolicyTypesCV.request = Odrl.nsVocabUri + &quot;request&quot;;
+        PolicyTypesCV.set = Odrl.nsVocabUri + &quot;set&quot;;
+        PolicyTypesCV.ticket = Odrl.nsVocabUri + &quot;ticket&quot;;
+        return PolicyTypesCV;
+    })();
+    Odrl.PolicyTypesCV = PolicyTypesCV;
+    var ConstraintsCV = (function () {
+        function ConstraintsCV() {
+        }
+        ConstraintsCV.absolutePosition = Odrl.nsVocabUri + &quot;absolutePosition&quot;;
+        ConstraintsCV.absoluteSize = Odrl.nsVocabUri + &quot;absoluteSize&quot;;
+        ConstraintsCV.count = Odrl.nsVocabUri + &quot;count&quot;;
+        ConstraintsCV.dateTime = Odrl.nsVocabUri + &quot;dateTime&quot;;
+        ConstraintsCV.fileFormat = Odrl.nsVocabUri + &quot;fileFormat&quot;;
+        ConstraintsCV.industry = Odrl.nsVocabUri + &quot;industry&quot;;
+        ConstraintsCV.language = Odrl.nsVocabUri + &quot;language&quot;;
+        ConstraintsCV.deliveryChannel = Odrl.nsVocabUri + &quot;deliveryChannel&quot;;
+        ConstraintsCV.elapsedTime = Odrl.nsVocabUri + &quot;elapsedTime&quot;;
+        ConstraintsCV.event = Odrl.nsVocabUri + &quot;media&quot;;
+        ConstraintsCV.meteredTime = Odrl.nsVocabUri + &quot;meteredTime&quot;;
+        ConstraintsCV.payAmount = Odrl.nsVocabUri + &quot;payAmount&quot;;
+        ConstraintsCV.percentage = Odrl.nsVocabUri + &quot;percentage&quot;;
+        ConstraintsCV.product = Odrl.nsVocabUri + &quot;product&quot;;
+        ConstraintsCV.purpose = Odrl.nsVocabUri + &quot;purpose&quot;;
+        ConstraintsCV.recipient = Odrl.nsVocabUri + &quot;recipient&quot;;
+        ConstraintsCV.relativePosition = Odrl.nsVocabUri + &quot;relativePosition&quot;;
+        ConstraintsCV.relativeSize = Odrl.nsVocabUri + &quot;relativeSize&quot;;
+        ConstraintsCV.resolution = Odrl.nsVocabUri + &quot;resolution&quot;;
+        ConstraintsCV.spatial = Odrl.nsVocabUri + &quot;spatial&quot;;
+        ConstraintsCV.timeInterval = Odrl.nsVocabUri + &quot;event&quot;;
+        ConstraintsCV.systemDevice = Odrl.nsVocabUri + &quot;systemDevice&quot;;
+        ConstraintsCV.version = Odrl.nsVocabUri + &quot;version&quot;;
+        ConstraintsCV.virtualLocation = Odrl.nsVocabUri + &quot;virtualLocation&quot;;
+        return ConstraintsCV;
+    })();
+    Odrl.ConstraintsCV = ConstraintsCV;
+    var ConstrOperatorsCV = (function () {
+        function ConstrOperatorsCV() {
+        }
+        ConstrOperatorsCV.eq = Odrl.nsVocabUri + &quot;eq&quot;;
+        ConstrOperatorsCV.gt = Odrl.nsVocabUri + &quot;gt&quot;;
+        ConstrOperatorsCV.gteq = Odrl.nsVocabUri + &quot;gteq&quot;;
+        ConstrOperatorsCV.hasPart = Odrl.nsVocabUri + &quot;hasPart&quot;;
+        ConstrOperatorsCV.isA = Odrl.nsVocabUri + &quot;isA&quot;;
+        ConstrOperatorsCV.isAllOf = Odrl.nsVocabUri + &quot;isAllOf&quot;;
+        ConstrOperatorsCV.isAnyOf = Odrl.nsVocabUri + &quot;isAnyOf&quot;;
+        ConstrOperatorsCV.isNoneOf = Odrl.nsVocabUri + &quot;isNoneOf&quot;;
+        ConstrOperatorsCV.isPartOf = Odrl.nsVocabUri + &quot;isPartOf&quot;;
+        ConstrOperatorsCV.lt = Odrl.nsVocabUri + &quot;lt&quot;;
+        ConstrOperatorsCV.lteq = Odrl.nsVocabUri + &quot;lteq&quot;;
+        ConstrOperatorsCV.neq = Odrl.nsVocabUri + &quot;neq&quot;;
+        return ConstrOperatorsCV;
+    })();
+    Odrl.ConstrOperatorsCV = ConstrOperatorsCV;
+    var PartyRolesCV = (function () {
+        function PartyRolesCV() {
+        }
+        PartyRolesCV.assigner = Odrl.nsVocabUri + &quot;assigner&quot;;
+        PartyRolesCV.assignee = Odrl.nsVocabUri + &quot;assignee&quot;;
+        PartyRolesCV.attributedParty = Odrl.nsVocabUri + &quot;attributedParty&quot;;
+        PartyRolesCV.consentingParty = Odrl.nsVocabUri + &quot;consentingParty&quot;;
+        PartyRolesCV.informedParty = Odrl.nsVocabUri + &quot;informedParty&quot;;
+        PartyRolesCV.payeeParty = Odrl.nsVocabUri + &quot;payeeParty&quot;;
+        PartyRolesCV.trackingParty = Odrl.nsVocabUri + &quot;trackingParty&quot;;
+        return PartyRolesCV;
+    })();
+    Odrl.PartyRolesCV = PartyRolesCV;
+    var PartyRoleScopesCV = (function () {
+        function PartyRoleScopesCV() {
+        }
+        PartyRoleScopesCV.individual = Odrl.nsVocabUri + &quot;individual&quot;;
+        PartyRoleScopesCV.group = Odrl.nsVocabUri + &quot;group&quot;;
+        PartyRoleScopesCV.all = Odrl.nsVocabUri + &quot;all&quot;;
+        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + &quot;allConnections&quot;;
+        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + &quot;all2ndConnections&quot;;
+        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + &quot;allGroups&quot;;
+        return PartyRoleScopesCV;
+    })();
+    Odrl.PartyRoleScopesCV = PartyRoleScopesCV;
+    var AssetRelationsCV = (function () {
+        function AssetRelationsCV() {
+        }
+        AssetRelationsCV.target = Odrl.nsVocabUri + &quot;target&quot;;
+        AssetRelationsCV.output = Odrl.nsVocabUri + &quot;output&quot;;
+        return AssetRelationsCV;
+    })();
+    Odrl.AssetRelationsCV = AssetRelationsCV;
+
+})(Odrl || (Odrl = {}));
+
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+/**
+* This module provides all ODRL classes complying to the RightsML profile
+*
+* @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
+* Published under MIT license (see http://www.opensource.org/licenses/MIT)
+* development timestamp: 2014-06-23
+*/
+var RightsML;
+(function (RightsML) {
+    var Policy = (function (_super) {
+        __extends(Policy, _super);
+        function Policy(pUid, pType) {
+            _super.call(this, pUid, pType);
+            this.profile = RightsML.nsUri;
+        }
+        return Policy;
+    })(Odrl.Policy);
+    RightsML.Policy = Policy;
+    
+        // Constant values:
+    RightsML.nsUri = &quot;http://iptc.org/std/RightsML/2011-10-07/&quot;;
+
+    var ActionsCV = (function () {
+        function ActionsCV() {
+        }
+        ActionsCV.archive = RightsML.nsUri + &quot;archive&quot;;
+        ActionsCV.copy = RightsML.nsUri + &quot;copy&quot;;
+        ActionsCV.distribute = RightsML.nsUri + &quot;distribute&quot;;
+        ActionsCV.removeFromService = RightsML.nsUri + &quot;removeFromService&quot;;
+        return ActionsCV;
+    })();
+    RightsML.ActionsCV = ActionsCV;
+
+    var ConstraintsCV = (function () {
+        function ConstraintsCV() {
+        }
+        ConstraintsCV.actionRequestReceived = RightsML.nsUri + &quot;actionRequestReceived&quot;;
+        ConstraintsCV.requestedActionsPerformed = RightsML.nsUri + &quot;requestedActionsPerformed&quot;;
+        return ConstraintsCV;
+    })();
+    RightsML.ConstraintsCV = ConstraintsCV;
+
+    var RightOperandsCV = (function () {
+        function RightOperandsCV() {
+        }
+        RightOperandsCV.requestReceivedDateTime = RightsML.nsUri + &quot;requestReceivedDateTime&quot;;
+        RightOperandsCV.serviceDevelopment = RightsML.nsUri + &quot;serviceDevelopment&quot;;
+        RightOperandsCV.serviceDemonstration = RightsML.nsUri + &quot;serviceDemonstration&quot;;
+        RightOperandsCV.serviceTesting = RightsML.nsUri + &quot;serviceTesting&quot;;
+        return RightOperandsCV;
+    })();
+    RightsML.RightOperandsCV = RightOperandsCV;
+
+})(RightsML || (RightsML = {}));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

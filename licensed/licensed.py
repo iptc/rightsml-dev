@@ -143,7 +143,7 @@ class odrl(object):
 							for a in d["assets"]:
 								asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-								asset.set('id', a)
+								asset.set('uid', a)
 								duty.append(asset)
 
 						if "constraints" in d:

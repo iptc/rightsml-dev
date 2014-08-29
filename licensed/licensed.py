@@ -23,6 +23,7 @@ except ImportError:
         except ImportError:
           print("Failed to import ElementTree from any known place")
 
+from StringIO import *
 import hashlib
 import json
 
@@ -215,6 +216,108 @@ class odrl(object):
 			policy.append(prohibition)
 
 		return policy
+
+	# Permissions and prohibitions have the same structure
+	def xml_permissions_prohibitions_to_json(self, type, policy):
+		permissions_prohibitions = []
+
+		for permission_prohibition in policy.iter(tag="{http://www.w3.org/ns/odrl/2/}"+type):
+			# In ODRL, a permission/prohibition must have an asset element and an action element
+			# So, we can rely on them being there, in that order
+			# Yeah, I know.
+			target = permission_prohibition[0].get("uid")
+			action = permission_prohibition[1].get("name")
+			permission_prohibition_obj = { 'target' : target, 'action' : action}
+
+			constraints = []
+			for constraint in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}constraint"):
+				name = constraint.get('name')
+				operator = constraint.get('operator')
+				rightoperand = constraint.get('rightOperand')
+				constraint_obj = { 'name' : name, 'operator' : operator, 'rightoperand' : rightoperand }
+
+				if constraint.get('dataType') != None:
+					constraint_obj['rightoperanddatatype'] = constraint.get('dataType')
+				if constraint.get('unit') != None:
+					constraint_obj['rightoperandunit'] = constraint.get('unit')
+				if constraint.get('status') != None:
+					constraint_obj['status'] = constraint.get('status')
+
+				constraints.append( constraint_obj)
+
+			# Constraints are optional
+			if len(constraints) > 0:
+				permission_prohibition_obj['constraints'] = constraints
+
+			for party in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}party"):
+				if party.get('function') == 'http://www.w3.org/ns/odrl/2/assigner':
+					permission_prohibition_obj['assigner'] = party.get('uid')
+				elif party.get('function') == 'http://www.w3.org/ns/odrl/2/assignee':
+					permission_prohibition_obj['assignee'] = party.get('uid')
+					if party.get('scope') != None:
+						permission_prohibition_object['assignee_scope'] = party.get('scope')
+
+			duties = []
+			for duty in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}duty"):
+				duty_obj = {}
+				action = duty[0].get("name")
+
+				duty_obj['action'] = action
+
+				assets = []
+				for asset in duty.iter(tag="{http://www.w3.org/ns/odrl/2/}asset"):
+					if asset.get('relation') == 'http://www.w3.org/ns/odrl/2/target':
+						duty_obj['target'] = asset.get('uid')
+					else:
+						asset.append(asset.get('uid'))
+
+				if len(assets) > 0:
+					duty_obj['assets'] = assets
+
+				constraints = []
+				for constraint in duty.iter(tag="{http://www.w3.org/ns/odrl/2/}constraint"):
+					name = constraint.get('name')
+					operator = constraint.get('operator')
+					rightoperand = constraint.get('rightOperand')
+					constraint_obj = { 'name' : name, 'operator' : operator, 'rightoperand' : rightoperand }
+
+					if constraint.get('dataType') != None:
+						constraint_obj['rightoperanddatatype'] = constraint.get('dataType')
+					if constraint.get('unit') != None:
+						constraint_obj['rightoperandunit'] = constraint.get('unit')
+					if constraint.get('status') != None:
+						constraint_obj['status'] = constraint.get('status')
+
+					constraints.append( constraint_obj)
+
+				# Constraints are optional
+				if len(constraints) > 0:
+					duty_obj['constraints'] = constraints
+
+				duties.append(duty_obj)
+
+			if len(duties) > 0:
+				permission_prohibition_obj['duties'] = duties
+
+			permissions_prohibitions.append(permission_prohibition_obj)
+
+		
+		if len(permissions_prohibitions) > 0:
+			self.odrl[type+'s'] = permissions_prohibitions
+
+	def xml2json(self, theXML):
+		odrl_tree = etree.parse(StringIO(theXML))
+
+		for policy in odrl_tree.xpath('/o:Policy', namespaces={'o': 'http://www.w3.org/ns/odrl/2/'}):
+			self.odrl['policyid'] = policy.get('uid')
+			self.odrl['policytype'] = policy.get('type')
+
+			self.xml_permissions_prohibitions_to_json("permission", policy)
+
+			self.xml_permissions_prohibitions_to_json("prohibition", policy)
+
+		return self.json()
+
 
 class rightsml(odrl):
 

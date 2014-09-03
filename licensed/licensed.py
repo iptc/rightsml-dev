@@ -221,7 +221,7 @@ class odrl(object):
 	def xml_permissions_prohibitions_to_json(self, type, policy):
 		permissions_prohibitions = []
 
-		for permission_prohibition in policy.iter(tag="{http://www.w3.org/ns/odrl/2/}"+type):
+		for permission_prohibition in [p for p in policy if p.tag == "{http://www.w3.org/ns/odrl/2/}"+type]:
 			# In ODRL, a permission/prohibition must have an asset element and an action element
 			# So, we can rely on them being there, in that order
 			# Yeah, I know.
@@ -230,7 +230,8 @@ class odrl(object):
 			permission_prohibition_obj = { 'target' : target, 'action' : action}
 
 			constraints = []
-			for constraint in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}constraint"):
+
+			for constraint in [c for c in permission_prohibition if c.tag == "{http://www.w3.org/ns/odrl/2/}constraint"]:
 				name = constraint.get('name')
 				operator = constraint.get('operator')
 				rightoperand = constraint.get('rightOperand')
@@ -243,13 +244,13 @@ class odrl(object):
 				if constraint.get('status') != None:
 					constraint_obj['status'] = constraint.get('status')
 
-				constraints.append( constraint_obj)
+				constraints.append(constraint_obj)
 
 			# Constraints are optional
 			if len(constraints) > 0:
 				permission_prohibition_obj['constraints'] = constraints
 
-			for party in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}party"):
+			for party in [p for p in permission_prohibition if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
 				if party.get('function') == 'http://www.w3.org/ns/odrl/2/assigner':
 					permission_prohibition_obj['assigner'] = party.get('uid')
 				elif party.get('function') == 'http://www.w3.org/ns/odrl/2/assignee':
@@ -258,14 +259,14 @@ class odrl(object):
 						permission_prohibition_object['assignee_scope'] = party.get('scope')
 
 			duties = []
-			for duty in permission_prohibition.iter(tag="{http://www.w3.org/ns/odrl/2/}duty"):
+			for duty in [d for d in permission_prohibition if d.tag == "{http://www.w3.org/ns/odrl/2/}duty"]:
 				duty_obj = {}
 				action = duty[0].get("name")
 
 				duty_obj['action'] = action
 
 				assets = []
-				for asset in duty.iter(tag="{http://www.w3.org/ns/odrl/2/}asset"):
+				for asset in [a for a in duty if a.tag == "{http://www.w3.org/ns/odrl/2/}asset"]:
 					if asset.get('relation') == 'http://www.w3.org/ns/odrl/2/target':
 						duty_obj['target'] = asset.get('uid')
 					else:
@@ -275,7 +276,7 @@ class odrl(object):
 					duty_obj['assets'] = assets
 
 				constraints = []
-				for constraint in duty.iter(tag="{http://www.w3.org/ns/odrl/2/}constraint"):
+				for constraint in [c for c in duty if c.tag == "{http://www.w3.org/ns/odrl/2/}constraint"]:
 					name = constraint.get('name')
 					operator = constraint.get('operator')
 					rightoperand = constraint.get('rightOperand')
@@ -288,11 +289,25 @@ class odrl(object):
 					if constraint.get('status') != None:
 						constraint_obj['status'] = constraint.get('status')
 
-					constraints.append( constraint_obj)
+					constraints.append(constraint_obj)
 
 				# Constraints are optional
 				if len(constraints) > 0:
 					duty_obj['constraints'] = constraints
+
+				for party in [p for p in duty if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
+					party_function = party.get('function')
+					party_uid = party.get('uid')
+					if party_function == 'http://www.w3.org/ns/odrl/2/payeeParty':
+						duty_obj['payeeparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/attributedParty':
+						duty_obj['attributedparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/consentingParty':
+						duty_obj['consentingparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/informedParty':
+						duty_obj['informedparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/trackingParty':
+						duty_obj['trackingparty'] = party_uid
 
 				duties.append(duty_obj)
 

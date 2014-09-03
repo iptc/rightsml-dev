@@ -357,5 +357,50 @@ class ConvertXML2JSONTest(unittest.TestCase):
 
 		self.assertEqual(duty_json, simple_duty_json)
 
+	def test_json_to_payee_xml(self):
+		simple_payee_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/print", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "duties": [
+                {
+                    "action": "http://www.w3.org/ns/odrl/2/pay", 
+                    "constraints": [
+                        {
+                            "name": "http://www.w3.org/ns/odrl/2/payAmount", 
+                            "operator": "http://www.w3.org/ns/odrl/2/eq", 
+                            "rightoperand": "100.00", 
+                            "rightoperandunit": "http://cvx.iptc.org/iso4217a/EUR"
+                        }
+                    ], 
+                    "payeeparty": "http://example.com/cv/party/epa"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/2c1b09db7cd80b63b9107ba5ccc5b93c", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		simple_payee_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/2c1b09db7cd80b63b9107ba5ccc5b93c" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/print"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+    <o:duty>
+      <o:action name="http://www.w3.org/ns/odrl/2/pay"/>
+      <o:constraint name="http://www.w3.org/ns/odrl/2/payAmount" operator="http://www.w3.org/ns/odrl/2/eq" rightOperand="100.00" unit="http://cvx.iptc.org/iso4217a/EUR"/>
+      <o:party function="http://www.w3.org/ns/odrl/2/payeeParty" uid="http://example.com/cv/party/epa"/>
+    </o:duty>
+  </o:permission>
+</o:Policy>"""
+
+		payee_json = self.odrl_factory.xml2json(simple_payee_xml)
+
+		self.assertEqual(payee_json, simple_payee_json)
 if __name__ == '__main__':
 	unittest.main()

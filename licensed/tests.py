@@ -402,5 +402,52 @@ class ConvertXML2JSONTest(unittest.TestCase):
 		payee_json = self.odrl_factory.xml2json(simple_payee_xml)
 
 		self.assertEqual(payee_json, simple_payee_json)
+
+
+	def test_json_to_geodate_xml(self):
+		simple_geodate_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/use", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "constraints": [
+                {
+                    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+                    "operator": "http://www.w3.org/ns/odrl/2/neq", 
+                    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/GBR"
+                }, 
+                {
+                    "name": "http://www.w3.org/ns/odrl/2/dateTime", 
+                    "operator": "http://www.w3.org/ns/odrl/2/lt", 
+                    "rightoperand": "2013-06-15", 
+                    "rightoperanddatatype": "xs:dateTime"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/04f4bc3ad8f037a8ffb15186005ef672", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		simple_geodate_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/04f4bc3ad8f037a8ffb15186005ef672" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/use"/>
+    <o:constraint name="http://www.w3.org/ns/odrl/2/spatial" operator="http://www.w3.org/ns/odrl/2/neq" rightOperand="http://cvx.iptc.org/iso3166-1a3/GBR"/>
+    <o:constraint name="http://www.w3.org/ns/odrl/2/dateTime" operator="http://www.w3.org/ns/odrl/2/lt" rightOperand="2013-06-15" dataType="xs:dateTime"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+  </o:permission>
+</o:Policy>"""
+
+
+		geodate_json = self.odrl_factory.xml2json(simple_geodate_xml)
+
+		self.assertEqual(geodate_json, simple_geodate_json)
+
+
+
 if __name__ == '__main__':
 	unittest.main()

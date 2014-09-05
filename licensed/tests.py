@@ -22,6 +22,7 @@ except ImportError:
           print("Failed to import ElementTree from any known place")
 
 from licensed import mklicense
+from licensed import odrl
 import unittest
 import json
 import jsonschema
@@ -208,6 +209,9 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
+		odrl_schema_doc = etree.parse("ODRL.xsd")
+		self.odrl_schema = etree.XMLSchema(odrl_schema_doc)
+
 	def tearDown(self):
 		pass
 
@@ -223,7 +227,180 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 		self.assertIn("eq", combined_geo_duty_xml)
 		self.assertIn("duty", combined_geo_duty_xml)
 
+		if not self.odrl_schema(combined_geo_duty.xml_etree()):
+			log = odrl_schema.error_log
+			error = log.last_error
+			self.fail("Invalid ODRL %s" % error)
 
+	def test_combined_geographic_and_time_period(self):
+		combined_geo_duty = self.licenseFactory.combinedGeoTimePeriod(geography="http://cvx.iptc.org/iso3166-1a3/GBR", action="http://www.w3.org/ns/odrl/2/use", timeperiod="2013-06-15", geooperator="http://www.w3.org/ns/odrl/2/neq")
+		combined_geo_duty_xml = combined_geo_duty.xml()
 
+		self.assertIn("GBR", combined_geo_duty_xml)
+		self.assertIn("epa", combined_geo_duty_xml)
+		self.assertIn("use", combined_geo_duty_xml)
+		self.assertIn("spatial", combined_geo_duty_xml)
+		self.assertIn("neq", combined_geo_duty_xml)
+		self.assertIn("lt", combined_geo_duty_xml)
+		self.assertIn("2013-06-15", combined_geo_duty_xml)
+
+		if not self.odrl_schema(combined_geo_duty.xml_etree()):
+			log = odrl_schema.error_log
+			error = log.last_error
+			self.fail("Invalid ODRL %s" % error)
+
+class ConvertXML2JSONTest(unittest.TestCase):
+
+	def setUp(self):
+		self.odrl_factory = odrl()
+
+	def tearDown(self):
+		pass
+
+	def test_json_to_xml(self):
+		simple_action_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/803951be46345a69a2ef1fe5199a425d" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/print"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+  </o:permission>
+</o:Policy>"""
+
+		simple_action_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/print", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/803951be46345a69a2ef1fe5199a425d", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		action_json = self.odrl_factory.xml2json(simple_action_xml)
+
+		self.assertEqual(action_json, simple_action_json)
+
+	def test_json_to_constraint_xml(self):
+
+		simple_constraint_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/6fa472b50272943c9671f775d96d2547" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/distribute"/>
+    <o:constraint name="http://www.w3.org/ns/odrl/2/dateTime" operator="http://www.w3.org/ns/odrl/2/lt" rightOperand="2013-06-15"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+  </o:permission>
+</o:Policy>"""
+
+		simple_constraint_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/distribute", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "constraints": [
+                {
+                    "name": "http://www.w3.org/ns/odrl/2/dateTime", 
+                    "operator": "http://www.w3.org/ns/odrl/2/lt", 
+                    "rightoperand": "2013-06-15"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/6fa472b50272943c9671f775d96d2547", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		constraint_json = self.odrl_factory.xml2json(simple_constraint_xml)
+
+		self.assertEqual(constraint_json, simple_constraint_json)
+
+	def test_json_to_duty_xml(self):
+		simple_duty_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/sublicense", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "duties": [
+                {
+                    "action": "http://www.w3.org/ns/odrl/2/nextPolicy", 
+                    "target": "http://example.com/policy/99"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/3526a64a774c5acd11f1fe51b18836b5", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		simple_duty_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/3526a64a774c5acd11f1fe51b18836b5" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/sublicense"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+    <o:duty>
+      <o:action name="http://www.w3.org/ns/odrl/2/nextPolicy"/>
+      <o:asset uid="http://example.com/policy/99" relation="http://www.w3.org/ns/odrl/2/target"/>
+    </o:duty>
+  </o:permission>
+</o:Policy>"""
+
+		duty_json = self.odrl_factory.xml2json(simple_duty_xml)
+
+		self.assertEqual(duty_json, simple_duty_json)
+
+	def test_json_to_payee_xml(self):
+		simple_payee_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/print", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "duties": [
+                {
+                    "action": "http://www.w3.org/ns/odrl/2/pay", 
+                    "constraints": [
+                        {
+                            "name": "http://www.w3.org/ns/odrl/2/payAmount", 
+                            "operator": "http://www.w3.org/ns/odrl/2/eq", 
+                            "rightoperand": "100.00", 
+                            "rightoperandunit": "http://cvx.iptc.org/iso4217a/EUR"
+                        }
+                    ], 
+                    "payeeparty": "http://example.com/cv/party/epa"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/2c1b09db7cd80b63b9107ba5ccc5b93c", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		simple_payee_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/2c1b09db7cd80b63b9107ba5ccc5b93c" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/print"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+    <o:duty>
+      <o:action name="http://www.w3.org/ns/odrl/2/pay"/>
+      <o:constraint name="http://www.w3.org/ns/odrl/2/payAmount" operator="http://www.w3.org/ns/odrl/2/eq" rightOperand="100.00" unit="http://cvx.iptc.org/iso4217a/EUR"/>
+      <o:party function="http://www.w3.org/ns/odrl/2/payeeParty" uid="http://example.com/cv/party/epa"/>
+    </o:duty>
+  </o:permission>
+</o:Policy>"""
+
+		payee_json = self.odrl_factory.xml2json(simple_payee_xml)
+
+		self.assertEqual(payee_json, simple_payee_json)
 if __name__ == '__main__':
 	unittest.main()

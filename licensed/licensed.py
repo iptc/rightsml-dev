@@ -23,6 +23,7 @@ except ImportError:
         except ImportError:
           print("Failed to import ElementTree from any known place")
 
+from StringIO import *
 import hashlib
 import json
 
@@ -56,6 +57,9 @@ class mklicense(object):
 
 	def combinedGeoNextPolicy(self, geography, action, policy):
 		return combinedGeoNextPolicy(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, action=action, policy=policy)
+
+	def combinedGeoTimePeriod(self, geography, action, timeperiod, geooperator):
+		return combinedGeoTimePeriod(target=self.target, assigner=self.assigner, assignee=self.assignee, geography=geography, action=action, timeperiod=timeperiod, geooperator=geooperator)
 
 class odrl(object):
 
@@ -123,6 +127,12 @@ class odrl(object):
 					for d in p["duties"]:
 						duty = etree.Element("{http://www.w3.org/ns/odrl/2/}duty",
 							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+
+						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
+							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
+						action.set('name', d['action'])
+						duty.append(action)
+
 						if "target" in d:
 							asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 								nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
@@ -130,16 +140,11 @@ class odrl(object):
 							asset.set('relation', 'http://www.w3.org/ns/odrl/2/target')
 							duty.append(asset)
 
-						action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
-							nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-						action.set('name', d['action'])
-						duty.append(action)
-
 						if "assets" in d:
 							for a in d["assets"]:
 								asset = etree.Element("{http://www.w3.org/ns/odrl/2/}asset",
 									nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
-								asset.set('id', a)
+								asset.set('uid', a)
 								duty.append(asset)
 
 						if "constraints" in d:
@@ -211,6 +216,123 @@ class odrl(object):
 			policy.append(prohibition)
 
 		return policy
+
+	# Permissions and prohibitions have the same structure
+	def xml_permissions_prohibitions_to_json(self, type, policy):
+		permissions_prohibitions = []
+
+		for permission_prohibition in [p for p in policy if p.tag == "{http://www.w3.org/ns/odrl/2/}"+type]:
+			# In ODRL, a permission/prohibition must have an asset element and an action element
+			# So, we can rely on them being there, in that order
+			# Yeah, I know.
+			target = permission_prohibition[0].get("uid")
+			action = permission_prohibition[1].get("name")
+			permission_prohibition_obj = { 'target' : target, 'action' : action}
+
+			constraints = []
+
+			for constraint in [c for c in permission_prohibition if c.tag == "{http://www.w3.org/ns/odrl/2/}constraint"]:
+				name = constraint.get('name')
+				operator = constraint.get('operator')
+				rightoperand = constraint.get('rightOperand')
+				constraint_obj = { 'name' : name, 'operator' : operator, 'rightoperand' : rightoperand }
+
+				if constraint.get('dataType') != None:
+					constraint_obj['rightoperanddatatype'] = constraint.get('dataType')
+				if constraint.get('unit') != None:
+					constraint_obj['rightoperandunit'] = constraint.get('unit')
+				if constraint.get('status') != None:
+					constraint_obj['status'] = constraint.get('status')
+
+				constraints.append(constraint_obj)
+
+			# Constraints are optional
+			if len(constraints) > 0:
+				permission_prohibition_obj['constraints'] = constraints
+
+			for party in [p for p in permission_prohibition if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
+				if party.get('function') == 'http://www.w3.org/ns/odrl/2/assigner':
+					permission_prohibition_obj['assigner'] = party.get('uid')
+				elif party.get('function') == 'http://www.w3.org/ns/odrl/2/assignee':
+					permission_prohibition_obj['assignee'] = party.get('uid')
+					if party.get('scope') != None:
+						permission_prohibition_object['assignee_scope'] = party.get('scope')
+
+			duties = []
+			for duty in [d for d in permission_prohibition if d.tag == "{http://www.w3.org/ns/odrl/2/}duty"]:
+				duty_obj = {}
+				action = duty[0].get("name")
+
+				duty_obj['action'] = action
+
+				assets = []
+				for asset in [a for a in duty if a.tag == "{http://www.w3.org/ns/odrl/2/}asset"]:
+					if asset.get('relation') == 'http://www.w3.org/ns/odrl/2/target':
+						duty_obj['target'] = asset.get('uid')
+					else:
+						asset.append(asset.get('uid'))
+
+				if len(assets) > 0:
+					duty_obj['assets'] = assets
+
+				constraints = []
+				for constraint in [c for c in duty if c.tag == "{http://www.w3.org/ns/odrl/2/}constraint"]:
+					name = constraint.get('name')
+					operator = constraint.get('operator')
+					rightoperand = constraint.get('rightOperand')
+					constraint_obj = { 'name' : name, 'operator' : operator, 'rightoperand' : rightoperand }
+
+					if constraint.get('dataType') != None:
+						constraint_obj['rightoperanddatatype'] = constraint.get('dataType')
+					if constraint.get('unit') != None:
+						constraint_obj['rightoperandunit'] = constraint.get('unit')
+					if constraint.get('status') != None:
+						constraint_obj['status'] = constraint.get('status')
+
+					constraints.append(constraint_obj)
+
+				# Constraints are optional
+				if len(constraints) > 0:
+					duty_obj['constraints'] = constraints
+
+				for party in [p for p in duty if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
+					party_function = party.get('function')
+					party_uid = party.get('uid')
+					if party_function == 'http://www.w3.org/ns/odrl/2/payeeParty':
+						duty_obj['payeeparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/attributedParty':
+						duty_obj['attributedparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/consentingParty':
+						duty_obj['consentingparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/informedParty':
+						duty_obj['informedparty'] = party_uid
+					elif party_function == 'http://www.w3.org/ns/odrl/2/trackingParty':
+						duty_obj['trackingparty'] = party_uid
+
+				duties.append(duty_obj)
+
+			if len(duties) > 0:
+				permission_prohibition_obj['duties'] = duties
+
+			permissions_prohibitions.append(permission_prohibition_obj)
+
+		
+		if len(permissions_prohibitions) > 0:
+			self.odrl[type+'s'] = permissions_prohibitions
+
+	def xml2json(self, theXML):
+		odrl_tree = etree.parse(StringIO(theXML))
+
+		for policy in odrl_tree.xpath('/o:Policy', namespaces={'o': 'http://www.w3.org/ns/odrl/2/'}):
+			self.odrl['policyid'] = policy.get('uid')
+			self.odrl['policytype'] = policy.get('type')
+
+			self.xml_permissions_prohibitions_to_json("permission", policy)
+
+			self.xml_permissions_prohibitions_to_json("prohibition", policy)
+
+		return self.json()
+
 
 class rightsml(odrl):
 
@@ -286,5 +408,13 @@ class combinedGeoNextPolicy(simpleAction):
 		super(combinedGeoNextPolicy, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
 		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
+		hashedparams = hashlib.md5(self.json())
+
+class combinedGeoTimePeriod(simpleAction):
+
+	def __init__(self, target, assigner, assignee, geography, action, timeperiod, geooperator='http://www.w3.org/ns/odrl/2/eq', timeperiodoperator='http://www.w3.org/ns/odrl/2/lt'):
+		super(combinedGeoTimePeriod, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
+		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : geooperator},
+								{'rightoperand' : timeperiod, 'name' : 'http://www.w3.org/ns/odrl/2/dateTime', 'operator' : timeperiodoperator, 'rightoperanddatatype' : 'xs:dateTime'}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()

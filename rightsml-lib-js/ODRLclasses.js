@@ -4,7 +4,7 @@
 * @module: ODRL
 * @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 * Published under MIT license (see http://www.opensource.org/licenses/MIT)
-* development timestamp: 2014-06-23
+* development timestamp: 2014-09-04
 */
 var Odrl;
 (function (Odrl) {
@@ -31,7 +31,7 @@ var Odrl;
         Asset.prototype.validationResult = function () {
             var valResult = "";
             if (this.uid.length < 1) {
-                valResult = "!! Asset: the uid is missing\n";
+                valResult = "!! Asset: required uid is missing<br />";
             }
             return valResult;
         };
@@ -54,6 +54,14 @@ var Odrl;
         function Action(name) {
             this.name = name;
         }
+        Action.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.name.length < 1) {
+                valResult = "!! Action: required name is missing<br />";
+            }
+            return valResult;
+        };
+
         Action.prototype.serializeXml = function (serStrIn) {
             return serStrIn + "<action name=\"" + this.name + "\"/>";
         };
@@ -82,6 +90,20 @@ var Odrl;
             this.unit = unit;
             this.status = status;
         }
+        Constraint.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.name.length < 1) {
+                valResult = "!! Constraint: required name is missing<br />";
+            }
+            if (this.operator.length < 1) {
+                valResult += "!! Constraint: required operator is missing<br />";
+            }
+            if (this.rightOperand.length < 1) {
+                valResult += "!! Constraint: required rightOperand is missing<br />";
+            }
+            return valResult;
+        };
+
         Constraint.prototype.serializeXml = function (serStrIn) {
             var serStrOut = serStrIn + "<constraint name=\"" + this.name + "\"";
             if (this.operator !== undefined && this.operator != "") {
@@ -121,6 +143,17 @@ var Odrl;
             this.pfunction = pfunction;
             this.scope = scope;
         }
+        Party.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.uid.length < 1) {
+                valResult = "!! Party: required uid is missing<br />";
+            }
+            if (this.pfunction.length < 1) {
+                valResult += "!! Party: required function is missing<br />";
+            }
+            return valResult;
+        };
+
         Party.prototype.serializeXml = function (serStrIn) {
             var serStrOut = serStrIn + "<party uid=\"" + this.uid + "\"";
             if (this.pfunction !== undefined && this.pfunction != "") {
@@ -150,7 +183,7 @@ var Odrl;
             this.parties = [];
         }
         /**
-        * The method for setting the unique identifier of the Duty
+        * Method for setting the unique identifier of the Duty
         * @method setUid
         * @param {String} uid The unique identifier of the Duty
         */
@@ -160,7 +193,7 @@ var Odrl;
         };
 
         /**
-        * The method for setting the action of the Duty
+        * Method for setting the action of the Duty
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -170,7 +203,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding an asset to the Duty
+        * Method for adding an asset to the Duty
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -182,7 +215,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a constraint to the Duty
+        * Method for adding a constraint to the Duty
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -198,7 +231,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a party to the Duty
+        * Method for adding a party to the Duty
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -208,6 +241,14 @@ var Odrl;
             var newParty = new Party(uid, pfunction, scope);
             this.parties.push(newParty);
             return this;
+        };
+
+        Duty.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.action === undefined) {
+                valResult = "!! Duty: required action is missing<br />";
+            }
+            return valResult;
         };
 
         Duty.prototype.serializeXml = function (serStrIn) {
@@ -237,7 +278,9 @@ var Odrl;
         Duty.prototype.buildDutyOdrlInJson = function () {
             var thisD = {};
             var i;
-            thisD.action = this.action.name;
+            if (this.action !== undefined) {
+                thisD.action = this.action.name;
+            }
             for (i = 0; i < this.assets.length; i++) {
                 if (this.assets[i].relation == Odrl.nsUri + "target") {
                     thisD.target = this.assets[i].uid;
@@ -298,7 +341,7 @@ var Odrl;
             this.duties = [];
         }
         /**
-        * The method for setting the action of the Permission
+        * Method for setting the action of the Permission
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -308,7 +351,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding an asset to the Permission
+        * Method for adding an asset to the Permission
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -320,7 +363,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding the required target asset to the Permission
+        * Method for adding the required target asset to the Permission
         * @method addTargetAsset
         * @param {String} uid The unique identifier of the asset
         */
@@ -331,7 +374,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a constraint to the Permission
+        * Method for adding a constraint to the Permission
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -347,7 +390,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a party to the Permission
+        * Method for adding a party to the Permission
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -360,13 +403,36 @@ var Odrl;
         };
 
         /**
-        * The method for adding a duty to the Permission
+        * Method for adding a duty to the Permission
         * @method addParty
         * @param {Duty} newDuty A duty instance
         */
         Permission.prototype.addDuty = function (newDuty) {
             this.duties.push(newDuty);
             return this;
+        };
+
+        Permission.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.action === undefined) {
+                valResult = "!! Permission: required action is missing<br />";
+            }
+            if (this.assets.length == 0) {
+                valResult += "!! Permission: no asset assigned to it<br />";
+            }
+            for (var i = 0; i < this.assets.length; i++) {
+                valResult += this.assets[i].validationResult();
+            }
+            for (i = 0; i < this.parties.length; i++) {
+                valResult += this.parties[i].validationResult();
+            }
+            for (i = 0; i < this.constraints.length; i++) {
+                valResult += this.constraints[i].validationResult();
+            }
+            for (i = 0; i < this.duties.length; i++) {
+                valResult += this.duties[i].validationResult();
+            }
+            return valResult;
         };
 
         Permission.prototype.serializeXml = function (serStrIn) {
@@ -402,8 +468,9 @@ var Odrl;
                     thisP.output = this.assets[i].uid;
                 }
             }
-            thisP.action = this.action.name;
-
+            if (this.action != undefined) {
+                thisP.action = this.action.name;
+            }
             if (this.constraints.length > 0) {
                 thisP.constraints = [];
                 var thisC;
@@ -426,11 +493,27 @@ var Odrl;
             }
 
             for (i = 0; i < this.parties.length; i++) {
-                if (this.parties[i].pfunction == Odrl.nsUri + "assigner") {
-                    thisP.assigner = this.parties[i].uid;
-                }
-                if (this.parties[i].pfunction == Odrl.nsUri + "assignee") {
-                    thisP.assignee = this.parties[i].uid;
+                switch (this.parties[i].pfunction) {
+                    case Odrl.nsUri + "assigner":
+                        thisP.assigner = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            thisP.assigner_scope = this.parties[i].scope;
+                        }
+                        break;
+                    case Odrl.nsUri + "assignee":
+                        thisP.assignee = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            thisP.assignee_scope = this.parties[i].scope;
+                        }
+                        break;
+                    default:
+                        var fieldname = "unknownfunct" + i.toString() + "party";
+                        thisP[fieldname] = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            fieldname = "unknownfunct" + i.toString() + "party_scope";
+                            thisP[fieldname] = this.parties[i].scope;
+                        }
+                        break;
                 }
             }
             if (this.duties.length > 0) {
@@ -440,17 +523,6 @@ var Odrl;
                 }
             }
             OdrlInJson.permissions.push(thisP);
-        };
-
-        Permission.prototype.validationResult = function () {
-            var valResult = "";
-            if (this.assets.length == 0) {
-                valResult += "!! Permission: no asset assigned to it";
-            }
-            for (var i = 0; i < this.assets.length; i++) {
-                valResult += this.assets[i].validationResult();
-            }
-            return valResult;
         };
         return Permission;
     })();
@@ -470,7 +542,7 @@ var Odrl;
             this.parties = [];
         }
         /**
-        * The method for setting the action of the Prohibition
+        * Method for setting the action of the Prohibition
         * @method setAction
         * @param {String} actionname The identifier of the action
         */
@@ -480,7 +552,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding an asset to the Prohibition
+        * Method for adding an asset to the Prohibition
         * @method addAsset
         * @param {String} uid The unique identifier of the asset
         * @param {String} relation The relation of the asset to the Duty.
@@ -492,7 +564,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding the required target asset to the Prohibition
+        * Method for adding the required target asset to the Prohibition
         * @method addTargetAsset
         * @param {String} uid The unique identifier of the asset
         */
@@ -503,7 +575,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a constraint to the Prohibition
+        * Method for adding a constraint to the Prohibition
         * @method addConstraint
         * @param {String} name The identifing name of the Constraint
         * @param {String} operator The identifyer of the operator
@@ -519,7 +591,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a party to the Prohibition
+        * Method for adding a party to the Prohibition
         * @method addParty
         * @param {String} uid The Unique Identifier of the Party
         * @param {String} pfunction The identifier of the functional role this party takes
@@ -529,6 +601,26 @@ var Odrl;
             var newParty = new Party(uid, pfunction, scope);
             this.parties.push(newParty);
             return this;
+        };
+
+        Prohibition.prototype.validationResult = function () {
+            var valResult = "";
+            if (this.action === undefined) {
+                valResult = "!! Prohibition: required action is missing<br />";
+            }
+            if (this.assets.length == 0) {
+                valResult += "!! Prohibition: no asset assigned to it<br />";
+            }
+            for (var i = 0; i < this.assets.length; i++) {
+                valResult += this.assets[i].validationResult();
+            }
+            for (i = 0; i < this.parties.length; i++) {
+                valResult += this.parties[i].validationResult();
+            }
+            for (i = 0; i < this.constraints.length; i++) {
+                valResult += this.constraints[i].validationResult();
+            }
+            return valResult;
         };
 
         Prohibition.prototype.serializeXml = function (serStrIn) {
@@ -553,7 +645,7 @@ var Odrl;
         Prohibition.prototype.buildOdrlInJson = function () {
             var thisP = {};
             var i;
-            thisP.action = this.action.name;
+
             for (i = 0; i < this.assets.length; i++) {
                 if (this.assets[i].relation == Odrl.nsUri + "target") {
                     thisP.target = this.assets[i].uid;
@@ -561,6 +653,9 @@ var Odrl;
                 if (this.assets[i].relation == Odrl.nsUri + "output") {
                     thisP.output = this.assets[i].uid;
                 }
+            }
+            if (this.action != undefined) {
+                thisP.action = this.action.name;
             }
             if (this.constraints.length > 0) {
                 thisP.constraints = [];
@@ -583,14 +678,28 @@ var Odrl;
                 }
             }
             for (i = 0; i < this.parties.length; i++) {
-                if (this.parties[i].pfunction == Odrl.nsUri + "assigner") {
-                    thisP.assigner = this.parties[i].uid;
-                }
-                if (this.parties[i].pfunction == Odrl.nsUri + "assignee") {
-                    thisP.assignee = this.parties[i].uid;
-                    if (this.parties[i].scope != "") {
-                        thisP.assignee_scope = this.parties[i].scope;
-                    }
+                switch (this.parties[i].pfunction) {
+                    case Odrl.nsUri + "assigner":
+                        thisP.assigner = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            thisP.assigner_scope = this.parties[i].scope;
+                        }
+                        break;
+                    case Odrl.nsUri + "assignee":
+                        thisP.assignee = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            thisP.assignee_scope = this.parties[i].scope;
+                        }
+                        break;
+                    default:
+                        var fieldname = "unknownfunct" + i.toString() + "party";
+                        var temp = {};
+                        thisP[fieldname] = this.parties[i].uid;
+                        if (this.parties[i].scope != "") {
+                            fieldname = "unknownfunct" + i.toString() + "party_scope";
+                            thisP[fieldname] = this.parties[i].scope;
+                        }
+                        break;
                 }
             }
         };
@@ -614,7 +723,7 @@ var Odrl;
             this.prohibitions = [];
         }
         /**
-        * The method for setting the conflict property of the Policy
+        * Method for setting the conflict property of the Policy
         * @method setConflict
         * @param {String} conflict The identifier of the conflict
         */
@@ -624,7 +733,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a permission to the Policy
+        * Method for adding a permission to the Policy
         * @method addPermission
         * @param {Permission} newPerm A permission instance
         */
@@ -634,7 +743,7 @@ var Odrl;
         };
 
         /**
-        * The method for adding a Prohibition to the Policy
+        * Method for adding a Prohibition to the Policy
         * @method addProhibition
         * @param {Prohibition} newProhib A prohibition instance
         */
@@ -644,7 +753,7 @@ var Odrl;
         };
 
         /**
-        * The method for serializing the Policy to XML syntax
+        * Method for serializing the Policy to XML syntax
         * @method serializeXml
         */
         Policy.prototype.serializeXml = function () {
@@ -701,23 +810,28 @@ var Odrl;
         };
 
         /**
-        * The method for validating the data, returns a string
+        * Method for validating the data inside the whole policy,
+        * returns a string with HTML markup for line breaks.
+        * Validates the existence of mandatory components
         * @method validationResult
         */
         Policy.prototype.validationResult = function () {
             var valResult = "";
             if (this.permissions.length == 0 && this.prohibitions.length == 0) {
-                valResult += "!! Policy does not contain a permission or a prohibition \n";
+                valResult += "!! Policy: does not contain a permission or a prohibition <br />";
             }
             for (var i = 0; i < this.permissions.length; i++) {
                 valResult += this.permissions[i].validationResult();
+            }
+            for (i = 0; i < this.prohibitions.length; i++) {
+                valResult += this.prohibitions[i].validationResult();
             }
 
             return valResult;
         };
 
         /**
-        * The method for serializing the Policy to the official ODRL JSON syntax
+        * Method for serializing the Policy to the official ODRL JSON syntax
         * @method serializeJson
         */
         Policy.prototype.serializeJson = function () {
@@ -726,7 +840,7 @@ var Odrl;
         };
 
         /**
-        * The method for serializing the Policy to JSON reflecting the Core Model
+        * Method for serializing the Policy to JSON reflecting the Core Model
         * @method serializeCoreModelJson
         */
         Policy.prototype.serializeCoreModelJson = function () {

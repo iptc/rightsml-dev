@@ -1,48 +1,6 @@
 {
     "project": {},
     "files": {
-        "HtmlPages4testing\\scripts\\vkbeautify.js": {
-            "name": "HtmlPages4testing\\scripts\\vkbeautify.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "HtmlPages4testing\\FormTestAllproc.js": {
-            "name": "HtmlPages4testing\\FormTestAllproc.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "HtmlPages4testing\\RMLsimpleExAllProc.js": {
-            "name": "HtmlPages4testing\\RMLsimpleExAllProc.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "NITtestData\\scripts\\vkbeautify.js": {
-            "name": "NITtestData\\scripts\\vkbeautify.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "_hiddenData\\RMLsimpleExAllProc.js": {
-            "name": "_hiddenData\\RMLsimpleExAllProc.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "_hiddenData\\odrl-rightsml.js": {
-            "name": "_hiddenData\\odrl-rightsml.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "ODRLclasses.js": {
             "name": "ODRLclasses.js",
             "modules": {
@@ -101,9 +59,9 @@
             "namespaces": {},
             "tag": "module",
             "file": "ODRLclasses.js",
-            "line": 602,
+            "line": 711,
             "description": "This file of the module provides all classes of the ODRL data model",
-            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2014-06-23"
+            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2014-09-04"
         }
     },
     "classes": {
@@ -116,6 +74,7 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
             "line": 19,
             "description": "Class for the Asset of the ODRL Core Model",
@@ -142,6 +101,7 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
             "line": 47,
             "description": "Class for the Action of the ODRL Core Model",
@@ -163,8 +123,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 65,
+            "line": 73,
             "description": "Class for the Constraint of the ODRL Core Model",
             "is_constructor": 1,
             "params": [
@@ -209,8 +170,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 110,
+            "line": 132,
             "description": "Class for the Party of the ODRL Core Model",
             "is_constructor": 1,
             "params": [
@@ -240,8 +202,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 140,
+            "line": 173,
             "description": "Class for the Duty of the ODRL Core Model",
             "is_constructor": 1
         },
@@ -254,8 +217,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 287,
+            "line": 330,
             "description": "Class for the Permission of the ODRL Core Model",
             "is_constructor": 1
         },
@@ -268,8 +232,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 460,
+            "line": 532,
             "description": "Class for the Prohibition of the ODRL Core Model",
             "is_constructor": 1
         },
@@ -282,8 +247,9 @@
             "plugin_for": [],
             "extension_for": [],
             "module": ": ODRL",
+            "namespace": "",
             "file": "ODRLclasses.js",
-            "line": 602,
+            "line": 711,
             "description": "Class for the Policy of the ODRL Core Model",
             "is_constructor": 1,
             "params": [
@@ -302,496 +268,9 @@
     },
     "classitems": [
         {
-            "file": "HtmlPages4testing\\scripts\\vkbeautify.js",
-            "line": 1,
-            "description": "vkBeautify - javascript plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.\n \nVersion - 0.99.00.beta \nCopyright (c) 2012 Vadim Kiryukhin\nvkiryukhin @ gmail.com\nhttp://www.eslinstructor.net/vkbeautify/\n\nDual licensed under the MIT and GPL licenses:\n  http://www.opensource.org/licenses/mit-license.php\n  http://www.gnu.org/licenses/gpl.html\n\n  Pretty print\n\n       vkbeautify.xml(text [,indent_pattern]);\n       vkbeautify.json(text [,indent_pattern]);\n       vkbeautify.css(text [,indent_pattern]);\n       vkbeautify.sql(text [,indent_pattern]);",
-            "text": "- String; text to minify;",
-            "indent_pattern": "- Integer | String;\n               Integer:  number of white spaces;\n               String:   character string to visualize indentation ( can also be a set of white spaces )\n  Minify\n\n       vkbeautify.xmlmin(text [,preserve_comments]);\n       vkbeautify.jsonmin(text);\n       vkbeautify.cssmin(text [,preserve_comments]);\n       vkbeautify.sqlmin(text);",
-            "preserve_comments": "- Bool; [optional];\n               Set this flag to true to prevent removing comments from @text ( minxml and mincss functions only. )\n\n  Examples:\n       vkbeautify.xml(text); // pretty print XML\n       vkbeautify.json(text, 4 ); // pretty print JSON\n       vkbeautify.css(text, '. . . .'); // pretty print CSS\n       vkbeautify.sql(text, '----'); // pretty print SQL\n\n       vkbeautify.xmlmin(text, true);// minify XML, preserve comments\n       vkbeautify.jsonmin(text);// minify JSON\n       vkbeautify.cssmin(text);// minify CSS, remove comments ( default )\n       vkbeautify.sqlmin(text);// minify SQL",
-            "class": "Asset"
-        },
-        {
-            "file": "HtmlPages4testing\\FormTestAllproc.js",
-            "line": 4,
-            "description": "development timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the FormTest HTML pages",
-            "class": "Asset"
-        },
-        {
-            "file": "HtmlPages4testing\\RMLsimpleExAllProc.js",
-            "line": 5,
-            "description": "development timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
-            "class": "Asset"
-        },
-        {
-            "file": "NITtestData\\scripts\\vkbeautify.js",
-            "line": 1,
-            "description": "vkBeautify - javascript plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.\n \nVersion - 0.99.00.beta \nCopyright (c) 2012 Vadim Kiryukhin\nvkiryukhin @ gmail.com\nhttp://www.eslinstructor.net/vkbeautify/\n\nDual licensed under the MIT and GPL licenses:\n  http://www.opensource.org/licenses/mit-license.php\n  http://www.gnu.org/licenses/gpl.html\n\n  Pretty print\n\n       vkbeautify.xml(text [,indent_pattern]);\n       vkbeautify.json(text [,indent_pattern]);\n       vkbeautify.css(text [,indent_pattern]);\n       vkbeautify.sql(text [,indent_pattern]);",
-            "text": "- String; text to minify;",
-            "indent_pattern": "- Integer | String;\n               Integer:  number of white spaces;\n               String:   character string to visualize indentation ( can also be a set of white spaces )\n  Minify\n\n       vkbeautify.xmlmin(text [,preserve_comments]);\n       vkbeautify.jsonmin(text);\n       vkbeautify.cssmin(text [,preserve_comments]);\n       vkbeautify.sqlmin(text);",
-            "preserve_comments": "- Bool; [optional];\n               Set this flag to true to prevent removing comments from @text ( minxml and mincss functions only. )\n\n  Examples:\n       vkbeautify.xml(text); // pretty print XML\n       vkbeautify.json(text, 4 ); // pretty print JSON\n       vkbeautify.css(text, '. . . .'); // pretty print CSS\n       vkbeautify.sql(text, '----'); // pretty print SQL\n\n       vkbeautify.xmlmin(text, true);// minify XML, preserve comments\n       vkbeautify.jsonmin(text);// minify JSON\n       vkbeautify.cssmin(text);// minify CSS, remove comments ( default )\n       vkbeautify.sqlmin(text);// minify SQL",
-            "class": "Asset"
-        },
-        {
-            "file": "_hiddenData\\RMLsimpleExAllProc.js",
-            "line": 4,
-            "description": "development timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
-            "class": "Asset"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 1,
-            "description": "ODRL-RightsML JavaScript Library",
-            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2014-06-23",
-            "class": "Asset"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 151,
-            "description": "The method for setting the unique identifier of the Duty",
-            "itemtype": "method",
-            "name": "setUid",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the Duty",
-                    "type": "String"
-                }
-            ],
-            "class": "Duty"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 161,
-            "description": "The method for setting the action of the Duty",
-            "itemtype": "method",
-            "name": "setAction",
-            "params": [
-                {
-                    "name": "actionname",
-                    "description": "The identifier of the action",
-                    "type": "String"
-                }
-            ],
-            "class": "Duty"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 171,
-            "description": "The method for adding an asset to the Duty",
-            "itemtype": "method",
-            "name": "addAsset",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the asset",
-                    "type": "String"
-                },
-                {
-                    "name": "relation",
-                    "description": "The relation of the asset to the Duty.",
-                    "type": "String"
-                }
-            ],
-            "class": "Duty"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 183,
-            "description": "The method for adding a constraint to the Duty",
-            "itemtype": "method",
-            "name": "addConstraint",
-            "params": [
-                {
-                    "name": "name",
-                    "description": "The identifing name of the Constraint",
-                    "type": "String"
-                },
-                {
-                    "name": "operator",
-                    "description": "The identifyer of the operator",
-                    "type": "String"
-                },
-                {
-                    "name": "rightOperand",
-                    "description": "The identifyer of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "dataType",
-                    "description": "The identifyer of the data type of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "unit",
-                    "description": "The identifyer of the unit of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "status",
-                    "description": "The identifyer of the status",
-                    "type": "String"
-                }
-            ],
-            "class": "Duty"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 199,
-            "description": "The method for adding a party to the Duty",
-            "itemtype": "method",
-            "name": "addParty",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The Unique Identifier of the Party",
-                    "type": "String"
-                },
-                {
-                    "name": "pfunction",
-                    "description": "The identifier of the functional role this party takes",
-                    "type": "String"
-                },
-                {
-                    "name": "scope",
-                    "description": "The scope of the party",
-                    "type": "String"
-                }
-            ],
-            "class": "Duty"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 299,
-            "description": "The method for setting the action of the Permission",
-            "itemtype": "method",
-            "name": "setAction",
-            "params": [
-                {
-                    "name": "actionname",
-                    "description": "The identifier of the action",
-                    "type": "String"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 309,
-            "description": "The method for adding an asset to the Permission",
-            "itemtype": "method",
-            "name": "addAsset",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the asset",
-                    "type": "String"
-                },
-                {
-                    "name": "relation",
-                    "description": "The relation of the asset to the Duty.",
-                    "type": "String"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 321,
-            "description": "The method for adding the required target asset to the Permission",
-            "itemtype": "method",
-            "name": "addTargetAsset",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the asset",
-                    "type": "String"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 332,
-            "description": "The method for adding a constraint to the Permission",
-            "itemtype": "method",
-            "name": "addConstraint",
-            "params": [
-                {
-                    "name": "name",
-                    "description": "The identifing name of the Constraint",
-                    "type": "String"
-                },
-                {
-                    "name": "operator",
-                    "description": "The identifyer of the operator",
-                    "type": "String"
-                },
-                {
-                    "name": "rightOperand",
-                    "description": "The identifyer of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "dataType",
-                    "description": "The identifyer of the data type of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "unit",
-                    "description": "The identifyer of the unit of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "status",
-                    "description": "The identifyer of the status",
-                    "type": "String"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 348,
-            "description": "The method for adding a party to the Permission",
-            "itemtype": "method",
-            "name": "addParty",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The Unique Identifier of the Party",
-                    "type": "String"
-                },
-                {
-                    "name": "pfunction",
-                    "description": "The identifier of the functional role this party takes",
-                    "type": "String"
-                },
-                {
-                    "name": "scope",
-                    "description": "The scope of the party",
-                    "type": "String"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 361,
-            "description": "The method for adding a duty to the Permission",
-            "itemtype": "method",
-            "name": "addParty",
-            "params": [
-                {
-                    "name": "newDuty",
-                    "description": "A duty instance",
-                    "type": "Duty"
-                }
-            ],
-            "class": "Permission"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 471,
-            "description": "The method for setting the action of the Prohibition",
-            "itemtype": "method",
-            "name": "setAction",
-            "params": [
-                {
-                    "name": "actionname",
-                    "description": "The identifier of the action",
-                    "type": "String"
-                }
-            ],
-            "class": "Prohibition"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 481,
-            "description": "The method for adding an asset to the Prohibition",
-            "itemtype": "method",
-            "name": "addAsset",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the asset",
-                    "type": "String"
-                },
-                {
-                    "name": "relation",
-                    "description": "The relation of the asset to the Duty.",
-                    "type": "String"
-                }
-            ],
-            "class": "Prohibition"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 493,
-            "description": "The method for adding the required target asset to the Prohibition",
-            "itemtype": "method",
-            "name": "addTargetAsset",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The unique identifier of the asset",
-                    "type": "String"
-                }
-            ],
-            "class": "Prohibition"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 504,
-            "description": "The method for adding a constraint to the Prohibition",
-            "itemtype": "method",
-            "name": "addConstraint",
-            "params": [
-                {
-                    "name": "name",
-                    "description": "The identifing name of the Constraint",
-                    "type": "String"
-                },
-                {
-                    "name": "operator",
-                    "description": "The identifyer of the operator",
-                    "type": "String"
-                },
-                {
-                    "name": "rightOperand",
-                    "description": "The identifyer of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "dataType",
-                    "description": "The identifyer of the data type of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "unit",
-                    "description": "The identifyer of the unit of the right operand",
-                    "type": "String"
-                },
-                {
-                    "name": "status",
-                    "description": "The identifyer of the status",
-                    "type": "String"
-                }
-            ],
-            "class": "Prohibition"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 520,
-            "description": "The method for adding a party to the Prohibition",
-            "itemtype": "method",
-            "name": "addParty",
-            "params": [
-                {
-                    "name": "uid",
-                    "description": "The Unique Identifier of the Party",
-                    "type": "String"
-                },
-                {
-                    "name": "pfunction",
-                    "description": "The identifier of the functional role this party takes",
-                    "type": "String"
-                },
-                {
-                    "name": "scope",
-                    "description": "The scope of the party",
-                    "type": "String"
-                }
-            ],
-            "class": "Prohibition"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 615,
-            "description": "The method for setting the conflict property of the Policy",
-            "itemtype": "method",
-            "name": "setConflict",
-            "params": [
-                {
-                    "name": "conflict",
-                    "description": "The identifier of the conflict",
-                    "type": "String"
-                }
-            ],
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 625,
-            "description": "The method for adding a permission to the Policy",
-            "itemtype": "method",
-            "name": "addPermission",
-            "params": [
-                {
-                    "name": "newPerm",
-                    "description": "A permission instance",
-                    "type": "Permission"
-                }
-            ],
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 635,
-            "description": "The method for adding a Prohibition to the Policy",
-            "itemtype": "method",
-            "name": "addProhibition",
-            "params": [
-                {
-                    "name": "newProhib",
-                    "description": "A prohibition instance",
-                    "type": "Prohibition"
-                }
-            ],
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 645,
-            "description": "The method for serializing the Policy to XML syntax",
-            "itemtype": "method",
-            "name": "serializeXml",
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 702,
-            "description": "The method for validating the data, returns a string",
-            "itemtype": "method",
-            "name": "validationResult",
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 718,
-            "description": "The method for serializing the Policy to the official ODRL JSON syntax",
-            "itemtype": "method",
-            "name": "serializeJson",
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 727,
-            "description": "The method for serializing the Policy to JSON reflecting the Core Model",
-            "itemtype": "method",
-            "name": "serializeCoreModelJson",
-            "class": "Policy"
-        },
-        {
-            "file": "_hiddenData\\odrl-rightsml.js",
-            "line": 892,
-            "description": "This module provides all ODRL classes complying to the RightsML profile",
-            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2014-06-23",
-            "class": "Policy"
-        },
-        {
             "file": "ODRLclasses.js",
-            "line": 152,
-            "description": "The method for setting the unique identifier of the Duty",
+            "line": 185,
+            "description": "Method for setting the unique identifier of the Duty",
             "itemtype": "method",
             "name": "setUid",
             "params": [
@@ -806,8 +285,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 162,
-            "description": "The method for setting the action of the Duty",
+            "line": 195,
+            "description": "Method for setting the action of the Duty",
             "itemtype": "method",
             "name": "setAction",
             "params": [
@@ -822,8 +301,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 172,
-            "description": "The method for adding an asset to the Duty",
+            "line": 205,
+            "description": "Method for adding an asset to the Duty",
             "itemtype": "method",
             "name": "addAsset",
             "params": [
@@ -843,8 +322,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 184,
-            "description": "The method for adding a constraint to the Duty",
+            "line": 217,
+            "description": "Method for adding a constraint to the Duty",
             "itemtype": "method",
             "name": "addConstraint",
             "params": [
@@ -884,8 +363,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 200,
-            "description": "The method for adding a party to the Duty",
+            "line": 233,
+            "description": "Method for adding a party to the Duty",
             "itemtype": "method",
             "name": "addParty",
             "params": [
@@ -910,8 +389,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 300,
-            "description": "The method for setting the action of the Permission",
+            "line": 343,
+            "description": "Method for setting the action of the Permission",
             "itemtype": "method",
             "name": "setAction",
             "params": [
@@ -926,8 +405,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 310,
-            "description": "The method for adding an asset to the Permission",
+            "line": 353,
+            "description": "Method for adding an asset to the Permission",
             "itemtype": "method",
             "name": "addAsset",
             "params": [
@@ -947,8 +426,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 322,
-            "description": "The method for adding the required target asset to the Permission",
+            "line": 365,
+            "description": "Method for adding the required target asset to the Permission",
             "itemtype": "method",
             "name": "addTargetAsset",
             "params": [
@@ -963,8 +442,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 333,
-            "description": "The method for adding a constraint to the Permission",
+            "line": 376,
+            "description": "Method for adding a constraint to the Permission",
             "itemtype": "method",
             "name": "addConstraint",
             "params": [
@@ -1004,8 +483,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 349,
-            "description": "The method for adding a party to the Permission",
+            "line": 392,
+            "description": "Method for adding a party to the Permission",
             "itemtype": "method",
             "name": "addParty",
             "params": [
@@ -1030,8 +509,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 362,
-            "description": "The method for adding a duty to the Permission",
+            "line": 405,
+            "description": "Method for adding a duty to the Permission",
             "itemtype": "method",
             "name": "addParty",
             "params": [
@@ -1046,8 +525,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 472,
-            "description": "The method for setting the action of the Prohibition",
+            "line": 544,
+            "description": "Method for setting the action of the Prohibition",
             "itemtype": "method",
             "name": "setAction",
             "params": [
@@ -1062,8 +541,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 482,
-            "description": "The method for adding an asset to the Prohibition",
+            "line": 554,
+            "description": "Method for adding an asset to the Prohibition",
             "itemtype": "method",
             "name": "addAsset",
             "params": [
@@ -1083,8 +562,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 494,
-            "description": "The method for adding the required target asset to the Prohibition",
+            "line": 566,
+            "description": "Method for adding the required target asset to the Prohibition",
             "itemtype": "method",
             "name": "addTargetAsset",
             "params": [
@@ -1099,8 +578,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 505,
-            "description": "The method for adding a constraint to the Prohibition",
+            "line": 577,
+            "description": "Method for adding a constraint to the Prohibition",
             "itemtype": "method",
             "name": "addConstraint",
             "params": [
@@ -1140,8 +619,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 521,
-            "description": "The method for adding a party to the Prohibition",
+            "line": 593,
+            "description": "Method for adding a party to the Prohibition",
             "itemtype": "method",
             "name": "addParty",
             "params": [
@@ -1166,8 +645,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 616,
-            "description": "The method for setting the conflict property of the Policy",
+            "line": 725,
+            "description": "Method for setting the conflict property of the Policy",
             "itemtype": "method",
             "name": "setConflict",
             "params": [
@@ -1182,8 +661,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 626,
-            "description": "The method for adding a permission to the Policy",
+            "line": 735,
+            "description": "Method for adding a permission to the Policy",
             "itemtype": "method",
             "name": "addPermission",
             "params": [
@@ -1198,8 +677,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 636,
-            "description": "The method for adding a Prohibition to the Policy",
+            "line": 745,
+            "description": "Method for adding a Prohibition to the Policy",
             "itemtype": "method",
             "name": "addProhibition",
             "params": [
@@ -1214,8 +693,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 646,
-            "description": "The method for serializing the Policy to XML syntax",
+            "line": 755,
+            "description": "Method for serializing the Policy to XML syntax",
             "itemtype": "method",
             "name": "serializeXml",
             "class": "Policy",
@@ -1223,8 +702,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 703,
-            "description": "The method for validating the data, returns a string",
+            "line": 812,
+            "description": "Method for validating the data inside the whole policy,\nreturns a string with HTML markup for line breaks.\nValidates the existence of mandatory components",
             "itemtype": "method",
             "name": "validationResult",
             "class": "Policy",
@@ -1232,8 +711,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 719,
-            "description": "The method for serializing the Policy to the official ODRL JSON syntax",
+            "line": 833,
+            "description": "Method for serializing the Policy to the official ODRL JSON syntax",
             "itemtype": "method",
             "name": "serializeJson",
             "class": "Policy",
@@ -1241,8 +720,8 @@
         },
         {
             "file": "ODRLclasses.js",
-            "line": 728,
-            "description": "The method for serializing the Policy to JSON reflecting the Core Model",
+            "line": 842,
+            "description": "Method for serializing the Policy to JSON reflecting the Core Model",
             "itemtype": "method",
             "name": "serializeCoreModelJson",
             "class": "Policy",
@@ -1274,66 +753,6 @@
         }
     ],
     "warnings": [
-        {
-            "message": "unknown tag: text",
-            "line": " HtmlPages4testing\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: indent_pattern",
-            "line": " HtmlPages4testing\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: text",
-            "line": " HtmlPages4testing\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: preserve_comments",
-            "line": " HtmlPages4testing\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: text",
-            "line": " NITtestData\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: indent_pattern",
-            "line": " NITtestData\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: text",
-            "line": " NITtestData\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "unknown tag: preserve_comments",
-            "line": " NITtestData\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "Missing item type\nvkBeautify - javascript plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.\n \nVersion - 0.99.00.beta \nCopyright (c) 2012 Vadim Kiryukhin\nvkiryukhin @ gmail.com\nhttp://www.eslinstructor.net/vkbeautify/\n\nDual licensed under the MIT and GPL licenses:\n  http://www.opensource.org/licenses/mit-license.php\n  http://www.gnu.org/licenses/gpl.html\n\n  Pretty print\n\n       vkbeautify.xml(text [,indent_pattern]);\n       vkbeautify.json(text [,indent_pattern]);\n       vkbeautify.css(text [,indent_pattern]);\n       vkbeautify.sql(text [,indent_pattern]);",
-            "line": " HtmlPages4testing\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "Missing item type\ndevelopment timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the FormTest HTML pages",
-            "line": " HtmlPages4testing\\FormTestAllproc.js:4"
-        },
-        {
-            "message": "Missing item type\ndevelopment timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
-            "line": " HtmlPages4testing\\RMLsimpleExAllProc.js:5"
-        },
-        {
-            "message": "Missing item type\nvkBeautify - javascript plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.\n \nVersion - 0.99.00.beta \nCopyright (c) 2012 Vadim Kiryukhin\nvkiryukhin @ gmail.com\nhttp://www.eslinstructor.net/vkbeautify/\n\nDual licensed under the MIT and GPL licenses:\n  http://www.opensource.org/licenses/mit-license.php\n  http://www.gnu.org/licenses/gpl.html\n\n  Pretty print\n\n       vkbeautify.xml(text [,indent_pattern]);\n       vkbeautify.json(text [,indent_pattern]);\n       vkbeautify.css(text [,indent_pattern]);\n       vkbeautify.sql(text [,indent_pattern]);",
-            "line": " NITtestData\\scripts\\vkbeautify.js:1"
-        },
-        {
-            "message": "Missing item type\ndevelopment timestamp: 2014-06-24\ndevelopment by Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\n\nThis module provides functions for processing the RightsML Simple Examples HTML pages",
-            "line": " _hiddenData\\RMLsimpleExAllProc.js:4"
-        },
-        {
-            "message": "Missing item type\nODRL-RightsML JavaScript Library",
-            "line": " _hiddenData\\odrl-rightsml.js:1"
-        },
-        {
-            "message": "Missing item type\nThis module provides all ODRL classes complying to the RightsML profile",
-            "line": " _hiddenData\\odrl-rightsml.js:892"
-        },
         {
             "message": "Missing item type\nThis module provides each currently defined ODRL Controlled Vocabulary\nas a class.",
             "line": " ODRLvocabs.js:2"

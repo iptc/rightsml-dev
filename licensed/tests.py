@@ -202,7 +202,7 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
 
-class CombinedLicenseXMLTest(unittest.TestCase):
+class CombinedLicenseTest(unittest.TestCase):
 
 	def setUp(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
@@ -211,6 +211,10 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 
 		odrl_schema_doc = etree.parse("ODRL.xsd")
 		self.odrl_schema = etree.XMLSchema(odrl_schema_doc)
+
+		jsonfile =  open("ODRL.json")
+		odrlschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
 	def tearDown(self):
 		pass
@@ -232,7 +236,12 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
 
-	def test_combined_geographic_and_time_period(self):
+		try:
+			self.odrlvalidator.validate(combined_geo_duty.odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
+
+	def test_combined_geographic_and_time_period_xml(self):
 		combined_geo_duty = self.licenseFactory.combinedGeoTimePeriod(geography="http://cvx.iptc.org/iso3166-1a3/GBR", action="http://www.w3.org/ns/odrl/2/use", timeperiod="2013-06-15", geooperator="http://www.w3.org/ns/odrl/2/neq")
 		combined_geo_duty_xml = combined_geo_duty.xml()
 
@@ -248,6 +257,11 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			log = odrl_schema.error_log
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
+
+		try:
+			self.odrlvalidator.validate(combined_geo_duty.odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
 
 class ConvertXML2JSONTest(unittest.TestCase):
 

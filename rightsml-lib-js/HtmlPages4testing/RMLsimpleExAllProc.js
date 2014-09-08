@@ -20,7 +20,7 @@ function processFormSimpleExGeo() {
     var constrainttarget = document.forms["relinput1"]["constrainttarget"].value;
     var assigner = document.forms["relinput1"]["assignerParty"].value;
     var assignee = document.forms["relinput1"]["assigneeParty"].value;
-    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelationsCV.target).addConstraint(Odrl.ConstraintsCV.spatial, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRolesCV.assigner, Odrl.PartyRoleScopesCV.individual).addParty(assignee, Odrl.PartyRolesCV.assignee, Odrl.PartyRoleScopesCV.individual);
+    perm1.setAction(action).addAsset(targetAsset, Odrl.AssetRelationsCV.target).addConstraint(Odrl.ConstraintsCV.spatial, constraintoperator, constrainttarget, "", "", "").addParty(assigner, Odrl.PartyRolesCV.assigner, "").addParty(assignee, Odrl.PartyRolesCV.assignee, "");
 
     policy1.addPermission(perm1);
 

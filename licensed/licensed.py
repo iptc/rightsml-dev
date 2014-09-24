@@ -114,6 +114,8 @@ class odrl(object):
 						nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 					assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
 					assigner.set('uid', p['assigner'])
+					if "assigner_scope" in p:
+						assigner.set('scope', p['assigner_scope'])
 					permission_prohibition.append(assigner)
 
 				if "assignee" in p:
@@ -257,6 +259,8 @@ class odrl(object):
 			for party in [p for p in permission_prohibition if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
 				if party.get('function') == 'http://www.w3.org/ns/odrl/2/assigner':
 					permission_prohibition_obj['assigner'] = party.get('uid')
+					if party.get('scope') != None:
+						permission_prohibition_object['assigner_scope'] = party.get('scope')
 				elif party.get('function') == 'http://www.w3.org/ns/odrl/2/assignee':
 					permission_prohibition_obj['assignee'] = party.get('uid')
 					if party.get('scope') != None:

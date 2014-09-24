@@ -63,8 +63,10 @@ class mklicense(object):
 
 class odrl(object):
 
-	def __init__(self):
+	def __init__(self, profile=None):
 		self.odrl = {}
+		if profile != None:
+			self.odrl["policyprofile"] = profile
 
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)
@@ -208,6 +210,8 @@ class odrl(object):
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		policy.set('uid', self.odrl['policyid'])
 		policy.set('type', self.odrl['policytype'])
+		if self.odrl['policyprofile'] != None:
+			policy.set('profile', self.odrl['policyprofile'])
 
 		for permission in self.xml_etree_permissions_prohibitions(type="permission"):
 			policy.append(permission)
@@ -339,6 +343,7 @@ class rightsml(odrl):
 	def __init__(self):
 		super(rightsml, self).__init__()
 		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/Set'
+		self.odrl['policyprofile'] = 'http://www.iptc.org/std/RightsML/'
 
 class simpleAction(rightsml):
 

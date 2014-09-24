@@ -26,6 +26,7 @@ from licensed import odrl
 import unittest
 import json
 import jsonschema
+import hashlib
  
 class SimpleLicenseJSONTest(unittest.TestCase):
 
@@ -462,6 +463,49 @@ class ConvertXML2JSONTest(unittest.TestCase):
 		self.assertEqual(geodate_json, simple_geodate_json)
 
 
+class ProfileTest(unittest.TestCase):
+
+	def setUp(self):
+		self.license = odrl()
+
+		jsonfile =  open("ODRL.json")
+		odrlschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
+
+	def tearDown(self):
+		pass
+
+	def test_json_profile(self):
+		self.license.odrl['policyprofile'] = "http://www.w3.org/community/odrl/work/cc/"
+		self.license.odrl['policytype'] = "http://www.w3.org/ns/odrl/2/offer"
+		self.license.odrl['permissions'] = [{'target' : "http://www.example.com/assets/1234567",
+			'assigner' : "http://example.com/cv/party/epa",
+			'assignee' : "http://example.com/cv/policy/group/epapartners",
+			'action' : "http://www.w3.org/community/odrl/work/cc/Sharing" }]
+		hashedparams = hashlib.md5(self.license.json())
+		self.license.odrl['policyid'] = 'http://example.com/cc/policy/' + hashedparams.hexdigest()
+
+		profilelicense_json = self.license.json()
+
+		self.assertIn("http://www.w3.org/community/odrl/work/cc/Sharing", profilelicense_json)
+		self.assertIn("profile", profilelicense_json)
+		self.assertIn("epa", profilelicense_json)
+
+	def test_xml_profile(self):
+		self.license.odrl['policyprofile'] = "http://www.iptc.org/std/RightsML/2011-10-07/"
+		self.license.odrl['policytype'] = "http://www.w3.org/ns/odrl/2/set"
+		self.license.odrl['permissions'] = [{'target' : "http://www.example.com/assets/1234567",
+			'assigner' : "http://example.com/cv/party/epa",
+			'assignee' : "http://example.com/cv/policy/group/epapartners",
+			'action' : "http://www.w3.org/ns/odrl/2/use" }]
+		hashedparams = hashlib.md5(self.license.json())
+		self.license.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+		profilelicense_xml = self.license.xml()
+
+		self.assertIn("profile", profilelicense_xml)
+		self.assertIn("http://www.iptc.org/std/RightsML/2011-10-07/", profilelicense_xml)
+		self.assertIn("epa", profilelicense_xml)
 
 if __name__ == '__main__':
 	unittest.main()

@@ -63,10 +63,16 @@ class mklicense(object):
 
 class odrl(object):
 
-	def __init__(self, profile=None):
+	def __init__(self, profile=None, inheritallowed=True, inheritfrom=None, inheritrelation=None):
 		self.odrl = {}
 		if profile != None:
 			self.odrl["policyprofile"] = profile
+		if inheritallowed != True:
+			self.odrl["inheritallowed"] = inheritallowed
+		if inheritallowed and inheritfrom != None:
+			self.odrl["inheritfrom"] = inheritfrom
+		if inheritallowed and inheritrelation != None:
+			self.odrl["inheritrelation"] = inheritrelation
 
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)
@@ -214,6 +220,17 @@ class odrl(object):
 		policy.set('type', self.odrl['policytype'])
 		if self.odrl['policyprofile'] != None:
 			policy.set('profile', self.odrl['policyprofile'])
+
+		# Handle inheritance attributes
+		# Python Boolean values are "True" / "False", whereas XML Boolean values are "true" / "false"
+		# The inheritFrom and inheritRelation attributes can only be present if inheritAllowed is True (which is the default)
+		if 'inheritallowed' in self.odrl and self.odrl['inheritallowed'] != True:
+			policy.set('inheritAllowed', 'false')
+		else:
+			if 'inheritfrom' in self.odrl:
+				policy.set('inheritFrom', self.odrl['inheritfrom'])
+			if 'inheritrelation' in self.odrl:
+				policy.set('inheritRelation', self.odrl['inheritrelation'])
 
 		for permission in self.xml_etree_permissions_prohibitions(type="permission"):
 			policy.append(permission)

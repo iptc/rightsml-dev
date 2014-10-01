@@ -406,7 +406,7 @@ class simpleDutyToPay(simpleAction):
 
 	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
 		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
-		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/pay', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'name' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/compensate', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'name' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 

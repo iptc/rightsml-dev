@@ -35,7 +35,7 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		jsonfile =  open("ODRL.json")
+		jsonfile =  open("ODRL21.json")
 		odrlschema = json.load(jsonfile)
 		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
@@ -194,7 +194,7 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
 	def test_valid_odrl(self):
-		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema_doc = etree.parse("ODRL21.xsd")
 		odrl_schema = etree.XMLSchema(odrl_schema_doc)
 
 		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
@@ -210,10 +210,10 @@ class CombinedLicenseTest(unittest.TestCase):
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema_doc = etree.parse("ODRL21.xsd")
 		self.odrl_schema = etree.XMLSchema(odrl_schema_doc)
 
-		jsonfile =  open("ODRL.json")
+		jsonfile =  open("ODRL21.json")
 		odrlschema = json.load(jsonfile)
 		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
@@ -468,7 +468,7 @@ class ProfileTest(unittest.TestCase):
 	def setUp(self):
 		self.license = odrl()
 
-		jsonfile =  open("ODRL.json")
+		jsonfile =  open("ODRL21.json")
 		odrlschema = json.load(jsonfile)
 		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 

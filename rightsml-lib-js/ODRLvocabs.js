@@ -5,7 +5,7 @@
 *
 * @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 * Published under MIT license (see http://www.opensource.org/licenses/MIT)
-* development timestamp: 2014-06-25
+* development timestamp: 2015-01-17
 */
 var Odrl;
 (function (Odrl) {
@@ -13,63 +13,59 @@ var Odrl;
     var ActionsCV = (function () {
         function ActionsCV() {
         }
-        ActionsCV.acceptTracking = Odrl.nsVocabUri + "acceptTracking";
         ActionsCV.aggregate = Odrl.nsVocabUri + "aggregate";
         ActionsCV.annotate = Odrl.nsVocabUri + "annotate";
         ActionsCV.anonymize = Odrl.nsVocabUri + "anonymize";
-        ActionsCV.appendTo = Odrl.nsVocabUri + "appendTo";
         ActionsCV.archive = Odrl.nsVocabUri + "archive";
-        ActionsCV.attribute = Odrl.nsVocabUri + "attribute";
         ActionsCV.concurrentUse = Odrl.nsVocabUri + "concurrentUse";
-        ActionsCV.deletee = Odrl.nsVocabUri + "delete";
         ActionsCV.derive = Odrl.nsVocabUri + "derive";
         ActionsCV.digitize = Odrl.nsVocabUri + "digitize";
         ActionsCV.display = Odrl.nsVocabUri + "display";
         ActionsCV.distribute = Odrl.nsVocabUri + "distribute";
-        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + "ensureExclusivity";
         ActionsCV.execute = Odrl.nsVocabUri + "execute";
         ActionsCV.extract = Odrl.nsVocabUri + "extract";
         ActionsCV.give = Odrl.nsVocabUri + "give";
-        ActionsCV.include = Odrl.nsVocabUri + "include";
+        ActionsCV.grantUse = Odrl.nsVocabUri + "grantUse";
         ActionsCV.index = Odrl.nsVocabUri + "index";
-        ActionsCV.inform = Odrl.nsVocabUri + "inform";
         ActionsCV.install = Odrl.nsVocabUri + "install";
-        ActionsCV.lease = Odrl.nsVocabUri + "lease";
-        ActionsCV.lend = Odrl.nsVocabUri + "lend";
+        ActionsCV.modify = Odrl.nsVocabUri + "modify";
         ActionsCV.move = Odrl.nsVocabUri + "move";
-        ActionsCV.nextPolicy = Odrl.nsVocabUri + "nextPolicy";
-        ActionsCV.obtainConsent = Odrl.nsVocabUri + "obtainConsent";
-        ActionsCV.pay = Odrl.nsVocabUri + "pay";
         ActionsCV.play = Odrl.nsVocabUri + "play";
         ActionsCV.present = Odrl.nsVocabUri + "present";
-        ActionsCV.preview = Odrl.nsVocabUri + "preview";
         ActionsCV.print = Odrl.nsVocabUri + "print";
         ActionsCV.read = Odrl.nsVocabUri + "read";
         ActionsCV.reproduce = Odrl.nsVocabUri + "reproduce";
-        ActionsCV.reviewPolicy = Odrl.nsVocabUri + "reviewPolicy";
-        ActionsCV.secondaryUse = Odrl.nsVocabUri + "secondaryUse";
         ActionsCV.sell = Odrl.nsVocabUri + "sell";
-        ActionsCV.sublicense = Odrl.nsVocabUri + "sublicense";
         ActionsCV.textToSpeech = Odrl.nsVocabUri + "textToSpeech";
         ActionsCV.transfer = Odrl.nsVocabUri + "transfer";
         ActionsCV.transform = Odrl.nsVocabUri + "transform";
         ActionsCV.translate = Odrl.nsVocabUri + "translate";
-        ActionsCV.uninstall = Odrl.nsVocabUri + "uninstall";
         ActionsCV.use = Odrl.nsVocabUri + "use";
+
+        ActionsCV.acceptTracking = Odrl.nsVocabUri + "acceptTracking";
+        ActionsCV.attribute = Odrl.nsVocabUri + "attribute";
+        ActionsCV.compensate = Odrl.nsVocabUri + "compensate";
+        ActionsCV.delete_ = Odrl.nsVocabUri + "delete";
+        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + "ensureExclusivity";
+        ActionsCV.include = Odrl.nsVocabUri + "include";
+        ActionsCV.inform = Odrl.nsVocabUri + "inform";
+        ActionsCV.nextPolicy = Odrl.nsVocabUri + "nextPolicy";
+        ActionsCV.obtainConsent = Odrl.nsVocabUri + "obtainConsent";
+        ActionsCV.reviewPolicy = Odrl.nsVocabUri + "reviewPolicy";
+        ActionsCV.uninstall = Odrl.nsVocabUri + "uninstall";
         ActionsCV.watermark = Odrl.nsVocabUri + "watermark";
-        ActionsCV.writeTo = Odrl.nsVocabUri + "writeTo";
         return ActionsCV;
     })();
     Odrl.ActionsCV = ActionsCV;
     var PolicyTypesCV = (function () {
         function PolicyTypesCV() {
         }
-        PolicyTypesCV.agreement = Odrl.nsVocabUri + "agreement";
-        PolicyTypesCV.offer = Odrl.nsVocabUri + "offer";
-        PolicyTypesCV.privacy = Odrl.nsVocabUri + "privacy";
-        PolicyTypesCV.request = Odrl.nsVocabUri + "request";
-        PolicyTypesCV.set = Odrl.nsVocabUri + "set";
-        PolicyTypesCV.ticket = Odrl.nsVocabUri + "ticket";
+        PolicyTypesCV.agreement = Odrl.nsVocabUri + "Agreement";
+        PolicyTypesCV.offer = Odrl.nsVocabUri + "Offer";
+        PolicyTypesCV.privacy = Odrl.nsVocabUri + "Privacy";
+        PolicyTypesCV.request = Odrl.nsVocabUri + "Request";
+        PolicyTypesCV.set = Odrl.nsVocabUri + "Set";
+        PolicyTypesCV.ticket = Odrl.nsVocabUri + "Ticket";
         return PolicyTypesCV;
     })();
     Odrl.PolicyTypesCV = PolicyTypesCV;
@@ -137,12 +133,12 @@ var Odrl;
     var PartyRoleScopesCV = (function () {
         function PartyRoleScopesCV() {
         }
-        PartyRoleScopesCV.individual = Odrl.nsVocabUri + "individual";
-        PartyRoleScopesCV.group = Odrl.nsVocabUri + "group";
-        PartyRoleScopesCV.all = Odrl.nsVocabUri + "all";
-        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + "allConnections";
-        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + "all2ndConnections";
-        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + "allGroups";
+        PartyRoleScopesCV.individual = Odrl.nsVocabUri + "Individual";
+        PartyRoleScopesCV.group = Odrl.nsVocabUri + "Group";
+        PartyRoleScopesCV.all = Odrl.nsVocabUri + "All";
+        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + "AllConnections";
+        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + "All2ndConnections";
+        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + "AllGroups";
         return PartyRoleScopesCV;
     })();
     Odrl.PartyRoleScopesCV = PartyRoleScopesCV;

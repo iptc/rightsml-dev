@@ -63,8 +63,16 @@ class mklicense(object):
 
 class odrl(object):
 
-	def __init__(self):
+	def __init__(self, profile=None, inheritallowed=True, inheritfrom=None, inheritrelation=None):
 		self.odrl = {}
+		if profile != None:
+			self.odrl["policyprofile"] = profile
+		if inheritallowed != True:
+			self.odrl["inheritallowed"] = inheritallowed
+		if inheritallowed and inheritfrom != None:
+			self.odrl["inheritfrom"] = inheritfrom
+		if inheritallowed and inheritrelation != None:
+			self.odrl["inheritrelation"] = inheritrelation
 
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)
@@ -112,6 +120,8 @@ class odrl(object):
 						nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 					assigner.set('function', 'http://www.w3.org/ns/odrl/2/assigner')
 					assigner.set('uid', p['assigner'])
+					if "assigner_scope" in p:
+						assigner.set('scope', p['assigner_scope'])
 					permission_prohibition.append(assigner)
 
 				if "assignee" in p:
@@ -208,6 +218,19 @@ class odrl(object):
 			nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 		policy.set('uid', self.odrl['policyid'])
 		policy.set('type', self.odrl['policytype'])
+		if self.odrl['policyprofile'] != None:
+			policy.set('profile', self.odrl['policyprofile'])
+
+		# Handle inheritance attributes
+		# Python Boolean values are "True" / "False", whereas XML Boolean values are "true" / "false"
+		# The inheritFrom and inheritRelation attributes can only be present if inheritAllowed is True (which is the default)
+		if 'inheritallowed' in self.odrl and self.odrl['inheritallowed'] != True:
+			policy.set('inheritAllowed', 'false')
+		else:
+			if 'inheritfrom' in self.odrl:
+				policy.set('inheritFrom', self.odrl['inheritfrom'])
+			if 'inheritrelation' in self.odrl:
+				policy.set('inheritRelation', self.odrl['inheritrelation'])
 
 		for permission in self.xml_etree_permissions_prohibitions(type="permission"):
 			policy.append(permission)
@@ -253,6 +276,8 @@ class odrl(object):
 			for party in [p for p in permission_prohibition if p.tag == "{http://www.w3.org/ns/odrl/2/}party"]:
 				if party.get('function') == 'http://www.w3.org/ns/odrl/2/assigner':
 					permission_prohibition_obj['assigner'] = party.get('uid')
+					if party.get('scope') != None:
+						permission_prohibition_object['assigner_scope'] = party.get('scope')
 				elif party.get('function') == 'http://www.w3.org/ns/odrl/2/assignee':
 					permission_prohibition_obj['assignee'] = party.get('uid')
 					if party.get('scope') != None:
@@ -339,6 +364,7 @@ class rightsml(odrl):
 	def __init__(self):
 		super(rightsml, self).__init__()
 		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/Set'
+		self.odrl['policyprofile'] = 'http://www.iptc.org/std/RightsML/'
 
 class simpleAction(rightsml):
 
@@ -380,7 +406,7 @@ class simpleDutyToPay(simpleAction):
 
 	def __init__(self,target, assigner, assignee, action, rightoperand, rightoperandunit, payee, operator='http://www.w3.org/ns/odrl/2/eq'):
 		super(simpleDutyToPay, self).__init__(target=target, assigner=assigner, assignee=assignee, action=action)
-		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/pay', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'name' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
+		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/compensate', 'payeeparty' : payee, 'constraints': [{'rightoperand' : rightoperand, 'name' : 'http://www.w3.org/ns/odrl/2/payAmount', 'operator' : operator, 'rightoperandunit' : rightoperandunit}]}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 

@@ -26,6 +26,7 @@ from licensed import odrl
 import unittest
 import json
 import jsonschema
+import hashlib
  
 class SimpleLicenseJSONTest(unittest.TestCase):
 
@@ -34,7 +35,7 @@ class SimpleLicenseJSONTest(unittest.TestCase):
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		jsonfile =  open("ODRL.json")
+		jsonfile =  open("ODRL21.json")
 		odrlschema = json.load(jsonfile)
 		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
@@ -193,7 +194,7 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 		self.assertEqual(geolicense_deu_uid_1, geolicense_deu_uid_2)
 
 	def test_valid_odrl(self):
-		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema_doc = etree.parse("ODRL21.xsd")
 		odrl_schema = etree.XMLSchema(odrl_schema_doc)
 
 		geolicense_deu_1 = self.licenseFactory.simpleGeographic(geography="http://cvx.iptc.org/iso3166-1a3/DEU")
@@ -202,15 +203,19 @@ class SimpleLicenseXMLTest(unittest.TestCase):
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
 
-class CombinedLicenseXMLTest(unittest.TestCase):
+class CombinedLicenseTest(unittest.TestCase):
 
 	def setUp(self):
 		self.licenseFactory = mklicense(target="urn:newsml:example.com:20090101:120111-999-000013", 
 			assigner="http://example.com/cv/party/epa",
 			assignee="http://example.com/cv/policy/group/epapartners")
 
-		odrl_schema_doc = etree.parse("ODRL.xsd")
+		odrl_schema_doc = etree.parse("ODRL21.xsd")
 		self.odrl_schema = etree.XMLSchema(odrl_schema_doc)
+
+		jsonfile =  open("ODRL21.json")
+		odrlschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
 
 	def tearDown(self):
 		pass
@@ -232,7 +237,12 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
 
-	def test_combined_geographic_and_time_period(self):
+		try:
+			self.odrlvalidator.validate(combined_geo_duty.odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
+
+	def test_combined_geographic_and_time_period_xml(self):
 		combined_geo_duty = self.licenseFactory.combinedGeoTimePeriod(geography="http://cvx.iptc.org/iso3166-1a3/GBR", action="http://www.w3.org/ns/odrl/2/use", timeperiod="2013-06-15", geooperator="http://www.w3.org/ns/odrl/2/neq")
 		combined_geo_duty_xml = combined_geo_duty.xml()
 
@@ -248,6 +258,11 @@ class CombinedLicenseXMLTest(unittest.TestCase):
 			log = odrl_schema.error_log
 			error = log.last_error
 			self.fail("Invalid ODRL %s" % error)
+
+		try:
+			self.odrlvalidator.validate(combined_geo_duty.odrl)
+		except jsonschema.exceptions.ValidationError as e:
+			self.fail("ODRL JSON didn't validate: %s" % e.message)
 
 class ConvertXML2JSONTest(unittest.TestCase):
 
@@ -402,5 +417,95 @@ class ConvertXML2JSONTest(unittest.TestCase):
 		payee_json = self.odrl_factory.xml2json(simple_payee_xml)
 
 		self.assertEqual(payee_json, simple_payee_json)
+
+
+	def test_json_to_geodate_xml(self):
+		simple_geodate_json="""{
+    "permissions": [
+        {
+            "action": "http://www.w3.org/ns/odrl/2/use", 
+            "assignee": "http://example.com/cv/policy/group/epapartners", 
+            "assigner": "http://example.com/cv/party/epa", 
+            "constraints": [
+                {
+                    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+                    "operator": "http://www.w3.org/ns/odrl/2/neq", 
+                    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/GBR"
+                }, 
+                {
+                    "name": "http://www.w3.org/ns/odrl/2/dateTime", 
+                    "operator": "http://www.w3.org/ns/odrl/2/lt", 
+                    "rightoperand": "2013-06-15", 
+                    "rightoperanddatatype": "xs:dateTime"
+                }
+            ], 
+            "target": "urn:newsml:example.com:20090101:120111-999-000013"
+        }
+    ], 
+    "policyid": "http://example.com/RightsML/policy/04f4bc3ad8f037a8ffb15186005ef672", 
+    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+}"""
+
+		simple_geodate_xml="""<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/04f4bc3ad8f037a8ffb15186005ef672" type="http://www.w3.org/ns/odrl/2/Set">
+  <o:permission>
+    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>
+    <o:action name="http://www.w3.org/ns/odrl/2/use"/>
+    <o:constraint name="http://www.w3.org/ns/odrl/2/spatial" operator="http://www.w3.org/ns/odrl/2/neq" rightOperand="http://cvx.iptc.org/iso3166-1a3/GBR"/>
+    <o:constraint name="http://www.w3.org/ns/odrl/2/dateTime" operator="http://www.w3.org/ns/odrl/2/lt" rightOperand="2013-06-15" dataType="xs:dateTime"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>
+    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>
+  </o:permission>
+</o:Policy>"""
+
+
+		geodate_json = self.odrl_factory.xml2json(simple_geodate_xml)
+
+		self.assertEqual(geodate_json, simple_geodate_json)
+
+
+class ProfileTest(unittest.TestCase):
+
+	def setUp(self):
+		self.license = odrl()
+
+		jsonfile =  open("ODRL21.json")
+		odrlschema = json.load(jsonfile)
+		self.odrlvalidator = jsonschema.Draft4Validator(odrlschema)
+
+	def tearDown(self):
+		pass
+
+	def test_json_profile(self):
+		self.license.odrl['policyprofile'] = "http://www.w3.org/community/odrl/work/cc/"
+		self.license.odrl['policytype'] = "http://www.w3.org/ns/odrl/2/offer"
+		self.license.odrl['permissions'] = [{'target' : "http://www.example.com/assets/1234567",
+			'assigner' : "http://example.com/cv/party/epa",
+			'assignee' : "http://example.com/cv/policy/group/epapartners",
+			'action' : "http://www.w3.org/community/odrl/work/cc/Sharing" }]
+		hashedparams = hashlib.md5(self.license.json())
+		self.license.odrl['policyid'] = 'http://example.com/cc/policy/' + hashedparams.hexdigest()
+
+		profilelicense_json = self.license.json()
+
+		self.assertIn("http://www.w3.org/community/odrl/work/cc/Sharing", profilelicense_json)
+		self.assertIn("profile", profilelicense_json)
+		self.assertIn("epa", profilelicense_json)
+
+	def test_xml_profile(self):
+		self.license.odrl['policyprofile'] = "http://www.iptc.org/std/RightsML/2011-10-07/"
+		self.license.odrl['policytype'] = "http://www.w3.org/ns/odrl/2/set"
+		self.license.odrl['permissions'] = [{'target' : "http://www.example.com/assets/1234567",
+			'assigner' : "http://example.com/cv/party/epa",
+			'assignee' : "http://example.com/cv/policy/group/epapartners",
+			'action' : "http://www.w3.org/ns/odrl/2/use" }]
+		hashedparams = hashlib.md5(self.license.json())
+		self.license.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+		profilelicense_xml = self.license.xml()
+
+		self.assertIn("profile", profilelicense_xml)
+		self.assertIn("http://www.iptc.org/std/RightsML/2011-10-07/", profilelicense_xml)
+		self.assertIn("epa", profilelicense_xml)
+
 if __name__ == '__main__':
 	unittest.main()

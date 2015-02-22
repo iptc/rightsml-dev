@@ -345,7 +345,7 @@ class odrl(object):
 		if len(permissions_prohibitions) > 0:
 			self.odrl[type+'s'] = permissions_prohibitions
 
-	def xml2json(self, theXML):
+	def from_xml(self, theXML):
 		odrl_tree = etree.parse(StringIO(theXML))
 
 		for policy in odrl_tree.xpath('/o:Policy', namespaces={'o': 'http://www.w3.org/ns/odrl/2/'}):
@@ -355,9 +355,13 @@ class odrl(object):
 			self.xml_permissions_prohibitions_to_json("permission", policy)
 
 			self.xml_permissions_prohibitions_to_json("prohibition", policy)
-
+		
+	def xml2json(self, theXML):
+		self.from_xml(theXML)
 		return self.json()
 
+	def from_json(self, theJSON):
+		self.odrl = json.loads(theJSON)
 
 class rightsml(odrl):
 

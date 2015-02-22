@@ -507,5 +507,65 @@ class ProfileTest(unittest.TestCase):
 		self.assertIn("http://www.iptc.org/std/RightsML/2011-10-07/", profilelicense_xml)
 		self.assertIn("epa", profilelicense_xml)
 
+class ParseJSONODRLTest(unittest.TestCase):
+	def setUp(self):
+		self.odrl_factory = odrl()
+
+	def tearDown(self):
+		pass
+
+	def test_parse_json(self):
+		test_json = """
+		{
+		    "permissions": [
+			{
+			    "action": "http://www.w3.org/ns/odrl/2/print", 
+			    "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    "assigner": "http://example.com/cv/party/epa", 
+			    "target": "urn:newsml:example.com:20090101:120111-999-000013"
+			}
+		    ], 
+		    "policyid": "http://example.com/RightsML/policy/fc5ac66f826c0f850faa91262b64ffdc", 
+		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		}
+		"""
+		test_xml ='<o:Policy xmlns:o="http://www.w3.org/ns/odrl/2/" uid="http://example.com/RightsML/policy/fc5ac66f826c0f850faa91262b64ffdc" type="http://www.w3.org/ns/odrl/2/Set" profile="http://www.iptc.org/std/RightsML/">\n  <o:permission>\n    <o:asset uid="urn:newsml:example.com:20090101:120111-999-000013" relation="http://www.w3.org/ns/odrl/2/target"/>\n    <o:action name="http://www.w3.org/ns/odrl/2/print"/>\n    <o:party function="http://www.w3.org/ns/odrl/2/assigner" uid="http://example.com/cv/party/epa"/>\n    <o:party function="http://www.w3.org/ns/odrl/2/assignee" uid="http://example.com/cv/policy/group/epapartners"/>\n  </o:permission>\n</o:Policy>\n'
+		self.odrl_factory.from_json(test_json)
+		xml_license = self.odrl_factory.xml()
+		self.assertEqual(xml_license, test_xml)
+
+# class JSONtoPykeTest(unittest.TestCase):
+# 
+	# def setUp(self):
+		# self.odrl_factory = odrl()
+# 
+	# def tearDown(self):
+		# pass
+# 
+	# def test_json_pyke(self):
+		# test_json = """
+		# {
+		    # "permissions": [
+			# {
+			    # "action": "http://www.w3.org/ns/odrl/2/print", 
+			    # "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    # "assigner": "http://example.com/cv/party/epa", 
+			    # "target": "urn:newsml:example.com:20090101:120111-999-000013"
+			# }
+		    # ], 
+		    # "policyid": "http://example.com/RightsML/policy/fc5ac66f826c0f850faa91262b64ffdc", 
+		    # "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    # "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		# }
+		# """
+# 
+		# expected_pyke = """
+			# permission(license, (epa, stuart, present, (), (), ((), (), pay, (), (payamount, eq, 0.50, decimal, aud, ()))))
+		# """
+# 
+		# license = self.odrl_factory.from_json(test_json)
+		# ENSURE_IT_IS_SAME_AS_PYKE
+
 if __name__ == '__main__':
 	unittest.main()

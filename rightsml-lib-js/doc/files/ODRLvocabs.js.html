@@ -109,7 +109,7 @@
 *
 * @author Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)
 * Published under MIT license (see http://www.opensource.org/licenses/MIT)
-* development timestamp: 2014-06-25
+* development timestamp: 2015-01-17
 */
 var Odrl;
 (function (Odrl) {
@@ -117,63 +117,59 @@ var Odrl;
     var ActionsCV = (function () {
         function ActionsCV() {
         }
-        ActionsCV.acceptTracking = Odrl.nsVocabUri + &quot;acceptTracking&quot;;
         ActionsCV.aggregate = Odrl.nsVocabUri + &quot;aggregate&quot;;
         ActionsCV.annotate = Odrl.nsVocabUri + &quot;annotate&quot;;
         ActionsCV.anonymize = Odrl.nsVocabUri + &quot;anonymize&quot;;
-        ActionsCV.appendTo = Odrl.nsVocabUri + &quot;appendTo&quot;;
         ActionsCV.archive = Odrl.nsVocabUri + &quot;archive&quot;;
-        ActionsCV.attribute = Odrl.nsVocabUri + &quot;attribute&quot;;
         ActionsCV.concurrentUse = Odrl.nsVocabUri + &quot;concurrentUse&quot;;
-        ActionsCV.deletee = Odrl.nsVocabUri + &quot;delete&quot;;
         ActionsCV.derive = Odrl.nsVocabUri + &quot;derive&quot;;
         ActionsCV.digitize = Odrl.nsVocabUri + &quot;digitize&quot;;
         ActionsCV.display = Odrl.nsVocabUri + &quot;display&quot;;
         ActionsCV.distribute = Odrl.nsVocabUri + &quot;distribute&quot;;
-        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + &quot;ensureExclusivity&quot;;
         ActionsCV.execute = Odrl.nsVocabUri + &quot;execute&quot;;
         ActionsCV.extract = Odrl.nsVocabUri + &quot;extract&quot;;
         ActionsCV.give = Odrl.nsVocabUri + &quot;give&quot;;
-        ActionsCV.include = Odrl.nsVocabUri + &quot;include&quot;;
+        ActionsCV.grantUse = Odrl.nsVocabUri + &quot;grantUse&quot;;
         ActionsCV.index = Odrl.nsVocabUri + &quot;index&quot;;
-        ActionsCV.inform = Odrl.nsVocabUri + &quot;inform&quot;;
         ActionsCV.install = Odrl.nsVocabUri + &quot;install&quot;;
-        ActionsCV.lease = Odrl.nsVocabUri + &quot;lease&quot;;
-        ActionsCV.lend = Odrl.nsVocabUri + &quot;lend&quot;;
+        ActionsCV.modify = Odrl.nsVocabUri + &quot;modify&quot;;
         ActionsCV.move = Odrl.nsVocabUri + &quot;move&quot;;
-        ActionsCV.nextPolicy = Odrl.nsVocabUri + &quot;nextPolicy&quot;;
-        ActionsCV.obtainConsent = Odrl.nsVocabUri + &quot;obtainConsent&quot;;
-        ActionsCV.pay = Odrl.nsVocabUri + &quot;pay&quot;;
         ActionsCV.play = Odrl.nsVocabUri + &quot;play&quot;;
         ActionsCV.present = Odrl.nsVocabUri + &quot;present&quot;;
-        ActionsCV.preview = Odrl.nsVocabUri + &quot;preview&quot;;
         ActionsCV.print = Odrl.nsVocabUri + &quot;print&quot;;
         ActionsCV.read = Odrl.nsVocabUri + &quot;read&quot;;
         ActionsCV.reproduce = Odrl.nsVocabUri + &quot;reproduce&quot;;
-        ActionsCV.reviewPolicy = Odrl.nsVocabUri + &quot;reviewPolicy&quot;;
-        ActionsCV.secondaryUse = Odrl.nsVocabUri + &quot;secondaryUse&quot;;
         ActionsCV.sell = Odrl.nsVocabUri + &quot;sell&quot;;
-        ActionsCV.sublicense = Odrl.nsVocabUri + &quot;sublicense&quot;;
         ActionsCV.textToSpeech = Odrl.nsVocabUri + &quot;textToSpeech&quot;;
         ActionsCV.transfer = Odrl.nsVocabUri + &quot;transfer&quot;;
         ActionsCV.transform = Odrl.nsVocabUri + &quot;transform&quot;;
         ActionsCV.translate = Odrl.nsVocabUri + &quot;translate&quot;;
-        ActionsCV.uninstall = Odrl.nsVocabUri + &quot;uninstall&quot;;
         ActionsCV.use = Odrl.nsVocabUri + &quot;use&quot;;
+
+        ActionsCV.acceptTracking = Odrl.nsVocabUri + &quot;acceptTracking&quot;;
+        ActionsCV.attribute = Odrl.nsVocabUri + &quot;attribute&quot;;
+        ActionsCV.compensate = Odrl.nsVocabUri + &quot;compensate&quot;;
+        ActionsCV.delete_ = Odrl.nsVocabUri + &quot;delete&quot;;
+        ActionsCV.ensureExclusivity = Odrl.nsVocabUri + &quot;ensureExclusivity&quot;;
+        ActionsCV.include = Odrl.nsVocabUri + &quot;include&quot;;
+        ActionsCV.inform = Odrl.nsVocabUri + &quot;inform&quot;;
+        ActionsCV.nextPolicy = Odrl.nsVocabUri + &quot;nextPolicy&quot;;
+        ActionsCV.obtainConsent = Odrl.nsVocabUri + &quot;obtainConsent&quot;;
+        ActionsCV.reviewPolicy = Odrl.nsVocabUri + &quot;reviewPolicy&quot;;
+        ActionsCV.uninstall = Odrl.nsVocabUri + &quot;uninstall&quot;;
         ActionsCV.watermark = Odrl.nsVocabUri + &quot;watermark&quot;;
-        ActionsCV.writeTo = Odrl.nsVocabUri + &quot;writeTo&quot;;
         return ActionsCV;
     })();
     Odrl.ActionsCV = ActionsCV;
     var PolicyTypesCV = (function () {
         function PolicyTypesCV() {
         }
-        PolicyTypesCV.agreement = Odrl.nsVocabUri + &quot;agreement&quot;;
-        PolicyTypesCV.offer = Odrl.nsVocabUri + &quot;offer&quot;;
-        PolicyTypesCV.privacy = Odrl.nsVocabUri + &quot;privacy&quot;;
-        PolicyTypesCV.request = Odrl.nsVocabUri + &quot;request&quot;;
-        PolicyTypesCV.set = Odrl.nsVocabUri + &quot;set&quot;;
-        PolicyTypesCV.ticket = Odrl.nsVocabUri + &quot;ticket&quot;;
+        PolicyTypesCV.agreement = Odrl.nsVocabUri + &quot;Agreement&quot;;
+        PolicyTypesCV.offer = Odrl.nsVocabUri + &quot;Offer&quot;;
+        PolicyTypesCV.privacy = Odrl.nsVocabUri + &quot;Privacy&quot;;
+        PolicyTypesCV.request = Odrl.nsVocabUri + &quot;Request&quot;;
+        PolicyTypesCV.set = Odrl.nsVocabUri + &quot;Set&quot;;
+        PolicyTypesCV.ticket = Odrl.nsVocabUri + &quot;Ticket&quot;;
         return PolicyTypesCV;
     })();
     Odrl.PolicyTypesCV = PolicyTypesCV;
@@ -241,12 +237,12 @@ var Odrl;
     var PartyRoleScopesCV = (function () {
         function PartyRoleScopesCV() {
         }
-        PartyRoleScopesCV.individual = Odrl.nsVocabUri + &quot;individual&quot;;
-        PartyRoleScopesCV.group = Odrl.nsVocabUri + &quot;group&quot;;
-        PartyRoleScopesCV.all = Odrl.nsVocabUri + &quot;all&quot;;
-        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + &quot;allConnections&quot;;
-        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + &quot;all2ndConnections&quot;;
-        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + &quot;allGroups&quot;;
+        PartyRoleScopesCV.individual = Odrl.nsVocabUri + &quot;Individual&quot;;
+        PartyRoleScopesCV.group = Odrl.nsVocabUri + &quot;Group&quot;;
+        PartyRoleScopesCV.all = Odrl.nsVocabUri + &quot;All&quot;;
+        PartyRoleScopesCV.allConnections = Odrl.nsVocabUri + &quot;AllConnections&quot;;
+        PartyRoleScopesCV.all2ndConnections = Odrl.nsVocabUri + &quot;All2ndConnections&quot;;
+        PartyRoleScopesCV.allGroups = Odrl.nsVocabUri + &quot;AllGroups&quot;;
         return PartyRoleScopesCV;
     })();
     Odrl.PartyRoleScopesCV = PartyRoleScopesCV;

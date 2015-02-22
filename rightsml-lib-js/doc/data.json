@@ -731,7 +731,7 @@
             "file": "ODRLvocabs.js",
             "line": 2,
             "description": "This module provides each currently defined ODRL Controlled Vocabulary\nas a class.",
-            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2014-06-25",
+            "author": "Copyright Michael W. Steidl (www.linkedin.com/in/michaelwsteidl)\nPublished under MIT license (see http://www.opensource.org/licenses/MIT)\ndevelopment timestamp: 2015-01-17",
             "class": "",
             "module": ": ODRL"
         },

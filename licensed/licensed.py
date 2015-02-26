@@ -83,6 +83,57 @@ class odrl(object):
 		else:
 			return etree.tostring(self.xml_etree())
 
+	def pyke(self, type="policy"):
+		pyke_expressions = []
+		for permission in self.pyke_permissions_prohibitions(type="permission", pyke_type=type):
+			pyke_expressions.append(permission)
+
+		for prohibition in self.pyke_permissions_prohibitions(type="prohibition", pyke_type=type):
+			pyke_expressions.append(prohibition)
+
+		return "\n".join(pyke_expressions)
+
+	def pyke_permissions_prohibitions(self, type, pyke_type):
+		permissions_prohibitions = []
+		if type+"s" in self.odrl:
+			for p in self.odrl[type+"s"]:
+				permission_prohibition = type+"("+pyke_type+", "
+				if "assigner" in p:
+					permission_prohibition += p['assigner']
+				permission_prohibition += ", "
+				if "assignee" in p:
+					permission_prohibition += p['assignee']
+				permission_prohibition += ", "
+				permission_prohibition += p['action']
+				if "output" in p:
+					permission_prohibition += p['output']
+				permission_prohibition += ", ("
+				if "constraints" in p:
+					for c in p["constraints"]:
+						permission_prohibition += c['name']
+						permission_prohibition += ", "
+						permission_prohibition += c['operator']
+						permission_prohibition += ", "
+						permission_prohibition += c['rightoperand']
+						permission_prohibition += ", "
+						if "rightoperanddatatype" in c:
+							permission_prohibition += c['rightoperanddatatype']
+						permission_prohibition += ", "
+						if "rightoperandunit" in c:
+							permission_prohibition += c['rightoperandunit']
+						permission_prohibition += ", "
+						if "status" in c:
+							permission_prohibition += c['status']
+				
+				permission_prohibition += "), ("
+				# @@@FIXME - duties are a bit complicated, aren't they?
+				# if "duties" in p:
+				# 	for d in p["duties"]:
+				permission_prohibition += "))"
+			permissions_prohibitions.append(permission_prohibition)
+
+		return permissions_prohibitions
+
 	def xml_etree_permissions_prohibitions(self, type):
 		permissions_prohibitions = []
 		if type+"s" in self.odrl:
@@ -96,6 +147,7 @@ class odrl(object):
 				permission_prohibition.append(asset)
 
 				action = etree.Element("{http://www.w3.org/ns/odrl/2/}action",
+
 					nsmap={'o': 'http://www.w3.org/ns/odrl/2/'})
 				action.set('name', p['action'])
 				permission_prohibition.append(action)

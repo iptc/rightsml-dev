@@ -535,37 +535,36 @@ class ParseJSONODRLTest(unittest.TestCase):
 		xml_license = self.odrl_factory.xml()
 		self.assertEqual(xml_license, test_xml)
 
-# class JSONtoPykeTest(unittest.TestCase):
-# 
-	# def setUp(self):
-		# self.odrl_factory = odrl()
-# 
-	# def tearDown(self):
-		# pass
-# 
-	# def test_json_pyke(self):
-		# test_json = """
-		# {
-		    # "permissions": [
-			# {
-			    # "action": "http://www.w3.org/ns/odrl/2/print", 
-			    # "assignee": "http://example.com/cv/policy/group/epapartners", 
-			    # "assigner": "http://example.com/cv/party/epa", 
-			    # "target": "urn:newsml:example.com:20090101:120111-999-000013"
-			# }
-		    # ], 
-		    # "policyid": "http://example.com/RightsML/policy/fc5ac66f826c0f850faa91262b64ffdc", 
-		    # "policyprofile": "http://www.iptc.org/std/RightsML/", 
-		    # "policytype": "http://www.w3.org/ns/odrl/2/Set"
-		# }
-		# """
-# 
-		# expected_pyke = """
-			# permission(license, (epa, stuart, present, (), (), ((), (), pay, (), (payamount, eq, 0.50, decimal, aud, ()))))
-		# """
-# 
-		# license = self.odrl_factory.from_json(test_json)
-		# ENSURE_IT_IS_SAME_AS_PYKE
+class JSONtoPykeTest(unittest.TestCase):
+ 
+	def setUp(self):
+		self.odrl_factory = odrl()
+
+	def tearDown(self):
+		pass
+ 
+	def test_json_pyke(self):
+		test_json = """
+		{
+		    "permissions": [
+			{
+			    "action": "http://www.w3.org/ns/odrl/2/print", 
+			    "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    "assigner": "http://example.com/cv/party/epa", 
+			    "target": "urn:newsml:example.com:20090101:120111-999-000013"
+			}
+		    ], 
+		    "policyid": "http://example.com/RightsML/policy/fc5ac66f826c0f850faa91262b64ffdc", 
+		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		}
+		"""
+
+		expected_pyke = """permission(policy, http://example.com/cv/party/epa, http://example.com/cv/policy/group/epapartners, http://www.w3.org/ns/odrl/2/print, (), ())"""
+
+		self.odrl_factory.from_json(test_json)
+		pyke_license = self.odrl_factory.pyke()
+		self.assertEqual(pyke_license, expected_pyke)
 
 if __name__ == '__main__':
 	unittest.main()

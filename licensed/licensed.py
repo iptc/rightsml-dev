@@ -26,6 +26,7 @@ except ImportError:
 from StringIO import *
 import hashlib
 import json
+import ast
 
 class mklicense(object):
 
@@ -83,53 +84,81 @@ class odrl(object):
 		else:
 			return etree.tostring(self.xml_etree())
 
-	def pyke(self, type="policy"):
+	def pyke_expressions(self, type="policy"):
 		pyke_expressions = []
 		for permission in self.pyke_permissions_prohibitions(type="permission", pyke_type=type):
 			pyke_expressions.append(permission)
 
 		for prohibition in self.pyke_permissions_prohibitions(type="prohibition", pyke_type=type):
 			pyke_expressions.append(prohibition)
+		return pyke_expressions
 
+	def pyke(self, type="policy"):
+		pyke_expressions = self.pyke_expressions(type)
 		return "\n".join(pyke_expressions)
+
+	# permission(contract, 
+	# type(pyke_type, assigner, assignee, action, output, (c[name], c[operator], c[rightoperand], c[rightoperandtype], c[rightoperandunit], c[status]), ())
+	# engine.assert_('odrl', type, (pyke_type, (assigner, assignee, action, output, (c[name], c[operator], c[rightoperand], c[rightoperandtype], c[rightoperandunit], c[status]), (), ()), ())))
+	# engine.assert_('odrl', 'prohibition', ('policy', ('epa', 'stuart', 'transfer', (), ('location', 'eq', 'france', (), (), ()), ())))
 
 	def pyke_permissions_prohibitions(self, type, pyke_type):
 		permissions_prohibitions = []
 		if type+"s" in self.odrl:
 			for p in self.odrl[type+"s"]:
-				permission_prohibition = type+"("+pyke_type+", "
-				if "assigner" in p:
-					permission_prohibition += p['assigner']
+				permission_prohibition = "self.engine.assert_('odrl', '" + type+"', ('"+pyke_type+"', ("
+				# Not sure I can have more than one constraint in the way pyke is expressed?
+				# Plus there need to be line breaks so that the Python code will evaluate
+				permission_prohibition += "'" + p['assigner'] + "'" if "assigner" in p else "()"
 				permission_prohibition += ", "
-				if "assignee" in p:
-					permission_prohibition += p['assignee']
+				permission_prohibition += "'" + p['assignee'] + "'"  if "assignee" in p else "()"
 				permission_prohibition += ", "
-				permission_prohibition += p['action']
-				if "output" in p:
-					permission_prohibition += p['output']
+				permission_prohibition += "'" + p['action'] + "'" 
+				permission_prohibition += ", "
+				permission_prohibition += "'" + p['output'] + "'"  if "output" in p else "()"
 				permission_prohibition += ", ("
 				if "constraints" in p:
 					for c in p["constraints"]:
-						permission_prohibition += c['name']
+						permission_prohibition += "'" + c['name'] + "'" 
 						permission_prohibition += ", "
-						permission_prohibition += c['operator']
+						permission_prohibition += "'" + c['operator'] + "'" 
 						permission_prohibition += ", "
-						permission_prohibition += c['rightoperand']
+						permission_prohibition += "'" + c['rightoperand'] + "'" 
 						permission_prohibition += ", "
-						if "rightoperanddatatype" in c:
-							permission_prohibition += c['rightoperanddatatype']
+						permission_prohibition += "'" + c['rightoperanddatatype'] + "'"  if "rightoperanddatatype" in c else "()"
 						permission_prohibition += ", "
-						if "rightoperandunit" in c:
-							permission_prohibition += c['rightoperandunit']
+						permission_prohibition += "'" + c['rightoperandunit'] + "'"  if "rightoperandunit" in c else "()"
 						permission_prohibition += ", "
-						if "status" in c:
-							permission_prohibition += c['status']
+						permission_prohibition += "'" + c['status'] + "'"  if "status" in c else "()"
 				
 				permission_prohibition += "), ("
 				# @@@FIXME - duties are a bit complicated, aren't they?
-				# if "duties" in p:
-				# 	for d in p["duties"]:
-				permission_prohibition += "))"
+				if "duties" in p:
+					for d in p["duties"]:
+						permission_prohibition += "'" + d['assigner'] + "'"  if "assigner" in d else "()"
+						permission_prohibition += ", "
+						permission_prohibition += "'" + d['assignee'] + "'"  if "assignee" in d else "()"
+						permission_prohibition += ", "
+						permission_prohibition += "'" + d['action'] + "'"  if "action" in d else "()"
+						permission_prohibition += ", "
+						permission_prohibition += "'" + d['output'] + "'"  if "output" in d else "()"
+						permission_prohibition += ", "
+						if "constraints" in d:
+							for d in d["constraints"]:
+								permission_prohibition += "'" + d['name'] + "'" 
+								permission_prohibition += ", "
+								permission_prohibition += "'" + d['operator'] + "'" 
+								permission_prohibition += ", "
+								permission_prohibition += "'" + d['rightoperand'] + "'" 
+								permission_prohibition += ", "
+								permission_prohibition += "'" + d['rightoperanddatatype'] + "'"  if "rightoperanddatatype" in d else "()"
+								permission_prohibition += ", "
+								permission_prohibition += "'" + d['rightoperandunit'] + "'"  if "rightoperandunit" in d else "()"
+								permission_prohibition += ", "
+								permission_prohibition += "'" + d['status'] + "'"  if "status" in d else "()"
+						else:
+							permission_prohibition += "()"
+				permission_prohibition += "))))"
 			permissions_prohibitions.append(permission_prohibition)
 
 		return permissions_prohibitions
@@ -500,3 +529,29 @@ class combinedGeoTimePeriod(simpleAction):
 								{'rightoperand' : timeperiod, 'name' : 'http://www.w3.org/ns/odrl/2/dateTime', 'operator' : timeperiodoperator, 'rightoperanddatatype' : 'xs:dateTime'}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+from pyke import knowledge_engine, krb_traceback
+
+class odrl_evaluator(object):
+
+	def __init__(self):
+		self.engine = knowledge_engine.engine(__file__)
+                self.odrl_factory = odrl()
+
+	def _astIt(self, someCode):
+		theContext = ast.parse(someCode)
+
+		ast.fix_missing_locations(theContext)
+
+		co = compile(theContext, "<ast>", "exec")
+		exec(co)
+
+	def set_context(self, subject, predicate, object):
+		self.engine.assert_('odrl', 'context', (subject, predicate, object))
+
+	def add_contract_from_json(self, odrl_json):
+                self.odrl_factory.from_json(odrl_json)
+                pyke_contract = self.odrl_factory.pyke(type="contract")
+		print(pyke_contract)
+		self._astIt(pyke_contract)
+

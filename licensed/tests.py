@@ -23,6 +23,7 @@ except ImportError:
 
 from licensed import mklicense
 from licensed import odrl
+from licensed import odrl_evaluator
 import unittest
 import json
 import jsonschema
@@ -560,11 +561,42 @@ class JSONtoPykeTest(unittest.TestCase):
 		}
 		"""
 
-		expected_pyke = """permission(policy, http://example.com/cv/party/epa, http://example.com/cv/policy/group/epapartners, http://www.w3.org/ns/odrl/2/print, (), ())"""
-
+		expected_pyke = u"self.engine.assert_('odrl', 'permission', ('policy', ('http://example.com/cv/party/epa', 'http://example.com/cv/policy/group/epapartners', 'http://www.w3.org/ns/odrl/2/print', (), (), ())))"
 		self.odrl_factory.from_json(test_json)
 		pyke_license = self.odrl_factory.pyke()
 		self.assertEqual(pyke_license, expected_pyke)
+
+class EvaluateAUseTest(unittest.TestCase):
+ 
+	def setUp(self):
+		self.contract_odrl_factory = odrl()
+		self.license_odrl_factory = odrl()
+		self.evaluator = odrl_evaluator()
+
+	def tearDown(self):
+		pass
+
+	def test_context_permits(self):
+		self.evaluator.set_context("stuart", "location", "http://cvx.iptc.org/iso3166-1a3/FRA")
+		contract_json = """
+		{
+		    "permissions": [
+			{
+			    "action": "http://www.w3.org/ns/odrl/2/print", 
+			    "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    "assigner": "http://example.com/cv/party/epa", 
+			    "target": "http://example.com/assets/text"
+			}
+		    ], 
+		    "policyid": "http://example.com/RightsML/policy/66f826c0f850faa91262b64ffdcfc5ac", 
+		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		}
+		"""
+		self.evaluator.add_contract_from_json(contract_json)
+
+	def test_context_prohibits(self):
+		pass
 
 if __name__ == '__main__':
 	unittest.main()

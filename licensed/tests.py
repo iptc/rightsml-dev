@@ -24,10 +24,14 @@ except ImportError:
 from licensed import mklicense
 from licensed import odrl
 from licensed import odrl_evaluator
+from licensed import EvaluatorDuties
+from licensed import EvaluatorNotPermitted
 import unittest
 import json
 import jsonschema
 import hashlib
+
+import sys
  
 class SimpleLicenseJSONTest(unittest.TestCase):
 
@@ -577,13 +581,12 @@ class EvaluateAUseTest(unittest.TestCase):
 		pass
 
 	def test_context_permits(self):
-		self.evaluator.set_context("stuart", "location", "http://cvx.iptc.org/iso3166-1a3/FRA")
 		contract_json = """
 		{
 		    "permissions": [
 			{
 			    "action": "http://www.w3.org/ns/odrl/2/print", 
-			    "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    "assignee": "http://example.com/cv/party/stuart", 
 			    "assigner": "http://example.com/cv/party/epa", 
 			    "target": "http://example.com/assets/text"
 			}
@@ -595,8 +598,102 @@ class EvaluateAUseTest(unittest.TestCase):
 		"""
 		self.evaluator.add_contract_from_json(contract_json)
 
+		try:
+			self.evaluator.permitted(assigner="http://example.com/cv/party/epa", assignee="http://example.com/cv/party/stuart", action="http://www.w3.org/ns/odrl/2/print")
+		except EvaluatorDuties:
+			print(EvaluatorDuties)
+			self.fail()
+		except EvaluatorNotPermitted:
+			print(EvaluatorNotPermitted)
+			self.fail()
+		except:
+		        print "Unexpected error:", sys.exc_info()[0]
+		        raise
+		else:
+			pass
+
 	def test_context_prohibits(self):
-		pass
+		self.evaluator.set_context("john", "location", "http://cvx.iptc.org/iso3166-1a3/USA")
+		contract_json = """
+		{
+		    "permissions": [
+			{
+			    "action": "http://www.w3.org/ns/odrl/2/print", 
+			    "assignee": "http://example.com/cv/policy/group/epapartners", 
+			    "assigner": "http://example.com/cv/party/epa", 
+			    "target": "http://example.com/assets/text"
+			}
+		    ], 
+		    "constraints": [
+			{
+			    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+			    "operator": "http://www.w3.org/ns/odrl/2/eq", 
+			    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
+			}
+		    ],
+		    "policyid": "http://example.com/RightsML/policy/66f826c0f850faa91262b64ffdcfc5ac", 
+		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		}
+		"""
+		self.evaluator.add_contract_from_json(contract_json)
+
+		# vars, plan = engine.prove_1_goal('bc_odrl.permitted(display, epa, stuart, $duties)')
+		try:
+			self.evaluator.permitted(assigner='epa', assignee='john', action='display')
+		except EvaluatorDuties:
+			self.fail()
+		except EvaluatorNotPermitted:
+			pass
+		except:
+		        print "Unexpected error:", sys.exc_info()[0]
+		        raise
+		else:
+			self.fail()
+
+	def test_context_permits_with_duties(self):
+		#self.evaluator.set_context("john", "location", "http://cvx.iptc.org/iso3166-1a3/CHN")
+		contract_json = """{
+		    "permissions": [
+			{
+			    "action": "http://www.w3.org/ns/odrl/2/print", 
+			    "assignee": "http://example.com/cv/party/john", 
+			    "assigner": "http://example.com/cv/party/epa", 
+			    "duties": [
+				{
+				    "action": "http://www.w3.org/ns/odrl/2/compensate", 
+				    "constraints": [
+					{
+					    "name": "http://www.w3.org/ns/odrl/2/payAmount", 
+					    "operator": "http://www.w3.org/ns/odrl/2/eq", 
+					    "rightoperand": "100.00", 
+					    "rightoperandunit": "http://cvx.iptc.org/iso4217a/EUR"
+					}
+				    ], 
+				    "payeeparty": "http://example.com/cv/party/epa"
+				}
+			    ], 
+			    "target": "urn:newsml:example.com:20090101:120111-999-000013"
+			}
+		    ], 
+		    "policyid": "http://example.com/RightsML/policy/ad7cb7037736cbf54b06897fe775b151", 
+		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
+		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
+		}
+		"""
+		self.evaluator.add_contract_from_json(contract_json)
+
+		try:
+			self.evaluator.permitted(assigner="http://example.com/cv/party/epa", assignee="http://example.com/cv/party/john", action='print')
+		except EvaluatorDuties:
+			pass
+		except EvaluatorNotPermitted:
+			print(EvaluatorNotPermitted)
+			self.fail()
+		else:
+			print("test_context_permits_with_duties: Permitted")
+			self.fail()
+
 
 if __name__ == '__main__':
 	unittest.main()

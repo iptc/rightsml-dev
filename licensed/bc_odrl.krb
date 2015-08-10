@@ -1,0 +1,100 @@
+a_is_the_ancestor_of_x_if_x_is_the_child_of_a
+		use ancestor($x, $a)
+		when
+			odrl_ontology.childof($x, $a)
+
+a_is_the_ancestor_of_x_if_x_is_the_child_of_y_and_a_is_the_ancestor_of_y
+		use ancestor($x, $a)
+		when
+			odrl_ontology.childof($x, $y)
+			ancestor($y, $a)
+
+u_is_permitted_given_license_and_policy
+		use permitted($use, $assigner, $assignee, $duties)
+		when
+			permitted_by_license($use, $assigner, $assignee, $duties)
+			notany
+				prohibited_by_policy($use, $assigner, $assignee)
+
+use_or_equivalent_is_permitted_by_license
+		use permitted_by_license($use, $assigner, $assignee, $duties)
+		when
+			equivalent($use, $equivalentuse)
+			odrl.permission(license, ($assigner, $assignee, $equivalentuse, $output, $constraints, $duties))
+			constraints_are_met($assignee, $constraints)
+
+use_or_equivalent_is_prohibited_by_policy
+		use prohibited_by_policy($use, $assigner, $assignee)
+		when
+			equivalent($use, $equivalentuse)
+			odrl.prohibition(policy, ($assigner, $assignee, $equivalentuse, $output, $constraints))
+			constraints_are_met($assignee, $constraints)
+
+use_or_equivalent_is_permitted_by_policy_but_constraints_are_violated
+		use prohibited_by_policy($use, $assigner, $assignee)
+		when
+			equivalent($use, $equivalentuse)
+			odrl.permission(policy, ($assigner, $assignee, $equivalentuse, $output, $constraints, $duties))
+			notany
+				constraints_are_met($assignee, $constraints)
+
+constraints_are_met_when_they_are_empty
+		use constraints_are_met($assignee, $constraints)
+		when
+			check $constraints == ()
+
+constraints_are_met_when_the_context_directly_matches
+		use constraints_are_met($assignee, $constraints)
+		when
+			($name, $operator, $rightoperand, $rightoperanddatatype, $rightoperandunit, $status) = $constraints
+			check $operator == 'eq'
+			equivalent($equivalentcontext, $rightoperand)
+			odrl.context($assignee, $name, $equivalentcontext)
+
+constraints_are_met_when_the_context_does_not_match_excluded_case
+		use constraints_are_met($assignee, $constraints)
+		when
+			($name, $operator, $rightoperand, *$rest) = $constraints
+			check $operator == 'neq'
+			notany
+				equivalent($equivalentcontext, $rightoperand)
+				odrl.context($assignee, $name, $equivalentcontext)
+
+values_are_identical_when_they_are_sameas
+		use identical($a, $b)
+		when
+			odrl_ontology.sameas($a, $b)
+
+values_are_identical_when_they_are_sameas_in_reverse
+		use identical($a, $b)
+		when
+			odrl_ontology.sameas($b, $a)
+
+values_are_identical_when_they_are_both_sameas_a_third_value
+		use identical($a, $b)
+		when
+			odrl_ontology.sameas($a, $c)
+			odrl_ontology.sameas($b, $c)
+
+values_are_equivalent_when_they_are_identical
+		use equivalent($a, $b)
+		when
+			identical($a, $b)
+
+values_are_equivalent_when_one_is_the_ancestor_of_the_other
+		use equivalent($a, $b)
+		when
+			ancestor($a, $b)
+
+values_are_equivalent_when_one_is_identical_to_a_third_and_that_has_an_ancestor
+		use equivalent($a, $b)
+		when
+			identical($a, $c)
+			ancestor($c, $b)
+
+values_are_equivalent_when_one_is_identical_to_a_third_and_that_has_an_ancestor_which_is_identical_to_the_other_value
+		use equivalent($a, $b)
+		when
+			identical($a, $c)
+			ancestor($c, $d)
+			identical($d, $b)

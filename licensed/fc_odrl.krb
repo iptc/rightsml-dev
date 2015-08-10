@@ -1,0 +1,7 @@
+things_that_are_sameas_have_inverse_property_and_are_identical
+	foreach
+		odrl_ontology.sameas($a, $b)
+	assert
+		odrl_ontology.sameas($b, $a)
+		odrl_ontology.sameas($a, $a)
+		odrl_ontology.sameas($b, $b)

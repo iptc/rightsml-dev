@@ -1,0 +1,16 @@
+# License: Example Photo Agency (EPA) that permits me to "display" photos on my website
+# permission($type, ($assigner, $assignee, $action, $output, $constraints, $duties))
+# prohibition($type, ($assigner, $assignee, $action, $output, $constraints))
+# constraint($name, $operator, $rightoperand, $rightoperanddatatype, $rightoperandunit, $status)
+# duty($assigner, $assignee, $action, $output, $constraints)
+
+#permission(license, (epa, stuart, present, (), (), ((), (), pay, (), (payamount, eq, 0.50, decimal, aud, ()))))
+#permission(license, (epa, stuart, present, (), (location, eq, france, (), (), ()), (pay, (), (payamount, eq, 0.50, decimal, aud, ()))))
+
+#permission(policy, (epa, stuart, transfer, (), (location, eq, france, (), (), ()), ()))
+#permission(policy, (epa, stuart, display, (), (location, neq, germany, (), (), ()), ()))
+#permission(policy, (epa, stuart, present, (), (location, neq, france, (), (), ()), ()))
+#permission(policy, (epa, stuart, present, (), (location, neq, europe, (), (), ()), ()))
+
+#context(stuart, location, "http://cvx.iptc.org/iso3166-1a3/FRA")
+#context(stuart, location, france)

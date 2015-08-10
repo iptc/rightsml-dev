@@ -108,7 +108,6 @@ class odrl(object):
 			for p in self.odrl[type+"s"]:
 				permission_prohibition = "self.engine.assert_('odrl', '" + type+"', ('"+pyke_type+"', ("
 				# Not sure I can have more than one constraint in the way pyke is expressed?
-				# Plus there need to be line breaks so that the Python code will evaluate
 				permission_prohibition += "'" + p['assigner'] + "'" if "assigner" in p else "()"
 				permission_prohibition += ", "
 				permission_prohibition += "'" + p['assignee'] + "'"  if "assignee" in p else "()"
@@ -132,7 +131,6 @@ class odrl(object):
 						permission_prohibition += "'" + c['status'] + "'"  if "status" in c else "()"
 				
 				permission_prohibition += "), ("
-				# @@@FIXME - duties are a bit complicated, aren't they?
 				if "duties" in p:
 					for d in p["duties"]:
 						permission_prohibition += "'" + d['assigner'] + "'"  if "assigner" in d else "()"
@@ -536,6 +534,7 @@ class odrl_evaluator(object):
 
 	def __init__(self):
 		self.engine = knowledge_engine.engine(__file__)
+		self.engine.activate('bc_odrl')
                 self.odrl_factory = odrl()
 
 	def _astIt(self, someCode):
@@ -551,7 +550,23 @@ class odrl_evaluator(object):
 
 	def add_contract_from_json(self, odrl_json):
                 self.odrl_factory.from_json(odrl_json)
-                pyke_contract = self.odrl_factory.pyke(type="contract")
+                pyke_contract = self.odrl_factory.pyke(type="license")
 		print(pyke_contract)
 		self._astIt(pyke_contract)
 
+	def permitted(self, assigner, assignee, action='use'):
+		try:
+			prove = "vars, plan = self.engine.prove_1_goal('bc_odrl.permitted(" +'"'+ action +'"'+ ", " +'"'+ assigner +'"'+ ", " +'"'+ assignee +'"'+ ", $duties)') \nif (vars['duties'] != ()) : raise EvaluatorDuties({'duties' : vars['duties']})"
+			print(prove)
+			self._astIt(prove)
+		except knowledge_engine.CanNotProve:
+			raise EvaluatorNotPermitted
+		else:
+			pass
+
+
+class EvaluatorDuties(Exception):
+    pass
+
+class EvaluatorNotPermitted(Exception):
+    pass

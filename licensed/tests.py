@@ -580,7 +580,7 @@ class EvaluateAUseTest(unittest.TestCase):
 	def tearDown(self):
 		pass
 
-	def test_context_permits(self):
+	def test_contract_permits(self):
 		contract_json = """
 		{
 		    "permissions": [
@@ -613,7 +613,7 @@ class EvaluateAUseTest(unittest.TestCase):
 			pass
 
 	def test_context_prohibits(self):
-		self.evaluator.set_context("john", "location", "http://cvx.iptc.org/iso3166-1a3/USA")
+		self.evaluator.set_context("http://example.com/cv/policy/group/epapartners", "location", "http://cvx.iptc.org/iso3166-1a3/USA")
 		contract_json = """
 		{
 		    "permissions": [
@@ -638,9 +638,8 @@ class EvaluateAUseTest(unittest.TestCase):
 		"""
 		self.evaluator.add_contract_from_json(contract_json)
 
-		# vars, plan = engine.prove_1_goal('bc_odrl.permitted(display, epa, stuart, $duties)')
 		try:
-			self.evaluator.permitted(assigner='epa', assignee='john', action='display')
+			self.evaluator.permitted(assigner='http://example.com/cv/party/epa', assignee='http://example.com/cv/policy/group/epapartners', action='http://www.w3.org/ns/odrl/2/print')
 		except EvaluatorDuties:
 			self.fail()
 		except EvaluatorNotPermitted:
@@ -652,7 +651,7 @@ class EvaluateAUseTest(unittest.TestCase):
 			self.fail()
 
 	def test_context_permits_with_duties(self):
-		#self.evaluator.set_context("john", "location", "http://cvx.iptc.org/iso3166-1a3/CHN")
+		#self.evaluator.set_context("http://example.com/cv/party/john", "location", "http://cvx.iptc.org/iso3166-1a3/CHN")
 		contract_json = """{
 		    "permissions": [
 			{
@@ -676,6 +675,13 @@ class EvaluateAUseTest(unittest.TestCase):
 			    "target": "urn:newsml:example.com:20090101:120111-999-000013"
 			}
 		    ], 
+		    "constraints": [
+			{
+			    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+			    "operator": "http://www.w3.org/ns/odrl/2/eq", 
+			    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
+			}
+		    ],
 		    "policyid": "http://example.com/RightsML/policy/ad7cb7037736cbf54b06897fe775b151", 
 		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
 		    "policytype": "http://www.w3.org/ns/odrl/2/Set"

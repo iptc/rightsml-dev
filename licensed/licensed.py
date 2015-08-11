@@ -35,6 +35,9 @@ class mklicense(object):
 		self.assigner = assigner
 		self.assignee = assignee
 
+	def __repr__(self):
+		return "mklicense(target=%r, assigner=%r, assignee=%r)" % (self.target, self.assigner, self.assignee)
+
 	def simpleAction(self, action):
 		return simpleAction(target=self.target, assigner=self.assigner, assignee=self.assignee, action=action)
 
@@ -74,6 +77,9 @@ class odrl(object):
 			self.odrl["inheritfrom"] = inheritfrom
 		if inheritallowed and inheritrelation != None:
 			self.odrl["inheritrelation"] = inheritrelation
+
+	def __repr__(self):
+		return "odrl(profile=%r, inheritallowed=%r, inheritfrom=%r, inheritrelation=%r)" % (self.profile, self.inheritallowed, self.inheritfrom, self.inheritrelation)
 
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)
@@ -449,6 +455,9 @@ class rightsml(odrl):
 		self.odrl['policytype'] = 'http://www.w3.org/ns/odrl/2/Set'
 		self.odrl['policyprofile'] = 'http://www.iptc.org/std/RightsML/'
 
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class simpleAction(rightsml):
 
 	def __init__(self,target, assigner, assignee, action):
@@ -456,6 +465,9 @@ class simpleAction(rightsml):
 		self.odrl['permissions'] = [{'target' : target, 'assigner' : assigner, 'assignee' : assignee, 'action' : action}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 class simpleConstraint(simpleAction):
 
@@ -465,25 +477,40 @@ class simpleConstraint(simpleAction):
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 	
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class simpleTimePeriod(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, timeperiod, operator):
 		super(simpleTimePeriod, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/dateTime', operator=operator, rightoperand=timeperiod)
 	
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class simpleGeographic(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, geography, operator):
 		super(simpleGeographic, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/spatial', operator=operator, rightoperand=geography)
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 class simpleChannel(simpleConstraint):
 
 	def __init__(self,target, assigner, assignee, channel, operator):
 		super(simpleChannel, self).__init__(target=target, assigner=assigner, assignee=assignee, constraint='http://www.w3.org/ns/odrl/2/purpose', operator=operator, rightoperand=channel)
 
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class simpleDuty():
 
 	def __init__(self, target, assigner, assignee, duty, constraint, action, rightoperand, operator, rightoperandunit, party, partytype):
 		super(simpleDuty, self).__init__(target=target, assigner=assigner, assignee=assignee, action='http://www.w3.org/ns/odrl/2/distribute')
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 class simpleDutyToPay(simpleAction):
 
@@ -493,6 +520,9 @@ class simpleDutyToPay(simpleAction):
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class simpleDutyNextPolicy(simpleAction):
 
 	def __init__(self, target, assigner, assignee, action, policy):
@@ -500,6 +530,9 @@ class simpleDutyNextPolicy(simpleAction):
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 class simpleDutyReferToTerms(simpleAction):
 
@@ -511,6 +544,9 @@ class simpleDutyReferToTerms(simpleAction):
 		self.odrl['permissions'][0]['duties'] = duties
 		hashedparams = hashlib.md5(self.json())
 
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 class combinedGeoNextPolicy(simpleAction):
 
 	def __init__(self, target, assigner, assignee, geography, action, policy, operator='http://www.w3.org/ns/odrl/2/eq'):
@@ -518,6 +554,9 @@ class combinedGeoNextPolicy(simpleAction):
 		self.odrl['permissions'][0]['constraints'] = [{'rightoperand' : geography, 'name' : 'http://www.w3.org/ns/odrl/2/spatial', 'operator' : operator}]
 		self.odrl['permissions'][0]['duties']= [{'action' : 'http://www.w3.org/ns/odrl/2/nextPolicy', 'target' : policy}]
 		hashedparams = hashlib.md5(self.json())
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 class combinedGeoTimePeriod(simpleAction):
 
@@ -528,6 +567,9 @@ class combinedGeoTimePeriod(simpleAction):
 		hashedparams = hashlib.md5(self.json())
 		self.odrl['policyid'] = 'http://example.com/RightsML/policy/' + hashedparams.hexdigest()
 
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
+
 from pyke import knowledge_engine, krb_traceback
 
 class odrl_evaluator(object):
@@ -536,6 +578,9 @@ class odrl_evaluator(object):
 		self.engine = knowledge_engine.engine(__file__)
 		self.engine.activate('bc_odrl')
                 self.odrl_factory = odrl()
+
+	def __repr__(self):
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 	def _astIt(self, someCode):
 		theContext = ast.parse(someCode)
@@ -551,13 +596,13 @@ class odrl_evaluator(object):
 	def add_contract_from_json(self, odrl_json):
                 self.odrl_factory.from_json(odrl_json)
                 pyke_contract = self.odrl_factory.pyke(type="license")
-		print(pyke_contract)
+		#print(pyke_contract)
 		self._astIt(pyke_contract)
 
 	def permitted(self, assigner, assignee, action='use'):
 		try:
 			prove = "vars, plan = self.engine.prove_1_goal('bc_odrl.permitted(" +'"'+ action +'"'+ ", " +'"'+ assigner +'"'+ ", " +'"'+ assignee +'"'+ ", $duties)') \nif (vars['duties'] != ()) : raise EvaluatorDuties({'duties' : vars['duties']})"
-			print(prove)
+			#print(prove)
 			self._astIt(prove)
 		except knowledge_engine.CanNotProve:
 			raise EvaluatorNotPermitted

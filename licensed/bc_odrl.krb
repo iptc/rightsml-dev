@@ -47,7 +47,7 @@ constraints_are_met_when_the_context_directly_matches
 		use constraints_are_met($assignee, $constraints)
 		when
 			($name, $operator, $rightoperand, $rightoperanddatatype, $rightoperandunit, $status) = $constraints
-			check $operator == 'eq'
+			check $operator == 'http://www.w3.org/ns/odrl/2/eq'
 			equivalent($equivalentcontext, $rightoperand)
 			odrl.context($assignee, $name, $equivalentcontext)
 
@@ -55,7 +55,7 @@ constraints_are_met_when_the_context_does_not_match_excluded_case
 		use constraints_are_met($assignee, $constraints)
 		when
 			($name, $operator, $rightoperand, *$rest) = $constraints
-			check $operator == 'neq'
+			check $operator == 'http://www.w3.org/ns/odrl/2/neq'
 			notany
 				equivalent($equivalentcontext, $rightoperand)
 				odrl.context($assignee, $name, $equivalentcontext)

@@ -79,7 +79,7 @@ class odrl(object):
 			self.odrl["inheritrelation"] = inheritrelation
 
 	def __repr__(self):
-		return "odrl(profile=%r, inheritallowed=%r, inheritfrom=%r, inheritrelation=%r)" % (self.profile, self.inheritallowed, self.inheritfrom, self.inheritrelation)
+		return "%s(%r)" % (self.__class__, self.__dict__)
 
 	def json(self):
 		return json.dumps(self.odrl, sort_keys=True, indent=4)

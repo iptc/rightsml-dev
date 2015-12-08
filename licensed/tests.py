@@ -613,7 +613,8 @@ class EvaluateAUseTest(unittest.TestCase):
 			pass
 
 	def test_context_prohibits(self):
-		self.evaluator.set_context("http://example.com/cv/policy/group/epapartners", "location", "http://cvx.iptc.org/iso3166-1a3/USA")
+		self.evaluator.set_context("http://example.com/cv/policy/group/epapartners", "http://www.w3.org/ns/odrl/2/spatial", "http://cvx.iptc.org/iso3166-1a3/USA")
+
 		contract_json = """
 		{
 		    "permissions": [
@@ -621,14 +622,14 @@ class EvaluateAUseTest(unittest.TestCase):
 			    "action": "http://www.w3.org/ns/odrl/2/print", 
 			    "assignee": "http://example.com/cv/policy/group/epapartners", 
 			    "assigner": "http://example.com/cv/party/epa", 
-			    "target": "http://example.com/assets/text"
-			}
-		    ], 
-		    "constraints": [
-			{
-			    "name": "http://www.w3.org/ns/odrl/2/spatial", 
-			    "operator": "http://www.w3.org/ns/odrl/2/eq", 
-			    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
+			    "target": "http://example.com/assets/text",
+			    "constraints": [
+				{
+				    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+				    "operator": "http://www.w3.org/ns/odrl/2/eq", 
+				    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
+				}
+			    ] 
 			}
 		    ],
 		    "policyid": "http://example.com/RightsML/policy/66f826c0f850faa91262b64ffdcfc5ac", 
@@ -651,7 +652,7 @@ class EvaluateAUseTest(unittest.TestCase):
 			self.fail()
 
 	def test_context_permits_with_duties(self):
-		#self.evaluator.set_context("http://example.com/cv/party/john", "location", "http://cvx.iptc.org/iso3166-1a3/CHN")
+		self.evaluator.set_context("http://example.com/cv/party/john", "http://www.w3.org/ns/odrl/2/spatial", "http://cvx.iptc.org/iso3166-1a3/CHN")
 		contract_json = """{
 		    "permissions": [
 			{
@@ -672,22 +673,25 @@ class EvaluateAUseTest(unittest.TestCase):
 				    "payeeparty": "http://example.com/cv/party/epa"
 				}
 			    ], 
-			    "target": "urn:newsml:example.com:20090101:120111-999-000013"
+			    "target": "urn:newsml:example.com:20090101:120111-999-000013",
+			    "constraints": [
+				{
+				    "name": "http://www.w3.org/ns/odrl/2/spatial", 
+				    "operator": "http://www.w3.org/ns/odrl/2/eq", 
+				    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
+				}
+			    ]
 			}
 		    ], 
-		    "constraints": [
-			{
-			    "name": "http://www.w3.org/ns/odrl/2/spatial", 
-			    "operator": "http://www.w3.org/ns/odrl/2/eq", 
-			    "rightoperand": "http://cvx.iptc.org/iso3166-1a3/CHN"
-			}
-		    ],
 		    "policyid": "http://example.com/RightsML/policy/ad7cb7037736cbf54b06897fe775b151", 
 		    "policyprofile": "http://www.iptc.org/std/RightsML/", 
 		    "policytype": "http://www.w3.org/ns/odrl/2/Set"
 		}
 		"""
 		self.evaluator.add_contract_from_json(contract_json)
+
+		print(self.evaluator)
+		print(self.evaluator.odrl_factory.pyke())
 
 		try:
 			self.evaluator.permitted(assigner="http://example.com/cv/party/epa", assignee="http://example.com/cv/party/john", action='print')

@@ -16,7 +16,8 @@ constraint_fields = {
 
 permission_fields = {
 	"target" : fields.String,
-	"action" : fields.String
+	"action" : fields.String,
+	"assignee" : fields.String
 }
 
 prohibduty_fields = {
@@ -34,6 +35,7 @@ policy_fields = {
 	"id" : fields.String,
 	"policyid" : fields.String,
 	"policytype" : fields.String,
+	"policyprofile" : fields.String,
 	"permissions" : fields.List(fields.Nested(permission_fields))
 }
 
@@ -47,7 +49,8 @@ class Policy(Resource):
 
     def get(self, policy_id):
         self.abort_if_policy_doesnt_exist(policy_id)
-        return marshal(policies[policy_id], policy_fields)
+        real_fields = {key : value for key, value in policy_fields.items() if key in policies[policy_id]}
+        return marshal(policies[policy_id], real_fields)
 
     def delete(self, policy_id):
         self.abort_if_policy_doesnt_exist(policy_id)

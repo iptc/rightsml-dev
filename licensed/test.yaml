@@ -70,3 +70,25 @@
         - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
         - compare: {jsonpath_mini: 'policytype', comparator: 'eq', expected: 'http://www.w3.org/ns/odrl/2/Set'}
         - json_schema: {schema: {file: 'ODRL21.json'}}
+
+- test:
+    - group: "Policies"
+    - name: "Create a policy"
+    - url: "/policies"
+    - method: "POST"
+    - body: '{ "policytype": "http://www.w3.org/ns/odrl/2/Request", "policyid": "http://example.com/policy:04311", "policyprofile" : "http://iptc.org/std/RightsML/2011-10-07/", "permissions": [ { "target": "http://example.com/news:0099", "action": "http://iptc.org/std/RightsML/2011-10-07/distribute", "assignee": "http://example.com/guest:0589" }, { "target": "http://example.com/news:0099", "action": "http://www.w3.org/ns/odrl/2/display", "assignee": "http://example.com/guest:0589" } ] }'
+
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'id': {'jsonpath_mini': 'id'}
+
+- test:
+    - group: "Policies"
+    - name: "Get policy you just created and validate it"
+    - url: {'template': "/policies/$id"}
+    - validators:
+        - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
+        - compare: {jsonpath_mini: 'policytype', comparator: 'eq', expected: 'http://www.w3.org/ns/odrl/2/Request'}
+        - compare: {jsonpath_mini: 'policyprofile', comparator: 'eq', expected: 'http://iptc.org/std/RightsML/2011-10-07/'}
+        - json_schema: {schema: {file: 'ODRL21.json'}}
+

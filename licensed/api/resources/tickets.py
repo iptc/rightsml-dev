@@ -27,7 +27,7 @@ class TicketsSchema(Schema):
         asset = fields.Str()
 
 # Ticket
-# Get, update or delete a single ticket item
+# Get delete a single ticket item
 class Ticket(Resource):
     def __init__(self, **kwargs):
 	self.ts = TicketsSchema()
@@ -45,17 +45,6 @@ class Ticket(Resource):
         self.abort_if_tickets_doesnt_exist(ticket_id)
         del tickets[ticket_id]
         return '', 204
-
-    def put(self, ticket_id):
-        self.abort_if_tickets_doesnt_exist(ticket_id)
-	json_data = request.get_json()
-	if not json_data:
-		return jsonify({'message': 'No input data provided'}), 400
-        data,errors = self.ts.load(json_data)
-        tickets[ticket_id] = data
-        tickets[ticket_id]["id"] = ticket_id
-        tickets[ticket_id]["self"] = self.api.url_for(Ticket, ticket_id = ticket_id, _external=True)
-        return tickets[ticket_id], 201
 
 # TicketList
 # shows a list of all tickets, and lets you POST to add new tickets

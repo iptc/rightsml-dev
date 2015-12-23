@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-from flask_restful import reqparse, abort, Api, Resource, fields, marshal, request
+from flask_restful import reqparse, abort, Api, Resource, request
+from marshmallow import Schema, fields
 import json
 import uuid
 
@@ -8,30 +9,33 @@ import uuid
 
 uses = { }
 
-constraint_fields = {
-			"name" : fields.String,
-			"operator" : fields.String,
-			"rightoperand" : fields.String
-}
+class ConstraintsSchema(Schema):
+	name = fields.Str()
+	operator = fields.Str()
+	rightoperand = fields.Str()
 
-use_fields = {
-	"id" : fields.String,
-	"title" : fields.String,
-	"description" : fields.String,
-	"action" : fields.String,
-	"constraints" : fields.List(fields.Nested(constraint_fields))
-}
+class UseSchema(Schema):
+	id = fields.Str()
+	self = fields.Str()
+	title = fields.Str()
+	description = fields.Str()
+	action = fields.Str()
+	constraints = fields.Nested(ConstraintsSchema, many=True)
 
 # Use
 # shows a single use item and lets you delete a use item
 class Use(Resource):
+    def __init__(self, **kwargs):
+	self.us = UseSchema()
+	self.api = kwargs['api']
+
     def abort_if_use_doesnt_exist(self, use_id):
 	if use_id not in uses:
 		abort(404, message="Use {} doesn't exist".format(use_id))
 
     def get(self, use_id):
         self.abort_if_use_doesnt_exist(use_id)
-        return marshal(uses[use_id], use_fields)
+        return uses[use_id]
 
     def delete(self, use_id):
         self.abort_if_use_doesnt_exist(use_id)
@@ -43,21 +47,29 @@ class Use(Resource):
 	json_data = request.get_json()
 	if not json_data:
 		return jsonify({'message': 'No input data provided'}), 400
-        uses[use_id] = json_data
+        data,errors = self.us.load(json_data)
+        uses[use_id] = data
         uses[use_id]["id"] = use_id # Just to make sure
-        return marshal(uses[use_id], use_fields), 201
+        uses[use_id]["self"] = self.api.url_for(Use, use_id = use_id, _external=True)
+        return uses[use_id], 201
 
 # UseList
 # shows a list of all uses, and lets you POST to add new uses
 class UseList(Resource):
+    def __init__(self, **kwargs):
+	self.us = UseSchema()
+	self.api = kwargs['api']
+
     def get(self):
-	return {'uses': [marshal(use, use_fields) for use in uses]}
+	return {'uses': [self.us.dumps(use) for use in uses]}
 
     def post(self):
 	json_data = request.get_json()
 	if not json_data:
 		return jsonify({'message': 'No input data provided'}), 400
 	use_id = str(uuid.uuid4())
-        uses[use_id] = json_data
+        data,errors = self.us.load(json_data)
+        uses[use_id] = data
         uses[use_id]["id"] = use_id
-        return marshal(uses[use_id], use_fields), 201
+        uses[use_id]["self"] = self.api.url_for(Use, use_id = use_id, _external=True)
+        return uses[use_id], 201

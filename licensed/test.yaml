@@ -16,6 +16,7 @@
     - headers: {'Content-Type': 'application/json'}
     - extract_binds:
         - 'id': {'jsonpath_mini': 'id'}
+        - 'self': {'jsonpath_mini': 'self'}
 
 - test:
     - group: "Uses"
@@ -24,6 +25,7 @@
     - validators:
         - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
         - compare: {jsonpath_mini: 'action', comparator: 'eq', expected: 'http://www.w3.org/ns/odrl/2/distribute'}
+        - compare: {jsonpath_mini: 'self', comparator: 'str_eq', expected: {template: 'http://localhost:5000/uses/$id'}}
 
 - test:
     - group: "Uses"
@@ -61,6 +63,7 @@
     - headers: {'Content-Type': 'application/json'}
     - extract_binds:
         - 'id': {'jsonpath_mini': 'id'}
+        - 'policyid': {'jsonpath_mini': 'policyid'}
 
 - test:
     - group: "Policies"
@@ -81,6 +84,7 @@
     - headers: {'Content-Type': 'application/json'}
     - extract_binds:
         - 'id': {'jsonpath_mini': 'id'}
+        - 'policyid': {'jsonpath_mini': 'policyid'}
 
 - test:
     - group: "Policies"
@@ -90,5 +94,196 @@
         - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
         - compare: {jsonpath_mini: 'policytype', comparator: 'eq', expected: 'http://www.w3.org/ns/odrl/2/Request'}
         - compare: {jsonpath_mini: 'policyprofile', comparator: 'eq', expected: 'http://iptc.org/std/RightsML/2011-10-07/'}
+        - compare: {jsonpath_mini: 'policyid', comparator: 'eq', expected: {template: 'http://localhost:5000/policies/$id'}}
         - json_schema: {schema: {file: 'ODRL21.json'}}
 
+- test:
+    - group: "Policies"
+    - name: "Create a policy with a spurious field"
+    - url: "/policies"
+    - method: "POST"
+    - body: '{ "spurious" : "this should be dropped", "policytype": "http://www.w3.org/ns/odrl/2/Request", "policyid": "http://example.com/policy:04311", "policyprofile" : "http://iptc.org/std/RightsML/2011-10-07/", "permissions": [ { "target": "http://example.com/news:0099", "action": "http://iptc.org/std/RightsML/2011-10-07/distribute", "assignee": "http://example.com/guest:0589" }, { "target": "http://example.com/news:0099", "action": "http://www.w3.org/ns/odrl/2/display", "assignee": "http://example.com/guest:0589" } ] }'
+
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'id': {'jsonpath_mini': 'id'}
+
+- test:
+    - group: "Policies"
+    - name: "Get policy you just created and validate that it doesn't contain spurious field"
+    - url: {'template': "/policies/$id"}
+    - validators:
+        - extract_test: {jsonpath_mini: "spurious",  test: "not_exists"}
+        - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
+        - compare: {jsonpath_mini: 'policyprofile', comparator: 'eq', expected: 'http://iptc.org/std/RightsML/2011-10-07/'}
+        - json_schema: {schema: {file: 'ODRL21.json'}}
+
+- test:
+    - group: "Nexus"
+    - name: "Basic smoketest for /nexus"
+    - url: "/nexus"
+
+- test:
+    - group: "Nexus"
+    - name: "Create a nexus"
+    - url: "/nexus"
+    - method: "POST"
+    - body: '{ "query" : "body_text=*passengers*", "policy" : "http://www.example.org/policy/1234"}'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'id': {'jsonpath_mini': 'id'}
+        - 'self': {'jsonpath_mini': 'self'}
+
+- test:
+    - group: "Nexus"
+    - name: "Get nexus you just created and validate it"
+    - url: {'template': "/nexus/$id"}
+    - validators:
+        - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$id'}}
+        - compare: {jsonpath_mini: 'policy', comparator: 'eq', expected: "http://www.example.org/policy/1234"}
+        - compare: {jsonpath_mini: 'self', comparator: 'str_eq', expected: {template: 'http://localhost:5000/nexus/$id'}}
+
+- test:
+    - group: "Nexus"
+    - name: "Create a mock article"
+    - url: "/mockecr"
+    - method: "POST"
+    - body: '{ "uri" : "http://ninjs.example.com/newsitems/20130709simp123", "type" : "text", "versioncreated" : "2013-07-09T10:37:00Z", "byline" : "Paulo Santalucia and Frances dEmilio", "headline" : "Captain of wrecked cruise ship on trial in Italy", "body_text" : "GROSSETO, Italy (AP) -- The trial of the captain of the shipwrecked Costa Concordia cruise liner has begun in a theater converted into a courtroom in Tuscany to accommodate all the survivors and relatives of the 32 victims who want to see justice carried out in the 2012 tragedy. The sole defendant, Francesco Schettino, his eyes shaded by sunglasses and slipping into a back door, made no comment to reporters as he arrived for his trial Tuesday on charges of multiple manslaughter, abandoning ship and causing the shipwreck near the island of Giglio. His lawyer, Domenico Pepe, told reporters that, as expected, the judge was postponing the hearing due to an eight-day nationwide lawyers strike. Pepe said some 1,000 witnesses are expected to eventually testify. Many of them are expected to be from among the 4,2000 passengers and crew aboard the ship that struck a jagged reef off Giglio, took on water and capsized. Schettino has denied wrongdoing.", "body_xhtml" : "<p>GROSSETO, Italy (AP) -- The trial of the captain of the shipwrecked Costa Concordia cruise liner has begun in a theater converted into a courtroom in Tuscany to accommodate all the survivors and relatives of the 32 victims who want to see justice carried out in the 2012 tragedy.</p><p>The sole defendant, Francesco Schettino, his eyes shaded by sunglasses and slipping into a back door, made no comment to reporters as he arrived for his trial Tuesday on charges of multiple manslaughter, abandoning ship and causing the shipwreck near the island of Giglio.</p><p>His lawyer, Domenico Pepe, told reporters that, as expected, the judge was postponing the hearing due to an eight-day nationwide lawyers strike.</p><p>Pepe said some 1,000 witnesses are expected to eventually testify. Many of them are expected to be from among the 4,2000 passengers and crew aboard the ship that struck a jagged reef off Giglio, took on water and capsized. Schettino has denied wrongdoing.</p>" }'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'ecrid': {'jsonpath_mini': 'uri'}
+
+- test:
+    - group: "Nexus"
+    - name: "Query a nexus"
+    - url: {'template': "/nexus?q=$ecrid"}
+    - validators:
+        - compare: {jsonpath_mini: '0.id', comparator: 'str_eq', expected: {template: '$id'}}
+        - compare: {jsonpath_mini: '0.policy', comparator: 'eq', expected: "http://www.example.org/policy/1234"}
+
+- test:
+    - group: "Nexus"
+    - name: "Add another nexus, which should also match"
+    - url: "/nexus"
+    - method: "POST"
+    - body: '{ "query" : "byline=*Paulo*", "policy" : "http://www.example.org/policy/4567"}'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'secondid': {'jsonpath_mini': 'id'}
+
+- test:
+    - group: "Nexus"
+    - name: "Add another nexus, which should not match"
+    - url: "/nexus"
+    - method: "POST"
+    - body: '{ "query" : "headline=*Stuart*", "policy" : "http://www.example.org/policy/8901"}'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'thirdid': {'jsonpath_mini': 'id'}
+- test:
+    - group: "Nexus"
+    - name: "Query a nexus"
+    - url: {'template': "/nexus?q=$ecrid"}
+    - validators:
+        - assertTrue: {jsonpath_mini: "0.id", test: 'exists'}
+        - assertTrue: {jsonpath_mini: "1.id", test: 'exists'}
+        - assertTrue: {jsonpath_mini: "2.id", test: 'not_exists'}
+
+- test:
+    - group: "Nexus"
+    - name: "Delete the nexus you just created"
+    - url: {'template': "/nexus/$id"}
+    - method: "DELETE"
+
+- test:
+    - group: "Nexus"
+    - name: "Delete the nexus you just created"
+    - url: {'template': "/nexus/$secondid"}
+    - method: "DELETE"
+
+- test:
+    - group: "Nexus"
+    - name: "Ensure query now returns nothing"
+    - url: {'template': "/nexus?q=$ecrid"}
+    - validators:
+        - assertTrue: {jsonpath_mini: "0.id", test: 'not_exists'}
+
+- test:
+    - group: "Tickets"
+    - name: "Basic smoketest for /tickets"
+    - url: "/tickets"
+
+- test:
+    - group: "Tickets"
+    - name: "Create a policy for use within the Tickets test - distribute ok but not in France"
+    - url: "/policies"
+    - method: "POST"
+    - body: '{ "policytype": "http://www.w3.org/ns/odrl/2/Set", "policyid": "http://example.com/policy:0099", "permissions": [{ "target": "http://example.com/asset:9898", "action" : "http://www.w3.org/ns/odrl/2/distribute", "constraints" : [ { "name": "http://www.w3.org/ns/odrl/2/spatial", "operator": "http://w3.org/ns/odrl/2/vocab/neq", "rightoperand": "http://cvx.iptc.org/iso3166-1a3/FRA" } ] }]}'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'policyid': {'jsonpath_mini': 'policyid'}
+
+- test:
+    - group: "Tickets"
+    - name: "Add a nexus for use within Tickets test"
+    - url: "/nexus"
+    - method: "POST"
+    - body: {'template' : '{ "query" : "byline=*Paulo*", "policy" : "$policyid"}'}
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'nexusid': {'jsonpath_mini': 'self'}
+
+- test:
+    - group: "Tickets"
+    - name: "Create a use for use (sic) within the Tickets test - distribute in Germany"
+    - url: "/uses"
+    - method: "POST"
+    - body: '{ "action" : "http://www.w3.org/ns/odrl/2/distribute", "constraints" : [ { "name": "http://www.w3.org/ns/odrl/2/spatial", "operator": "http://w3.org/ns/odrl/2/vocab/eq", "rightoperand": "http://cvx.iptc.org/iso3166-1a3/DEU" } ] }'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'deuuseid': {'jsonpath_mini': 'self'}
+
+- test:
+    - group: "Tickets"
+    - name: "Create a use for use (sic) within the Tickets test - distribute in France"
+    - url: "/uses"
+    - method: "POST"
+    - body: '{ "action" : "http://www.w3.org/ns/odrl/2/distribute", "constraints" : [ { "name": "http://www.w3.org/ns/odrl/2/spatial", "operator": "http://w3.org/ns/odrl/2/vocab/eq", "rightoperand": "http://cvx.iptc.org/iso3166-1a3/FRA" } ] }'
+    - headers: {'Content-Type': 'application/json'}
+    - extract_binds:
+        - 'frauseid': {'jsonpath_mini': 'self'}
+
+- test:
+    - group: "Tickets"
+    - name: "Create a ticket"
+    - url: "/tickets"
+    - method: "POST"
+    - body: {'template' : '{ "use" : "$deuuseid", "asset" : "$ecrid" }'}
+    - headers: {'Content-Type': 'application/json'}
+    - expected_status: 201
+    - extract_binds:
+        - 'deuticketid': {'jsonpath_mini': 'id'}
+
+- test:
+    - group: "Tickets"
+    - name: "Create a ticket"
+    - url: "/tickets"
+    - method: "POST"
+    - body: {'template' : '{ "use" : "$frauseid", "asset" : "$ecrid" }'}
+    - headers: {'Content-Type': 'application/json'}
+    - expected_status: 403
+    - extract_binds:
+        - 'fraticketid': {'jsonpath_mini': 'id'}
+
+- test:
+    - group: "Tickets"
+    - name: "Get ticket you just created and validate it"
+    - url: {'template': "/tickets/$deuticketid"}
+    - validators:
+        - compare: {jsonpath_mini: 'id', comparator: 'str_eq', expected: {template: '$deuticketid'}}
+
+- test:
+    - group: "Tickets"
+    - name: "Delete the ticket you just created"
+    - url: {'template': "/tickets/$deuticketid"}
+    - method: "DELETE"

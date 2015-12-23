@@ -1,47 +1,49 @@
 #!/usr/bin/python
 
-from flask_restful import reqparse, abort, Api, Resource, fields, marshal, request
+from flask_restful import reqparse, abort, Api, Resource, request
+from marshmallow import Schema, fields
 import json
 import uuid
 
 # /policies/[id]
 
-policies = { }
+policies = {}
 
-constraint_fields = {
-			"name" : fields.String,
-			"operator" : fields.String,
-			"rightoperand" : fields.String
-}
+class ConstraintSchema(Schema):
+	name = fields.Str()
+	operator = fields.Str()
+	rightoperand = fields.Str()
 
-permission_fields = {
-	"target" : fields.String,
-	"action" : fields.String,
-	"assignee" : fields.String
-}
+class ProhibDutySchema(Schema):
+	assigner = fields.Str()
+	assignee = fields.Str()
+	assignee_scope = fields.Str()
+	target = fields.Str()
+	output = fields.Str()
+	action = fields.Str()
+        constraints = fields.Nested(ConstraintSchema, many=True)
 
-prohibduty_fields = {
-	"assigner" : fields.String,
-	"assignee" : fields.String,
-	"assignee_scope" : fields.String,
-	"target" : fields.String,
-	"output" : fields.String,
-	"action" : fields.String,
-	"constraints" : fields.List(fields.Nested(constraint_fields))
-}
+class PermissionSchema(Schema):
+        target = fields.Str()
+        action = fields.Str()
+        assignee = fields.Str()
+        constraints = fields.Nested(ConstraintSchema, many=True)
+        duties = fields.Nested(ProhibDutySchema, many=True)
 
-
-policy_fields = {
-	"id" : fields.String,
-	"policyid" : fields.String,
-	"policytype" : fields.String,
-	"policyprofile" : fields.String,
-	"permissions" : fields.List(fields.Nested(permission_fields))
-}
+class PolicySchema(Schema):
+        id = fields.Str()
+        policyid = fields.Str()
+        policytype = fields.Str()
+        policyprofile = fields.Str()
+        permissions = fields.Nested(PermissionSchema, many=True)
+        prohibitions = fields.Nested(ProhibDutySchema, many=True)
 
 # Policy
 # shows a single policy item and lets you delete a policy item
 class Policy(Resource):
+    def __init__(self, **kwargs):
+	self.ps = PolicySchema()
+	self.api = kwargs['api']
 
     def abort_if_policy_doesnt_exist(self, policy_id):
 	if policy_id not in policies:
@@ -49,8 +51,7 @@ class Policy(Resource):
 
     def get(self, policy_id):
         self.abort_if_policy_doesnt_exist(policy_id)
-        real_fields = {key : value for key, value in policy_fields.items() if key in policies[policy_id]}
-        return marshal(policies[policy_id], real_fields)
+        return policies[policy_id]
 
     def delete(self, policy_id):
         self.abort_if_policy_doesnt_exist(policy_id)
@@ -62,24 +63,29 @@ class Policy(Resource):
 	json_data = request.get_json()
 	if not json_data:
 		return jsonify({'message': 'No input data provided'}), 400
-        policies[policy_id] = json_data
+        data,errors = self.ps.load(json_data)
+        policies[policy_id] = data
         policies[policy_id]["id"] = policy_id
-        policies[policy_id]["policy_id"] = policy_id
-        return marshal(policies[policy_id], policy_fields), 201
+        policies[policy_id]["policyid"] = self.api.url_for(Policy, policy_id = policy_id, _external=True)
+	return policies[policy_id], 201
 
 # PolicyList
 # shows a list of all policies, and lets you POST to add new policies
 class PolicyList(Resource):
+    def __init__(self, **kwargs):
+	self.ps = PolicySchema()
+	self.api = kwargs['api']
 
     def get(self):
-	return {'policies': [marshal(policy, policy_fields) for policy in policies]}
+	return {'policies': [self.ps.dumps(policy) for policy in policies]}
 
     def post(self):
 	json_data = request.get_json()
 	if not json_data:
 		return jsonify({'message': 'No input data provided'}), 400
 	policy_id = str(uuid.uuid4())
-        policies[policy_id] = json_data
+        data,errors = self.ps.load(json_data)
+        policies[policy_id] = data
         policies[policy_id]["id"] = policy_id
-        policies[policy_id]["policy_id"] = policy_id
-        return marshal(policies[policy_id], policy_fields), 201
+        policies[policy_id]["policyid"] = self.api.url_for(Policy, policy_id = policy_id, _external=True)
+        return policies[policy_id], 201

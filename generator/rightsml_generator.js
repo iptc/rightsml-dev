@@ -56,7 +56,7 @@ class RightsMLGenerator extends React.Component {
         }
         if (this.state.geoconstraint) {
             var geoconstraint = this.state.geoconstraint;
-            var geoconstraintoperator = this.state.geoincludeexclude == 'include' ? 'eq' : 'ne';
+            var geoconstraintoperator = this.state.geoincludeexclude == 'include' ? 'eq' : 'neq';
             var geography = this.state.geography || '';
         }
         if (this.state.timeperiodconstraint) {

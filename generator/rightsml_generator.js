@@ -9,7 +9,7 @@ class RightsMLGenerator extends React.Component {
         super(props);
         this.state = {
             output: '',
-            outputformat: 'jsonld',
+            outputformat: 'turtle',
             targetasseturi: '',
             actionuri: 'http://www.w3.org/ns/odrl/2/use',
             assigneruri: '',
@@ -30,262 +30,16 @@ class RightsMLGenerator extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
     componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip();
         this.refreshOutput();
     }
+
     componentDidUpdate() {
         $('[data-toggle="tooltip"]').tooltip();
     }
-    refreshOutput() {    
-        var output = this.getRightsMLOutput();
-        this.setState({output: output});
-    }
-    getRightsMLOutput() {
-        var odrlNS = 'http://www.w3.org/ns/odrl/2/';
-        var rootElement = 'o:Policy'
-        var rightsmlType = 'http://www.w3.org/ns/odrl/2/Set';
-        var rightsmlProfile = 'https://iptc.org/std/RightsML/odrl-profile/';
-        // set policy guid using today's date
-        var todaysDate = new Date().toISOString().slice(0, 10);
-        var policyguid = "http://example.com/RightsML/example-policy/"+todaysDate;
-        if (this.state.targetasseturi) {
-            var targetasseturi = this.state.targetasseturi;
-        }
-        if (this.state.actionuri) {
-            var actionuri = this.state.actionuri;
-        }
-        if (this.state.assigneruri) {
-            var assigneruri = this.state.assigneruri;
-        }
-        if (this.state.assigneeuri) {
-            var assigneeuri = this.state.assigneeuri;
-        }
-        if (this.state.assigneeIsPartyCollection) {
-            var assigneeIsPartyCollection = this.state.assigneeIsPartyCollection;
-        }
-        if (this.state.geoconstraint) {
-            var geoconstraint = this.state.geoconstraint;
-            var geoconstraintoperator = this.state.geoincludeexclude == 'include' ? 'eq' : 'neq';
-            var geography = this.state.geography || '';
-        }
-        if (this.state.timeperiodconstraint) {
-            var timeperiodconstraint = this.state.timeperiodconstraint;
-            var constraintdate = this.state.constraintdate;
-            var beforeafteroperator = this.state.datebeforeafter == 'before' ? 'lt' : 'gt';
-        }
-        if (this.state.platformconstraint) {
-            var platformconstraint = this.state.platformconstraint;
-            var platformconstraintoperator = this.state.platformincludeexclude == 'include' ? 'eq' : 'neq';
-            var platform = this.state.platform;
-        }
-        if (this.state.dutytopay) {
-            var dutytopay = this.state.dutytopay;
-            var dutyamount = this.state.dutyamount;
-            var dutycurrency = this.state.dutycurrency;
-        }
-        /* now output the object in various serialisations */
-        if (this.state.outputformat == 'rdfxml') {
-            var xmlDoc = document.implementation.createDocument(
-                odrlNS, rootElement, null
-            );
-            var rightsmlDoc = xmlDoc.documentElement;
-            rightsmlDoc.setAttribute('type', rightsmlType);
-            rightsmlDoc.setAttribute('profile', rightsmlProfile);
-            rightsmlDoc.setAttribute('uid', policyguid);
 
-            var permissionElem = document.createElementNS(odrlNS, 'o:permission', null);
-            if (targetasseturi) {
-                var assetElem = document.createElementNS(odrlNS, 'o:asset', null);
-                assetElem.setAttribute('uid', targetasseturi);
-                assetElem.setAttribute('relation', 'odrl:target');
-                permissionElem.appendChild(assetElem);
-            }
-            if (actionuri) {
-                var actionElem = document.createElementNS(odrlNS, 'o:action', null);
-                actionElem.setAttribute('name', actionuri);
-                permissionElem.appendChild(actionElem);
-            }
-            if (assigneruri) {
-                var assignerpartyElem = document.createElementNS(odrlNS, 'o:party', null);
-                assignerpartyElem.setAttribute('uid', assigneruri);
-                assignerpartyElem.setAttribute('function', odrlNS+'assigner');
-                permissionElem.appendChild(assignerpartyElem);
-            }
-            if (assigneeuri) {
-                var assigneepartyElem = document.createElementNS(odrlNS, 'o:party', null);
-                assigneepartyElem.setAttribute('uid', assigneeuri);
-                assigneepartyElem.setAttribute('function', odrlNS+'assignee');
-                if (assigneeIsPartyCollection) {
-                    assigneepartyElem.setAttribute('type', odrlNS+'PartyCollection');
-                }
-                permissionElem.appendChild(assigneepartyElem);
-            }
-             if (geoconstraint) {
-                var constraintElem = document.createElementNS(odrlNS, 'o:constraint', null);
-                constraintElem.setAttribute('leftOperand', odrlNS+'spatial');
-                constraintElem.setAttribute('operator', odrlNS+geoconstraintoperator);
-                constraintElem.setAttribute('rightOperand', geography);
-                permissionElem.appendChild(constraintElem);
-            }
-            if (timeperiodconstraint) {
-                var constraintElem = document.createElementNS(odrlNS, 'o:constraint', null);
-                constraintElem.setAttribute('leftOperand', odrlNS+'dateTime');
-                constraintElem.setAttribute('operator', odrlNS+beforeafteroperator);
-                constraintElem.setAttribute('rightOperand', constraintdate);
-                constraintElem.setAttribute('datatype', 'xs:date');
-                rightsmlDoc.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xs', 'http://www.w3.org/2001/XMLSchema');
-                permissionElem.appendChild(constraintElem);
-            }
-            if (platformconstraint) {
-                var constraintElem = document.createElementNS(odrlNS, 'o:constraint', null);
-                constraintElem.setAttribute('leftOperand', odrlNS+'deliveryChannel');
-                constraintElem.setAttribute('operator', odrlNS+platformconstraintoperator);
-                constraintElem.setAttribute('rightOperand', platform);
-                permissionElem.appendChild(constraintElem);
-            }
-            /* duties */
-            if (dutytopay) {
-                var dutiesElem = document.createElementNS(odrlNS, 'o:duty', null);
-                var dutiesActionElem = document.createElementNS(odrlNS, 'o:action', null);
-                dutiesActionElem.setAttribute('value', "http://www.w3.org/ns/odrl/2/compensate");
-                var dutiesRefinementElem = document.createElementNS(odrlNS, 'o:refinement', null);
-                dutiesRefinementElem.setAttribute('operator', "http://www.w3.org/ns/odrl/2/eq");
-                dutiesRefinementElem.setAttribute('rightOperand', dutyamount);
-                dutiesRefinementElem.setAttribute('dataType', "http://www.w3.org/2001/XMLSchema#decimal");
-                dutiesRefinementElem.setAttribute('unit', "http://cvx.iptc.org/iso4217a/"+dutycurrency);
-                dutiesActionElem.appendChild(dutiesRefinementElem);
-                dutiesElem.appendChild(dutiesActionElem);
-                permissionElem.appendChild(dutiesElem);
-            }
-            xmlDoc.documentElement.appendChild(permissionElem);
-
-            /* turn XML object into string */
-            // var serializer = new XMLSerializer();
-            var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
-            xmlString = this.xmlpretty(xmlString, 1);
-            const xmlDecl = '<?xml version="1.0" encoding="UTF-8"?>'
-            var xmlDocAsString =  xmlDecl + '\n' + xmlString.toString();
-            return(xmlDocAsString);
-        } else if (this.state.outputformat == 'turtle') {
-            return("Turtle output not yet implemented.");
-        } else if (this.state.outputformat == 'jsonld') {
-            var permissionobj = {};
-            if (targetasseturi) {
-                permissionobj["target"] = targetasseturi;
-            }
-            if (assigneruri) {
-                permissionobj["assigner"] = assigneruri;
-            }
-            if (assigneeuri) {
-                if (assigneeIsPartyCollection) {
-                    permissionobj["assignee"] = {
-                        "@type": "PartyCollection",
-                        "uid": assigneeuri
-                    }
-                } else {
-                    permissionobj["assignee"] = assigneeuri;
-                }
-            }
-            if (actionuri) {
-                permissionobj["action"] = actionuri;
-            }
-            /* constraints */
-            var constraints = []
-            if (geoconstraint) {
-                constraints.push({
-                    "leftOperand": "spatial",
-                    "operator": geoconstraintoperator,
-                    "rightOperand": geography
-                });
-            }
-            if (timeperiodconstraint) {
-                constraints.push({
-                    "leftOperand": "dateTime",
-                    "operator": beforeafteroperator,
-                    "rightOperand": { "@value": constraintdate, "@type": "xsd:date" }
-                });
-            }
-            if (platformconstraint) {
-                constraints.push({
-                    "leftOperand": "deliveryChannel",
-                    "operator": platformconstraintoperator,
-                    "rightOperand": platform
-                });
-            }
-            if (!isEmpty(constraints)) {
-                permissionobj["constraint"] = constraints;
-            }
-            /* duties */
-            var duties = [];
-            if (dutytopay) {
-                duties.push({
-                    "action": {
-                        "value": "http://www.w3.org/ns/odrl/2/compensate",
-                        "refinement": {
-                            "operator": "http://www.w3.org/ns/odrl/2/eq",
-                            "rightOperand": dutyamount,
-                            "dataType": "http://www.w3.org/2001/XMLSchema#decimal",
-                            "unit": "http://cvx.iptc.org/iso4217a/"+dutycurrency
-                        }
-                    }
-                });
-            }
-            if (!isEmpty(duties)) {
-                permissionobj["duty"] = duties;
-            }
- /*
-
-      duty:
-      - compensatedParty: "http://example.com/cv/party/epa"
-        action: 
-          value: "http://www.w3.org/ns/odrl/2/compensate"
-          refinement:
-          - leftOperand: "http://www.w3.org/ns/odrl/2/payAmount"
-            operator: "http://www.w3.org/ns/odrl/2/eq"
-            rightOperand: "100.00"
-            dataType: "http://www.w3.org/2001/XMLSchema#decimal"
-            unit: "http://cvx.iptc.org/iso4217a/EUR"
-
-
-                "action": "grantUse",
-                "constraint": [{
-                    "leftOperand": "spatial",
-                    "operator": "eq",
-                    "rightOperand": "http://cvx.iptc.org/iso3166-1a3/ITA"
-                }],
-  value: "http://www.w3.org/ns/odrl/2/compensate"
-          refinement:
-          - leftOperand: "http://www.w3.org/ns/odrl/2/payAmount"
-            operator: "{constraint-operator GUID}"
-            rightOperand: "{constraint-rightOp-value}"
-            unit: "{constraint-unit GUID}"
-                "duty": [{
-                    "target": "http://epa.eu/cv/policy/3",
-                    "action": "nextPolicy"
-                }]
-*/
-            if (!isEmpty(duties)) {
-                permissionobj["duty"] = duties;
-            }
-            var jsonoutput = {
-                "@context": ["http://www.w3.org/ns/odrl.jsonld", 
-                    "https://iptc.org/std/RightsML/odrl-profile/rightsml.jsonld"],
-                "@type": "Set",
-                "uid": policyguid,
-                "profile": rightsmlProfile
-            }
-            if (!isEmpty(permissionobj)) {
-                jsonoutput.permission = [ permissionobj ];
-            }
-            return(JSON.stringify(jsonoutput, null, 2));
-            // return("JSON-LD output not yet implemented.");
-        }
-    }
-    handleSubmit(event) {
-        /* there's no submit button but just in case some automatic feature tries to submit the form... */
-        event.preventDefault();
-    }
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked
@@ -297,6 +51,310 @@ class RightsMLGenerator extends React.Component {
             [name]: value
         }, this.refreshOutput);
     }
+
+    handleSubmit(event) {
+        /* there's no submit button but just in case some automatic feature tries to submit the form... */
+        event.preventDefault();
+    }
+ 
+    refreshOutput() {
+        var output = this.getRightsMLOutput();
+        this.setState({output: output});
+    }
+
+    getCommonData() {
+        const policyguid = `http://example.com/RightsML/example-policy/${new Date().toISOString().slice(0, 10)}`;
+        const profile = 'https://iptc.org/std/RightsML/odrl-profile/';
+        let permission = {};
+
+        if (this.state.targetasseturi) permission.target = this.state.targetasseturi;
+        if (this.state.actionuri) permission.action = this.state.actionuri;
+        if (this.state.assigneruri) permission.assigner = this.state.assigneruri;
+        if (this.state.assigneeuri) {
+            permission.assignee = this.state.assigneeIsPartyCollection
+                ? { "@type": "PartyCollection", "uid": this.state.assigneeuri }
+                : this.state.assigneeuri;
+        }
+
+        const constraints = [];
+        if (this.state.geoconstraint) {
+            constraints.push({
+                leftOperand: "spatial",
+                operator: this.state.geoincludeexclude === 'include' ? 'eq' : 'neq',
+                rightOperand: this.state.geography
+            });
+        }
+        if (this.state.timeperiodconstraint) {
+            constraints.push({
+                leftOperand: "dateTime",
+                operator: this.state.datebeforeafter === 'before' ? 'lt' : 'gt',
+                rightOperand: {
+                    "@value": this.state.constraintdate,
+                    "@type": "xsd:date"
+                }
+            });
+        }
+        if (this.state.platformconstraint) {
+            constraints.push({
+                leftOperand: "deliveryChannel",
+                operator: this.state.platformincludeexclude === 'include' ? 'eq' : 'neq',
+                rightOperand: this.state.platform
+            });
+        }
+        if (!isEmpty(constraints)) {
+            permission.constraint = constraints;
+        }
+
+        const duties = [];
+        if (this.state.dutytopay) {
+            duties.push({
+                action: {
+                    value: "http://www.w3.org/ns/odrl/2/compensate",
+                    refinement: {
+                        operator: "http://www.w3.org/ns/odrl/2/eq",
+                        rightOperand: this.state.dutyamount,
+                        dataType: "http://www.w3.org/2001/XMLSchema#decimal",
+                        unit: `http://cvx.iptc.org/iso4217a/${this.state.dutycurrency}`
+                    }
+                }
+            });
+        }
+        if (!isEmpty(duties)) {
+            permission.duty = duties;
+        }
+
+        return { policyguid, profile, permission };
+    }
+
+    getRightsMLOutput() {
+        const { policyguid, profile, permission } = this.getCommonData();
+
+        if (this.state.outputformat === 'jsonld') {
+            return this.generateJSONLD(policyguid, profile, permission);
+        } else if (this.state.outputformat === 'rdfxml') {
+            return this.generateRDFXML(policyguid, profile, permission);
+        } else if (this.state.outputformat === 'turtle') {
+            return this.generateTurtle(policyguid, profile, permission);
+        }
+    }
+
+    generateJSONLD(policyguid, profile, permission) {
+        return JSON.stringify({
+            "@context": [
+                "http://www.w3.org/ns/odrl.jsonld",
+                "https://iptc.org/std/RightsML/odrl-profile/rightsml.jsonld"
+            ],
+            "@type": "Set",
+            "uid": policyguid,
+            "profile": profile,
+            "permission": [permission]
+        }, null, 2);
+    }
+
+    generateTurtle(policyguid, profile, permission) {
+        const prefixes = `
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix rightsml: <https://iptc.org/std/RightsML/odrl-profile/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<${policyguid}>
+    a odrl:Set ;
+    odrl:profile <${profile}> ;
+    odrl:permission [
+`;
+        let lines = [];
+        if (permission.target) lines.push(`        odrl:target <${permission.target}> ;`);
+        if (permission.assigner) lines.push(`        odrl:assigner <${permission.assigner}> ;`);
+        if (permission.assignee) {
+            if (typeof permission.assignee === 'object') {
+                lines.push(`        odrl:assignee [ a odrl:PartyCollection ; odrl:uid <${permission.assignee.uid}> ] ;`);
+            } else {
+                lines.push(`        odrl:assignee <${permission.assignee}> ;`);
+            }
+        }
+        if (permission.action) lines.push(`        odrl:action <${permission.action}> ;`);
+        if (permission.constraint) {
+            permission.constraint.forEach(c => {
+                const ro = typeof c.rightOperand === 'object' ? c.rightOperand["@value"] : c.rightOperand;
+                lines.push(`        odrl:constraint [ odrl:leftOperand odrl:${c.leftOperand} ; odrl:operator odrl:${c.operator} ; odrl:rightOperand <${ro}> ] ;`);
+            });
+        }
+        if (permission.duty) {
+            permission.duty.forEach(d => {
+                lines.push(`        odrl:duty [
+            odrl:action <${d.action.value}> ;
+            odrl:refinement [
+                odrl:operator <${d.action.refinement.operator}> ;
+                odrl:rightOperand "${d.action.refinement.rightOperand}"^^<${d.action.refinement.dataType}> ;
+                odrl:unit <${d.action.refinement.unit}>
+            ]
+        ] ;`);
+            });
+        }
+        return prefixes + lines.join('\n') + '\n    ] .';
+    }
+
+    generateRDFXML(policyguid, profile, permission) {
+        const odrlNS = 'http://www.w3.org/ns/odrl/2/';
+        const rdfNS = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+
+        const doc = document.implementation.createDocument(rdfNS, 'rdf:RDF', null);
+        const rdfElem = doc.documentElement;
+        rdfElem.setAttribute('xmlns:odrl', odrlNS);
+
+        const policyElem = doc.createElementNS(odrlNS, 'odrl:Set');
+        policyElem.setAttributeNS(rdfNS, 'rdf:about', policyguid);
+
+        const profileElem = doc.createElementNS(odrlNS, 'odrl:profile');
+        profileElem.setAttributeNS(rdfNS, 'rdf:resource', profile);
+        policyElem.appendChild(profileElem);
+
+        const permissionWrapElem = doc.createElementNS(odrlNS, 'odrl:permission');
+        const permissionElem = doc.createElementNS(odrlNS, 'odrl:Permission');
+
+        if (permission.target) {
+            const targetElem = doc.createElementNS(odrlNS, 'odrl:target');
+            targetElem.setAttributeNS(rdfNS, 'rdf:resource', permission.target);
+            permissionElem.appendChild(targetElem);
+        }
+        if (permission.assigner) {
+            const assignerElem = doc.createElementNS(odrlNS, 'odrl:assigner');
+            assignerElem.setAttributeNS(rdfNS, 'rdf:resource', permission.assigner);
+            permissionElem.appendChild(assignerElem);
+        }
+        if (permission.assignee) {
+            if (typeof permission.assignee === 'object') {
+                const assigneeElem = doc.createElementNS(odrlNS, 'odrl:assignee');
+                const partyElem = doc.createElementNS(odrlNS, 'odrl:PartyCollection');
+                partyElem.setAttributeNS(rdfNS, 'rdf:about', permission.assignee.uid);
+                assigneeElem.appendChild(partyElem);
+                permissionElem.appendChild(assigneeElem);
+            } else {
+                const assigneeElem = doc.createElementNS(odrlNS, 'odrl:assignee');
+                assigneeElem.setAttributeNS(rdfNS, 'rdf:resource', permission.assignee);
+                permissionElem.appendChild(assigneeElem);
+            }
+        }
+        if (permission.action) {
+            const actionElem = doc.createElementNS(odrlNS, 'odrl:action');
+            actionElem.setAttributeNS(rdfNS, 'rdf:resource', permission.action);
+            permissionElem.appendChild(actionElem);
+        }
+        if (permission.constraint) {
+            permission.constraint.forEach(c => {
+                const constraintWrap = doc.createElementNS(odrlNS, 'odrl:constraint');
+                const constraint = doc.createElementNS(odrlNS, 'odrl:Constraint');
+
+                const left = doc.createElementNS(odrlNS, 'odrl:leftOperand');
+                left.textContent = `odrl:${c.leftOperand}`;
+                constraint.appendChild(left);
+
+                const op = doc.createElementNS(odrlNS, 'odrl:operator');
+                op.setAttributeNS(rdfNS, 'rdf:resource', `http://www.w3.org/ns/odrl/2/${c.operator}`);
+                constraint.appendChild(op);
+
+                const ro = doc.createElementNS(odrlNS, 'odrl:rightOperand');
+                const roVal = typeof c.rightOperand === 'object' ? c.rightOperand['@value'] : c.rightOperand;
+                ro.setAttributeNS(rdfNS, 'rdf:resource', roVal);
+                constraint.appendChild(ro);
+
+                constraintWrap.appendChild(constraint);
+                permissionElem.appendChild(constraintWrap);
+            });
+        }
+        if (permission.duty) {
+            permission.duty.forEach(d => {
+                const dutyWrap = doc.createElementNS(odrlNS, 'odrl:duty');
+                const duty = doc.createElementNS(odrlNS, 'odrl:Duty');
+
+                const action = doc.createElementNS(odrlNS, 'odrl:action');
+                action.setAttributeNS(rdfNS, 'rdf:resource', d.action.value);
+                duty.appendChild(action);
+
+                const refinementWrap = doc.createElementNS(odrlNS, 'odrl:refinement');
+                const refinement = doc.createElementNS(odrlNS, 'odrl:Constraint');
+
+                const op = doc.createElementNS(odrlNS, 'odrl:operator');
+                op.setAttributeNS(rdfNS, 'rdf:resource', d.action.refinement.operator);
+                refinement.appendChild(op);
+
+                const ro = doc.createElementNS(odrlNS, 'odrl:rightOperand');
+                ro.setAttribute('rdf:datatype', d.action.refinement.dataType);
+                ro.textContent = d.action.refinement.rightOperand;
+                refinement.appendChild(ro);
+
+                const unit = doc.createElementNS(odrlNS, 'odrl:unit');
+                unit.setAttributeNS(rdfNS, 'rdf:resource', d.action.refinement.unit);
+                refinement.appendChild(unit);
+
+                refinementWrap.appendChild(refinement);
+                duty.appendChild(refinementWrap);
+                dutyWrap.appendChild(duty);
+                permissionElem.appendChild(dutyWrap);
+            });
+        }
+
+        permissionWrapElem.appendChild(permissionElem);
+        policyElem.appendChild(permissionWrapElem);
+        rdfElem.appendChild(policyElem);
+
+        /* simple XML output as string
+        const serializer = new XMLSerializer();
+        return serializer.serializeToString(doc);
+        */
+
+        /* turn XML object into string */
+        // var serializer = new XMLSerializer();
+        var xmlString = (new XMLSerializer()).serializeToString(doc);
+        xmlString = this.xmlpretty(xmlString, 1);
+        const xmlDecl = '<?xml version="1.0" encoding="UTF-8"?>'
+        var xmlDocAsString =  xmlDecl + '\n' + xmlString.toString();
+        return(xmlDocAsString);
+    }
+
+    generateTurtle(policyguid, rightsmlProfile, permission) {
+        const prefixes = `
+    @prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+    @prefix rightsml: <https://iptc.org/std/RightsML/odrl-profile/> .
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    <${policyguid}>
+        a odrl:Set ;
+        odrl:profile <${rightsmlProfile}> ;
+        odrl:permission [
+    `;
+        let lines = [];
+        if (permission.target) lines.push(`        odrl:target <${permission.target}> ;`);
+        if (permission.assigner) lines.push(`        odrl:assigner <${permission.assigner}> ;`);
+        if (permission.assignee) {
+            if (typeof permission.assignee === 'object') {
+                lines.push(`        odrl:assignee [ a odrl:PartyCollection ; odrl:uid <${permission.assignee.uid}> ] ;`);
+            } else {
+                lines.push(`        odrl:assignee <${permission.assignee}> ;`);
+            }
+        }
+        if (permission.action) lines.push(`        odrl:action <${permission.action}> ;`);
+        if (permission.constraint) {
+            permission.constraint.forEach(c => {
+                const ro = typeof c.rightOperand === 'object' ? c.rightOperand["@value"] : c.rightOperand;
+                lines.push(`        odrl:constraint [ odrl:leftOperand odrl:${c.leftOperand} ; odrl:operator odrl:${c.operator} ; odrl:rightOperand <${ro}> ] ;`);
+            });
+        }
+        if (permission.duty) {
+            permission.duty.forEach(d => {
+                lines.push(`        odrl:duty [
+            odrl:action <${d.action.value}> ;
+            odrl:refinement [
+                odrl:operator <${d.action.refinement.operator}> ;
+                odrl:rightOperand "${d.action.refinement.rightOperand}"^^<${d.action.refinement.dataType}> ;
+                odrl:unit <${d.action.refinement.unit}>
+            ]
+        ] ;`);
+            });
+        }
+        return prefixes + lines.join('\n') + '\n    ] .';
+    }
+
     copyToClipboard = (e) => {
         this.textArea.select();
         document.execCommand('copy');
@@ -306,6 +364,7 @@ class RightsMLGenerator extends React.Component {
         this.setState({ copySuccess: 'Copied!' });
         e.preventDefault();
     };
+
     // used by xmlpretty below
     createShiftArr(step) {
         var space = '    ';
@@ -334,6 +393,7 @@ class RightsMLGenerator extends React.Component {
         }
         return shift;
     }
+
     xmlpretty(text,step) {
         var shift = this.createShiftArr(step);
         var ar = text.replace(/>\s{0,}</g,"><")
@@ -584,12 +644,12 @@ class RightsMLGenerator extends React.Component {
                         Choose output format:
                     </div>
                     <div className="col-sm-8">
-                        {/*<div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="outputformat" id="turtle" value="turtle" title="Output format - Turtle" onChange={this.handleInputChange} tabIndex="21" />&nbsp;
-                            <label className="form-check-label" htmlFor="turtle">Turtle</label>
-                        </div>*/}
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" defaultChecked name="outputformat" id="jsonld" value="jsonld" title="Output format - JSON-LD" onChange={this.handleInputChange} tabIndex="22" />&nbsp;
+                            <input className="form-check-input" type="radio" defaultChecked name="outputformat" id="turtle" value="turtle" title="Output format - Turtle" onChange={this.handleInputChange} tabIndex="21" />&nbsp;
+                            <label className="form-check-label" htmlFor="turtle">Turtle</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input className="form-check-input" type="radio" name="outputformat" id="jsonld" value="jsonld" title="Output format - JSON-LD" onChange={this.handleInputChange} tabIndex="22" />&nbsp;
                             <label className="form-check-label" htmlFor="jsonld">JSON-LD</label>
                         </div>
                         <div className="form-check form-check-inline">

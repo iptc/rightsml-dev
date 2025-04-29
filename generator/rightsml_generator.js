@@ -1,5 +1,9 @@
 'use strict';
 
+function isEmpty(value) {
+  return value && Object.keys(value).length === 0;
+}
+
 class RightsMLGenerator extends React.Component {
     constructor(props) {
         super(props);
@@ -7,15 +11,21 @@ class RightsMLGenerator extends React.Component {
             output: '',
             outputformat: 'jsonld',
             targetasseturi: '',
-            actionuri: '',
+            actionuri: 'http://www.w3.org/ns/odrl/2/use',
             assigneruri: '',
             assigneeuri: '',
             assigneeIsPartyCollection: false,
             geoconstraint: false,
             geoincludeexclude: 'exclude',
             timeperiodconstraint: false,
+            datebeforeafter: '',
             constraintdate: '',
-            datebeforeafter: ''
+            platformconstraint: false,
+            platformincludeexclude: 'exclude',
+            platform: '',
+            dutytopay: false,
+            dutyamount: '',
+            dutycurrency: ''
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -64,6 +74,16 @@ class RightsMLGenerator extends React.Component {
             var constraintdate = this.state.constraintdate;
             var beforeafteroperator = this.state.datebeforeafter == 'before' ? 'lt' : 'gt';
         }
+        if (this.state.platformconstraint) {
+            var platformconstraint = this.state.platformconstraint;
+            var platformconstraintoperator = this.state.platformincludeexclude == 'include' ? 'eq' : 'neq';
+            var platform = this.state.platform;
+        }
+        if (this.state.dutytopay) {
+            var dutytopay = this.state.dutytopay;
+            var dutyamount = this.state.dutyamount;
+            var dutycurrency = this.state.dutycurrency;
+        }
         /* now output the object in various serialisations */
         if (this.state.outputformat == 'rdfxml') {
             var xmlDoc = document.implementation.createDocument(
@@ -78,7 +98,7 @@ class RightsMLGenerator extends React.Component {
             if (targetasseturi) {
                 var assetElem = document.createElementNS(odrlNS, 'o:asset', null);
                 assetElem.setAttribute('uid', targetasseturi);
-                assetElem.setAttribute('relation', 'http://www.w3.org/ns/odrl/2/target');
+                assetElem.setAttribute('relation', 'odrl:target');
                 permissionElem.appendChild(assetElem);
             }
             if (actionuri) {
@@ -115,8 +135,28 @@ class RightsMLGenerator extends React.Component {
                 constraintElem.setAttribute('rightOperand', constraintdate);
                 constraintElem.setAttribute('datatype', 'xs:date');
                 rightsmlDoc.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xs', 'http://www.w3.org/2001/XMLSchema');
-
                 permissionElem.appendChild(constraintElem);
+            }
+            if (platformconstraint) {
+                var constraintElem = document.createElementNS(odrlNS, 'o:constraint', null);
+                constraintElem.setAttribute('leftOperand', odrlNS+'deliveryChannel');
+                constraintElem.setAttribute('operator', odrlNS+platformconstraintoperator);
+                constraintElem.setAttribute('rightOperand', platform);
+                permissionElem.appendChild(constraintElem);
+            }
+            /* duties */
+            if (dutytopay) {
+                var dutiesElem = document.createElementNS(odrlNS, 'o:duty', null);
+                var dutiesActionElem = document.createElementNS(odrlNS, 'o:action', null);
+                dutiesActionElem.setAttribute('value', "http://www.w3.org/ns/odrl/2/compensate");
+                var dutiesRefinementElem = document.createElementNS(odrlNS, 'o:refinement', null);
+                dutiesRefinementElem.setAttribute('operator', "http://www.w3.org/ns/odrl/2/eq");
+                dutiesRefinementElem.setAttribute('rightOperand', dutyamount);
+                dutiesRefinementElem.setAttribute('dataType', "http://www.w3.org/2001/XMLSchema#decimal");
+                dutiesRefinementElem.setAttribute('unit', "http://cvx.iptc.org/iso4217a/"+dutycurrency);
+                dutiesActionElem.appendChild(dutiesRefinementElem);
+                dutiesElem.appendChild(dutiesActionElem);
+                permissionElem.appendChild(dutiesElem);
             }
             xmlDoc.documentElement.appendChild(permissionElem);
 
@@ -130,7 +170,6 @@ class RightsMLGenerator extends React.Component {
         } else if (this.state.outputformat == 'turtle') {
             return("Turtle output not yet implemented.");
         } else if (this.state.outputformat == 'jsonld') {
-            
             var permissionobj = {};
             if (targetasseturi) {
                 permissionobj["target"] = targetasseturi;
@@ -151,6 +190,7 @@ class RightsMLGenerator extends React.Component {
             if (actionuri) {
                 permissionobj["action"] = actionuri;
             }
+            /* constraints */
             var constraints = []
             if (geoconstraint) {
                 constraints.push({
@@ -166,29 +206,77 @@ class RightsMLGenerator extends React.Component {
                     "rightOperand": { "@value": constraintdate, "@type": "xsd:date" }
                 });
             }
-            if (constraints) {
+            if (platformconstraint) {
+                constraints.push({
+                    "leftOperand": "deliveryChannel",
+                    "operator": platformconstraintoperator,
+                    "rightOperand": platform
+                });
+            }
+            if (!isEmpty(constraints)) {
                 permissionobj["constraint"] = constraints;
             }
-            var permission = [ permissionobj ];
-/*
+            /* duties */
+            var duties = [];
+            if (dutytopay) {
+                duties.push({
+                    "action": {
+                        "value": "http://www.w3.org/ns/odrl/2/compensate",
+                        "refinement": {
+                            "operator": "http://www.w3.org/ns/odrl/2/eq",
+                            "rightOperand": dutyamount,
+                            "dataType": "http://www.w3.org/2001/XMLSchema#decimal",
+                            "unit": "http://cvx.iptc.org/iso4217a/"+dutycurrency
+                        }
+                    }
+                });
+            }
+            if (!isEmpty(duties)) {
+                permissionobj["duty"] = duties;
+            }
+ /*
+
+      duty:
+      - compensatedParty: "http://example.com/cv/party/epa"
+        action: 
+          value: "http://www.w3.org/ns/odrl/2/compensate"
+          refinement:
+          - leftOperand: "http://www.w3.org/ns/odrl/2/payAmount"
+            operator: "http://www.w3.org/ns/odrl/2/eq"
+            rightOperand: "100.00"
+            dataType: "http://www.w3.org/2001/XMLSchema#decimal"
+            unit: "http://cvx.iptc.org/iso4217a/EUR"
+
+
                 "action": "grantUse",
                 "constraint": [{
                     "leftOperand": "spatial",
                     "operator": "eq",
                     "rightOperand": "http://cvx.iptc.org/iso3166-1a3/ITA"
                 }],
+  value: "http://www.w3.org/ns/odrl/2/compensate"
+          refinement:
+          - leftOperand: "http://www.w3.org/ns/odrl/2/payAmount"
+            operator: "{constraint-operator GUID}"
+            rightOperand: "{constraint-rightOp-value}"
+            unit: "{constraint-unit GUID}"
                 "duty": [{
                     "target": "http://epa.eu/cv/policy/3",
                     "action": "nextPolicy"
                 }]
 */
+            if (!isEmpty(duties)) {
+                permissionobj["duty"] = duties;
+            }
             var jsonoutput = {
                 "@context": ["http://www.w3.org/ns/odrl.jsonld", 
                     "https://iptc.org/std/RightsML/odrl-profile/rightsml.jsonld"],
                 "@type": "Set",
                 "uid": policyguid,
-                "profile": rightsmlProfile,
-                "permission": permission
+                "profile": rightsmlProfile
+            }
+            if (!isEmpty(permissionobj)) {
+                jsonoutput.permission = [ permissionobj ];
             }
             return(JSON.stringify(jsonoutput, null, 2));
             // return("JSON-LD output not yet implemented.");
@@ -204,7 +292,6 @@ class RightsMLGenerator extends React.Component {
             : target.type === 'select-multiple' ? [...target.selectedOptions].map(o => o.value)
             : target.value;
         const name = target.name;
-        console.log("Setting "+name+" to "+value);
         // setState is asynchronous so we update the output after completion using the callback
         this.setState({
             [name]: value
@@ -336,10 +423,18 @@ class RightsMLGenerator extends React.Component {
                     <div className="col-sm-8">
                         <select className="form-control form-control-sm" id="actionuri" name="actionuri" size="1" width="25" title="Select the applicable action" value={this.state.actionuri} onChange={this.handleInputChange} tabIndex="7">
                             <option value="">Choose an action type</option>
-                            <option value="http://www.w3.org/ns/odrl/2/distribute">Distribute</option>
-                            <option value="http://www.w3.org/ns/odrl/2/present">Present</option>
+                            <option value="http://www.w3.org/ns/odrl/2/aggregate">Aggregate</option>
                             <option value="http://www.w3.org/ns/odrl/2/archive">Archive</option>
+                            <option value="http://www.w3.org/ns/odrl/2/derive">Derive</option>
+                            <option value="http://www.w3.org/ns/odrl/2/distribute">Distribute</option>
+                            <option value="http://www.w3.org/ns/odrl/2/display">Display</option>
                             <option value="http://www.w3.org/ns/odrl/2/index">Index</option>
+                            <option value="http://www.w3.org/ns/odrl/2/modify">Modify</option>
+                            <option value="http://www.w3.org/ns/odrl/2/play">Play</option>
+                            <option value="http://www.w3.org/ns/odrl/2/present">Present</option>
+                            <option value="http://www.w3.org/ns/odrl/2/print">Print</option>
+                            <option value="http://www.w3.org/ns/odrl/2/sell">Sell</option>
+                            <option value="http://www.w3.org/ns/odrl/2/use">Use</option>
                         </select>
                     </div>
                 </div>
@@ -369,12 +464,17 @@ class RightsMLGenerator extends React.Component {
                     </div>
                 </div>
                  <div className="form-row">
-                    <label className="col-sm-4 col-form-label" htmlFor="provider">Geography</label>
+                    <label className="col-sm-4 col-form-label text-right" htmlFor="provider">Geography</label>
                     <div className="col-sm-8">
                         <select className="form-control form-control-sm" id="geography" name="geography" size="1" width="25" title="Select the applicable geography" value={this.state.geography} onChange={this.handleInputChange} tabIndex="7">
                             <option value="">Choose a geography</option>
                             <option value="http://cvx.iptc.org/iso3166-1a3/CHN">China</option>
+                            <option value="http://cvx.iptc.org/iso3166-1a3/FRA">France</option>
                             <option value="http://cvx.iptc.org/iso3166-1a3/DEU">Germany</option>
+                            <option value="http://cvx.iptc.org/iso3166-1a3/ITA">Italy</option>
+                            <option value="http://cvx.iptc.org/iso3166-1a3/NOR">Norway</option>
+                            <option value="http://cvx.iptc.org/iso3166-1a3/ESP">Spain</option>
+                            <option value="http://cvx.iptc.org/iso3166-1a3/SWE">Sweden</option>
                             <option value="http://cvx.iptc.org/iso3166-1a3/GBR">UK</option>
                             <option value="http://cvx.iptc.org/iso3166-1a3/USA">USA</option>
                         </select>
@@ -384,23 +484,23 @@ class RightsMLGenerator extends React.Component {
                     <div className="col-sm-4">&nbsp;</div>
                     <div className="col-sm-8">
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" id="geoinclude" name="geoincludeexclude" value="include" title="Include geography" onChange={this.handleInputChange} tabIndex="8" />
-                          <label className="form-check-label" htmlFor="geoinclude">Include</label>
+                          <input className="form-check-input" type="radio" id="geoinclude" name="geoincludeexclude" value="include" title="Only this geography" onChange={this.handleInputChange} tabIndex="8" />
+                          <label className="form-check-label" htmlFor="geoinclude">Only this geography</label>
                         </div>
                         <div className="form-check form-check-inline">
                           <input className="form-check-input" type="radio" id="geoexclude" defaultChecked name="geoincludeexclude" value="exclude" title="Exclude geography" onChange={this.handleInputChange} tabIndex="9" />
-                          <label className="form-check-label" htmlFor="geoexclude">Exclude</label>
+                          <label className="form-check-label" htmlFor="geoexclude">All except for this geography</label>
                         </div>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-check">
                         <input className="form-check-input" type="checkbox" id="timeperiod" name="timeperiodconstraint" value={this.state.timeperiodconstraint} onChange={this.handleInputChange} tabIndex="7" />
-                        <label className="form-check-label" htmlFor="timeperiod">Time period constraint</label>
+                        <label className="form-check-label" htmlFor="timeperiod">Time constraint</label>
                     </div>
                 </div>
                 <div className="form-row">
-                    <label className="col-sm-4 col-form-label" htmlFor="constraintdate">Date</label>
+                    <label className="col-sm-4 col-form-label text-right" htmlFor="constraintdate">Date</label>
                     <div className="col-sm-8">
                         <input className="form-control form-control-sm" type="date" id="constraintdate" name="constraintdate" title="Constraint Date" value={this.state.constraintdate} onChange={this.handleInputChange} tabIndex="13" />
                     </div>
@@ -418,7 +518,64 @@ class RightsMLGenerator extends React.Component {
                         </div>
                     </div>
                 </div>
-           </div>
+                <div className="form-row">
+                    <div className="form-check">
+                        <input className="form-check-input" type="checkbox" id="platformconstraint" name="platformconstraint" value={this.state.platformconstraint} onChange={this.handleInputChange} tabIndex="9" />
+                        <label className="form-check-label" htmlFor="platformconstraint">Platform constraint</label>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <label className="col-sm-4 col-form-label text-right" htmlFor="constraintplatform">Platform</label>
+                    <div className="col-sm-8">
+                        <select className="form-control form-control-sm" id="platform" name="platform" size="1" width="25" title="Select the applicable platform" value={this.state.platform} onChange={this.handleInputChange} tabIndex="7">
+                            <option value="">Choose a platform</option>
+                            <option value="advertising">Advertising</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="print">Print</option>
+                            <option value="tv">TV</option>
+                            <option value="web">Web</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="col-sm-4">&nbsp;</div>
+                    <div className="col-sm-8">
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" id="platforminclude" name="platformincludeexclude" value="include" title="Only this platform" onChange={this.handleInputChange} tabIndex="8" />
+                          <label className="form-check-label" htmlFor="platforminclude">Only this platform</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" id="platformexclude" defaultChecked name="platformincludeexclude" value="exclude" title="All except this platform" onChange={this.handleInputChange} tabIndex="9" />
+                          <label className="form-check-label" htmlFor="platformexclude">All except this platform</label>
+                        </div>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <b className="col-sm-12">Duties</b>
+                </div>
+                <div className="form-row">
+                    <div className="form-check">
+                        <input className="form-check-input" type="checkbox" id="dutytopay" name="dutytopay" value={this.state.dutytopay} onChange={this.handleInputChange} tabIndex="9" />
+                        <label className="form-check-label" htmlFor="dutytopay">Duty to pay</label>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <label className="col-sm-4 col-form-label text-right" htmlFor="dutyamount">Amount to pay</label>
+                    <div className="col-sm-8">
+                        <div className="row">
+                        <input className="form-control form-control-sm col-sm" type="text" id="dutyamount" name="dutyamount" size="10" value={this.state.dutyamount} onChange={this.handleInputChange} tabIndex="7" />
+                        &nbsp;
+                        <select className="form-control form-control-sm col-sm" id="dutycurrency" name="dutycurrency" size="1" width="5" title="Select the applicable currency" value={this.state.dutycurrency} onChange={this.handleInputChange} tabIndex="7">
+                            <option value="">Currency</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="NOK">NOK</option>
+                            <option value="USD">USD</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+             </div>
         <div className="col">
             <div className="outputbox">
                 <legend>{outputtext} <a href="#" className="btn btn-primary" role="button" onClick={this.copyToClipboard}>Copy to clipboard <i className="fas fa-copy" /></a></legend>
@@ -427,10 +584,10 @@ class RightsMLGenerator extends React.Component {
                         Choose output format:
                     </div>
                     <div className="col-sm-8">
-                        <div className="form-check form-check-inline">
+                        {/*<div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" name="outputformat" id="turtle" value="turtle" title="Output format - Turtle" onChange={this.handleInputChange} tabIndex="21" />&nbsp;
                             <label className="form-check-label" htmlFor="turtle">Turtle</label>
-                        </div>
+                        </div>*/}
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" defaultChecked name="outputformat" id="jsonld" value="jsonld" title="Output format - JSON-LD" onChange={this.handleInputChange} tabIndex="22" />&nbsp;
                             <label className="form-check-label" htmlFor="jsonld">JSON-LD</label>

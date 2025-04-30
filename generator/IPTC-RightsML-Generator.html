@@ -1,9 +1,15 @@
 <!doctype html>
 <html lang="en"> 
 	<head> 
-		<title>IPTC RightsML Generator: RightsML 2.0</title> 
+		<title>IPTC RightsML/ODRL Generator: RightsML 2.0</title> 
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- Load React and React Bootstrap from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
+        <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
         <!-- Icons from Font Awesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
@@ -18,26 +24,16 @@
     <div class="container-fluid">
         <div class="row" id="header">
             <div class="col">
-                <h1><span class="image"><img src="https://www.iptc.org/std/NewsML-G2/guidelines/images/iptc_sv_gradient_70x70.jpg" alt="IPTC logo"></span> IPTC RightsML Generator: RightsML 2.0</h1>
-                <p>Fill in the form and see the corresponding RightsML document as you type. Please note that this form only uses a small portion of the RightsML specification.</p>
+                <h1><span class="image"><img src="https://www.iptc.org/std/NewsML-G2/guidelines/images/iptc_sv_gradient_70x70.jpg" alt="IPTC logo"></span> IPTC RightsML/ODRL Generator: RightsML 2.0</h1>
+                <p>Fill in the form and see the corresponding RightsML document (in ODRL format) as you type. <i>Please note that this form only uses a small portion of the RightsML specification.</i></p>
                 <p>For more information about RightsML, see the <a href="https://iptc.org/standards/RightsML/">IPTC RightsML pages</a>, the <a href="https://iptc.org/std/RightsML/2.0/RightsML_2.0-specification.html">RightsML 2.0 Specification</a> and the <a href="http://dev.iptc.org/RightsML">RightsML area on dev.iptc.org</a>.</p>
             </div>
         </div>
         <div id="reactcontainer">
         </div>
     </div>
-    <!-- Load React -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js" -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-
     <!-- Load our React component. (the text/babel part means that it contains JSX tags) -->
     <script type="text/babel" src="rightsml_generator.js"></script>
-    <!-- Bootstrap JS components -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
 </body> 
 </html> 
  

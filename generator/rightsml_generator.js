@@ -1,5 +1,4 @@
 'use strict';
-
 function isEmpty(value) {
   return value && Object.keys(value).length === 0;
 }
@@ -32,12 +31,16 @@ class RightsMLGenerator extends React.Component {
     }
 
     componentDidMount() {
-        $('[data-toggle="tooltip"]').tooltip();
-        this.refreshOutput();
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        /* $('[data-toggle="tooltip"]').tooltip();
+        this.refreshOutput(); */
     }
 
     componentDidUpdate() {
-        $('[data-toggle="tooltip"]').tooltip();
+        /* $('[data-toggle="tooltip"]').tooltip(); */
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
 
     handleInputChange(event) {
@@ -469,16 +472,16 @@ class RightsMLGenerator extends React.Component {
     <div className="row">
         <div className="col">
             <legend>Enter RightsML policy content</legend>
-                <div className="form-row">
-                    <b className="col-sm-12">Generic properties</b>
+                <div className="row">
+                    <b className="col">Generic properties</b>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label" htmlFor="subheadline">Target Asset URI</label>
                     <div className="col-sm-8">
                         <input className="form-control form-control-sm" type="text" id="subheadline" name="targetasseturi" size="40" title="Target Asset URI" value={this.state.targetasseturi} onChange={this.handleInputChange} tabIndex="8" />
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label" htmlFor="provider">Assignee can...</label>
                     <div className="col-sm-8">
                         <select className="form-control form-control-sm" id="actionuri" name="actionuri" size="1" width="25" title="Select the applicable action" value={this.state.actionuri} onChange={this.handleInputChange} tabIndex="7">
@@ -498,13 +501,13 @@ class RightsMLGenerator extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label" htmlFor="assigneruri">Assigner (URI)</label>
                     <div className="col-sm-8">
                         <input className="form-control form-control-sm" type="text" id="assigneruri" name="assigneruri" size="40" title="Assigner URI" value={this.state.assigneruri} onChange={this.handleInputChange} tabIndex="13" />
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label" htmlFor="assigneeuri">Assignee (URI)</label>
                     <div className="col-sm-8">
                         <input className="form-control form-control-sm" type="text" id="assigneeuri" name="assigneeuri" size="40" title="Assignee URI" value={this.state.assigneeuri} onChange={this.handleInputChange}  tabIndex="14" />
@@ -514,58 +517,60 @@ class RightsMLGenerator extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <b className="col-sm-12">Constraints</b>
                 </div>
-                <div className="form-row">
+                <div className="col-sm-12">
                     <div className="form-check">
                         <input className="form-check-input" type="checkbox" id="geo" name="geoconstraint" value={this.state.geoconstraint} onChange={this.handleInputChange} tabIndex="7" />
                         <label className="form-check-label" htmlFor="geo">Geographic constraint</label>
                     </div>
                 </div>
-                 <div className="form-row">
-                    <label className="col-sm-4 col-form-label text-right" htmlFor="provider">Geography</label>
-                    <div className="col-sm-8">
-                        <select className="form-control form-control-sm" id="geography" name="geography" size="1" width="25" title="Select the applicable geography" value={this.state.geography} onChange={this.handleInputChange} tabIndex="7">
-                            <option value="">Choose a geography</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/CHN">China</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/FRA">France</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/DEU">Germany</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/ITA">Italy</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/NOR">Norway</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/ESP">Spain</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/SWE">Sweden</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/GBR">UK</option>
-                            <option value="http://cvx.iptc.org/iso3166-1a3/USA">USA</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="col-sm-4">&nbsp;</div>
-                    <div className="col-sm-8">
-                        <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" id="geoinclude" name="geoincludeexclude" value="include" title="Only this geography" onChange={this.handleInputChange} tabIndex="8" />
-                          <label className="form-check-label" htmlFor="geoinclude">Only this geography</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" id="geoexclude" defaultChecked name="geoincludeexclude" value="exclude" title="Exclude geography" onChange={this.handleInputChange} tabIndex="9" />
-                          <label className="form-check-label" htmlFor="geoexclude">All except for this geography</label>
+                <div id="geoconstraints">
+                    <div className="row">
+                        <label className="col-sm-4 col-form-label text-right" htmlFor="provider">Geography</label>
+                        <div className="col-sm-8">
+                            <select className="form-control form-control-sm" id="geography" name="geography" size="1" width="25" title="Select the applicable geography" value={this.state.geography} onChange={this.handleInputChange} tabIndex="7">
+                                <option value="">Choose a geography</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/CHN">China</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/FRA">France</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/DEU">Germany</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/ITA">Italy</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/NOR">Norway</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/ESP">Spain</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/SWE">Sweden</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/GBR">UK</option>
+                                <option value="http://cvx.iptc.org/iso3166-1a3/USA">USA</option>
+                            </select>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-sm-4">&nbsp;</div>
+                        <div className="col-sm-8">
+                            <div className="form-check form-check-inline">
+                              <input className="form-check-input" type="radio" id="geoinclude" name="geoincludeexclude" value="include" title="Only this geography" onChange={this.handleInputChange} tabIndex="8" />
+                              <label className="form-check-label" htmlFor="geoinclude">Only this geography</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                              <input className="form-check-input" type="radio" id="geoexclude" defaultChecked name="geoincludeexclude" value="exclude" title="Exclude geography" onChange={this.handleInputChange} tabIndex="9" />
+                              <label className="form-check-label" htmlFor="geoexclude">All except for this geography</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="form-row">
+                <div className="col-sm-12">
                     <div className="form-check">
                         <input className="form-check-input" type="checkbox" id="timeperiod" name="timeperiodconstraint" value={this.state.timeperiodconstraint} onChange={this.handleInputChange} tabIndex="7" />
                         <label className="form-check-label" htmlFor="timeperiod">Time constraint</label>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label text-right" htmlFor="constraintdate">Date</label>
                     <div className="col-sm-8">
                         <input className="form-control form-control-sm" type="date" id="constraintdate" name="constraintdate" title="Constraint Date" value={this.state.constraintdate} onChange={this.handleInputChange} tabIndex="13" />
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label" htmlFor="provider">&nbsp;</label>
                     <div className="col-sm-8">
                         <div className="form-check form-check-inline">
@@ -578,13 +583,13 @@ class RightsMLGenerator extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="col-sm-12">
                     <div className="form-check">
                         <input className="form-check-input" type="checkbox" id="platformconstraint" name="platformconstraint" value={this.state.platformconstraint} onChange={this.handleInputChange} tabIndex="9" />
                         <label className="form-check-label" htmlFor="platformconstraint">Platform constraint</label>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label text-right" htmlFor="constraintplatform">Platform</label>
                     <div className="col-sm-8">
                         <select className="form-control form-control-sm" id="platform" name="platform" size="1" width="25" title="Select the applicable platform" value={this.state.platform} onChange={this.handleInputChange} tabIndex="7">
@@ -597,7 +602,7 @@ class RightsMLGenerator extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <div className="col-sm-4">&nbsp;</div>
                     <div className="col-sm-8">
                         <div className="form-check form-check-inline">
@@ -610,23 +615,23 @@ class RightsMLGenerator extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <b className="col-sm-12">Duties</b>
                 </div>
-                <div className="form-row">
+                <div className="col-sm-12">
                     <div className="form-check">
                         <input className="form-check-input" type="checkbox" id="dutytopay" name="dutytopay" value={this.state.dutytopay} onChange={this.handleInputChange} tabIndex="9" />
                         <label className="form-check-label" htmlFor="dutytopay">Duty to pay</label>
                     </div>
                 </div>
-                <div className="form-row">
+                <div className="row">
                     <label className="col-sm-4 col-form-label text-right" htmlFor="dutyamount">Amount to pay</label>
                     <div className="col-sm-8">
                         <div className="row">
                         <input className="form-control form-control-sm col-sm" type="text" id="dutyamount" name="dutyamount" size="10" value={this.state.dutyamount} onChange={this.handleInputChange} tabIndex="7" />
                         &nbsp;
                         <select className="form-control form-control-sm col-sm" id="dutycurrency" name="dutycurrency" size="1" width="5" title="Select the applicable currency" value={this.state.dutycurrency} onChange={this.handleInputChange} tabIndex="7">
-                            <option value="">Currency</option>
+                            <option value="">Choose currency</option>
                             <option value="EUR">EUR</option>
                             <option value="GBP">GBP</option>
                             <option value="NOK">NOK</option>
@@ -639,7 +644,7 @@ class RightsMLGenerator extends React.Component {
         <div className="col">
             <div className="outputbox">
                 <legend>{outputtext} <a href="#" className="btn btn-primary" role="button" onClick={this.copyToClipboard}>Copy to clipboard <i className="fas fa-copy" /></a></legend>
-                <div className="form-row">
+                <div className="row">
                     <div className="col-sm-4">
                         Choose output format:
                     </div>
